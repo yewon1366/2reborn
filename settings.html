@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 설정</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wlnbiy6gr3");</script>
+<style>
+:root{--navy:#0E1B2E;--navy2:#162438;--blue:#185FA5;--blue-mid:#378ADD;--blue-light:#85B7EB;--teal:#5DCAA5;--amber:#EF9F27;--red:#F09595;--white:#FAFAF8;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text-dim:rgba(255,255,255,0.38);--text-mid:rgba(255,255,255,0.62);--text-main:rgba(255,255,255,0.92)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.top-nav{height:52px;background:rgba(14,27,46,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:100;flex-shrink:0}
+.sb-toggle{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.sb-toggle:hover{background:rgba(255,255,255,0.08)}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);text-decoration:none;padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);transition:all .15s}
+.back-btn:hover{color:var(--white);border-color:var(--border2)}
+.nav-logo{font-size:15px;font-weight:700;color:var(--white)}.nav-logo span{color:#378ADD}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .15s}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--navy);position:absolute;top:4px;right:4px}
+.app{display:flex;flex:1;min-height:0;overflow:hidden}
+.sidebar{width:210px;flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease,opacity .2s;overflow:hidden}
+.sidebar.closed{width:0;opacity:0;pointer-events:none}
+.sb-inner{width:210px;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.sb-logo{padding:16px 14px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sb-logo-mark{width:26px;height:26px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap}.sb-logo-sub{font-size:10px;color:var(--text-dim)}
+.sb-nav{padding:8px;flex:1;overflow-y:auto}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:10px 8px 4px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s;white-space:nowrap}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:10px;border-top:0.5px solid var(--border);flex-shrink:0}
+.sb-avatar{width:26px;height:26px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+.main{flex:1;min-width:0;min-height:0;overflow-y:auto}
+.content{padding:22px 24px;max-width:680px}
+.card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:16px;transition:border-color .15s}
+.card:hover{border-color:var(--border2)}
+.setting-title{font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:12px;padding-bottom:8px;border-bottom:0.5px solid var(--border)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.setting-row:last-child{border-bottom:none}
+.toggle{width:36px;height:20px;border-radius:10px;background:rgba(55,138,221,0.3);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.off{background:rgba(255,255,255,0.1)}
+.toggle::after{content:'';width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s}
+.toggle:not(.off)::after{left:19px}
+.profile-av{width:56px;height:56px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#85B7EB;flex-shrink:0}
+.input-field{width:100%;background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:12px;outline:none;transition:border-color .15s}
+.input-field:focus{border-color:rgba(55,138,221,0.4)}
+.saved-toast{position:fixed;bottom:24px;right:24px;background:#1D9E75;color:#fff;padding:10px 18px;border-radius:9px;font-size:12px;font-weight:500;opacity:0;transition:opacity .3s;pointer-events:none}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.35)}}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div class="sb-toggle" onclick="toggleSb()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="rgba(255,255,255,0.55)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+  <a href="dashboard.html" class="back-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>대시보드</a>
+  <div style="width:0.5px;height:16px;background:var(--border)"></div>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2)">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div class="collab-avatars">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+    </div>
+  </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-icon-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 1.8-.8 3.4-1.5 4h12c-.7-.6-1.5-2.2-1.5-4 0-2.5-2-4.5-4.5-4.5z" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/><path d="M5.5 10c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/></svg><div class="notif-dot"></div></div>
+  </div>
+</div>
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-inner">
+      <div class="sb-logo"><div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg></div><div><div class="sb-logo-text">돈워리</div><div class="sb-logo-sub">2025 학생회</div></div></div>
+      <div class="sb-nav">
+        <div class="sb-sec">메뉴</div>
+        <a href="dashboard.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>대시보드</a>
+        <a href="events.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>행사 관리</a>
+        <a href="triple.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>3중 교차 검증<span class="sb-bdg">5</span></a>
+        <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
+        
+        <a href="archive.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
+        <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <div class="sb-sec" style="margin-top:8px">설정</div>
+        <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+        <a href="settings.html" class="sb-item active"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+      </div>
+      <div class="sb-footer"><div style="display:flex;align-items:center;gap:8px"><div class="sb-avatar">장</div><div><div style="font-size:12px;color:var(--text-main)">장예원</div><div style="font-size:10px;color:#5DCAA5">관리자</div></div></div></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="content">
+      <!-- 프로필 -->
+      <div class="card">
+        <div class="setting-title">내 프로필</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+          <div class="profile-av" id="av-preview">장</div>
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600;color:var(--text-main)" id="profile-name-display">장예원</div>
+            <div style="font-size:11px;color:#5DCAA5">관리자 · 재정부장</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+          <div><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">이름</div><input id="profile-name" class="input-field" value="장예원" oninput="document.getElementById('profile-name-display').textContent=this.value;document.getElementById('av-preview').textContent=this.value[0]||'?'"></div>
+          <div><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">이메일</div><input id="profile-email" class="input-field" value="jang@univ.ac.kr"></div>
+          <div><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">역할</div><input id="profile-role" class="input-field" value="재정부장"></div>
+          <div><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">소속</div><input id="profile-dept" class="input-field" value="2025 학생회 총무국"></div>
+        </div>
+        <button onclick="saveProfile()" style="font-size:12px;padding:7px 18px;border-radius:7px;border:none;background:#185FA5;color:#fff;cursor:pointer;font-weight:500">프로필 저장</button>
+      </div>
+
+      <!-- 알림 -->
+      <div class="card">
+        <div class="setting-title">알림 설정</div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">수정 요청 알림</div><div style="font-size:11px;color:var(--text-dim)">국원 요청 시 관리자에게 알림</div></div>
+          <div class="toggle" id="t-noti-req" onclick="toggleSetting(this,'noti_req')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">승인/반려 결과 알림</div><div style="font-size:11px;color:var(--text-dim)">요청자에게 처리 결과 발송</div></div>
+          <div class="toggle" id="t-noti-res" onclick="toggleSetting(this,'noti_res')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">공개 메모 알림</div><div style="font-size:11px;color:var(--text-dim)">새 공개 메모 작성 시 팀원 전체 알림</div></div>
+          <div class="toggle" id="t-noti-memo" onclick="toggleSetting(this,'noti_memo')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">감사 D-Day 알림</div><div style="font-size:11px;color:var(--text-dim)">감사 7일 전, 3일 전, 1일 전 알림</div></div>
+          <div class="toggle off" id="t-noti-audit" onclick="toggleSetting(this,'noti_audit')"></div>
+        </div>
+      </div>
+
+      <!-- 보안 -->
+      <div class="card">
+        <div class="setting-title">보안 · 데이터</div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">자동 로그아웃</div><div style="font-size:11px;color:var(--text-dim)">30분 비활동 시 자동 로그아웃</div></div>
+          <div class="toggle off" id="t-auto-logout" onclick="toggleSetting(this,'auto_logout')"></div>
+        </div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">활동 내역 기록</div><div style="font-size:11px;color:var(--text-dim)">모든 업로드·수정·승인 내역 보관</div></div>
+          <div class="toggle" id="t-activity" onclick="toggleSetting(this,'activity_log')"></div>
+        </div>
+      </div>
+
+      <!-- 감사 설정 -->
+      <div class="card">
+        <div class="setting-title">감사 설정</div>
+        <div class="setting-row">
+          <div><div style="font-size:12px;color:var(--text-main)">감사 일정</div><div style="font-size:11px;color:var(--text-dim)">D-Day 기준일</div></div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input id="audit-date" type="date" value="2025-05-15" onchange="saveAuditDate(this.value)" style="background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:7px;padding:5px 8px;color:var(--text-main);font-family:inherit;font-size:12px;outline:none">
+            <span id="audit-date-preview" style="font-size:11px;color:#85B7EB"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 데이터 관리 -->
+      <div class="card">
+        <div class="setting-title">데이터 관리</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button onclick="exportData()" style="font-size:12px;padding:8px 14px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer">📥 전체 데이터 내보내기</button>
+          <button onclick="if(confirm('모든 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.'))resetAll()" style="font-size:12px;padding:8px 14px;border-radius:7px;border:0.5px solid rgba(240,149,149,0.3);background:transparent;color:#F09595;cursor:pointer">⚠ 데이터 초기화</button>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--text-dim)" id="storage-info"></div>
+      </div>
+
+      <!-- 앱 정보 -->
+      <div class="card">
+        <div class="setting-title">앱 정보</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text-mid)">서비스명</span><span style="font-size:12px;color:var(--text-main)">돈워리 (Don't Worry)</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text-mid)">버전</span><span style="font-size:12px;color:var(--text-main)">MVP v1.0</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text-mid)">운영 주체</span><span style="font-size:12px;color:var(--text-main)">2025 학생회 총무국</span></div>
+          <div style="display:flex;justify-content:space-between"><span style="font-size:12px;color:var(--text-mid)">개발</span><span style="font-size:12px;color:var(--text-main)">장예원 · 정찬우</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="saved-toast" id="toast">저장됐어요! ✓</div>
+<script>
+const SETTINGS_KEY='donworry_settings';
+const MEMBERS_KEY='donworry_members';
+function gs(){const s=localStorage.getItem(SETTINGS_KEY);return s?JSON.parse(s):{};}
+function ss(d){localStorage.setItem(SETTINGS_KEY,JSON.stringify(d));}
+function showToast(){const t=document.getElementById('toast');t.style.opacity='1';setTimeout(()=>t.style.opacity='0',2000);}
+function toggleSetting(el,key){el.classList.toggle('off');const cfg=gs();cfg[key]=!el.classList.contains('off');ss(cfg);showToast();}
+function saveProfile(){
+  const cfg=gs();
+  cfg.name=document.getElementById('profile-name').value;
+  cfg.email=document.getElementById('profile-email').value;
+  cfg.role=document.getElementById('profile-role').value;
+  cfg.dept=document.getElementById('profile-dept').value;
+  ss(cfg);
+  const members=JSON.parse(localStorage.getItem(MEMBERS_KEY)||'[]');
+  const me=members.find(m=>m.me);if(me){me.name=cfg.name;me.email=cfg.email;me.task=cfg.role;localStorage.setItem(MEMBERS_KEY,JSON.stringify(members));}
+  showToast();
+}
+function saveAuditDate(v){
+  const cfg=gs();cfg.audit_date=v;ss(cfg);
+  // donworry_audit_date 키에도 저장해서 audit.html에서 읽음
+  localStorage.setItem('donworry_audit_date',v);
+  showToast();
+  // 날짜 미리보기 업데이트
+  const d=new Date(v+'T00:00:00');
+  const label=`${d.getFullYear()}년 ${d.getMonth()+1}월 ${d.getDate()}일`;
+  const preview=document.getElementById('audit-date-preview');
+  if(preview)preview.textContent=label+' 감사';
+}
+function exportData(){
+  const keys=[SETTINGS_KEY,MEMBERS_KEY,'donworry_requests','donworry_files','donworry_audit_items','donworry_events_v3'];
+  const data={};keys.forEach(k=>{const s=localStorage.getItem(k);if(s)data[k]=JSON.parse(s);});
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='donworry_backup.json';a.click();
+}
+function resetAll(){
+  ['donworry_members','donworry_requests','donworry_files','donworry_audit_items',SETTINGS_KEY].forEach(k=>localStorage.removeItem(k));
+  showToast();location.reload();
+}
+function loadSettings(){
+  const cfg=gs();
+  const toggleMap={noti_req:'t-noti-req',noti_res:'t-noti-res',noti_memo:'t-noti-memo',noti_audit:'t-noti-audit',auto_logout:'t-auto-logout',activity_log:'t-activity'};
+  Object.entries(toggleMap).forEach(([key,id])=>{const el=document.getElementById(id);if(el){const isOn=cfg[key]!==undefined?cfg[key]:!el.classList.contains('off');el.classList.toggle('off',!isOn);}});
+  if(cfg.name){document.getElementById('profile-name').value=cfg.name;document.getElementById('profile-name-display').textContent=cfg.name;document.getElementById('av-preview').textContent=cfg.name[0]||'?';}
+  if(cfg.email)document.getElementById('profile-email').value=cfg.email;
+  if(cfg.role)document.getElementById('profile-role').value=cfg.role;
+  if(cfg.dept)document.getElementById('profile-dept').value=cfg.dept;
+  if(cfg.audit_date)document.getElementById('audit-date').value=cfg.audit_date;
+  const keys=['donworry_members','donworry_requests','donworry_files','donworry_audit_items','donworry_events_v3'];
+  let total=0;keys.forEach(k=>{const s=localStorage.getItem(k);if(s)total+=s.length;});
+  document.getElementById('storage-info').textContent=`localStorage 사용량: 약 ${(total/1024).toFixed(1)}KB`;
+}
+function toggleSb(){document.getElementById('sidebar').classList.toggle('closed');}
+loadSettings();
+</script>
+</body></html>

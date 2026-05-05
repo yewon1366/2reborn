@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 아카이브</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wlnbiy6gr3");
+</script>
+<style>
+:root{--navy:#0E1B2E;--navy2:#162438;--blue:#185FA5;--blue-mid:#378ADD;--blue-light:#85B7EB;--teal:#5DCAA5;--amber:#EF9F27;--red:#F09595;--purple:#A9A5EE;--white:#FAFAF8;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text-dim:rgba(255,255,255,0.38);--text-mid:rgba(255,255,255,0.62);--text-main:rgba(255,255,255,0.92);--sb-w:210px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+/* NAV */
+.top-nav{height:52px;background:rgba(14,27,46,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:100;flex-shrink:0}
+.sb-toggle{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.sb-toggle:hover{background:rgba(255,255,255,0.08)}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);text-decoration:none;padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);transition:all .15s}
+.back-btn:hover{color:var(--white);border-color:var(--border2)}
+.nav-logo{font-size:15px;font-weight:700;color:var(--white)}
+.nav-logo span{color:#378ADD}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .15s}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--navy);position:absolute;top:4px;right:4px}
+/* LAYOUT */
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 52px)}
+/* MENU SIDEBAR */
+.sidebar{width:var(--sb-w);flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease,opacity .2s;overflow:hidden;height:100%}
+.sidebar.closed{width:0;opacity:0;pointer-events:none}
+.sb-inner{width:var(--sb-w);display:flex;flex-direction:column;height:100%;overflow:hidden}
+.sb-logo{padding:16px 14px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sb-logo-mark{width:26px;height:26px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap}
+.sb-logo-sub{font-size:10px;color:var(--text-dim)}
+.sb-nav{padding:8px;flex:1;overflow-y:auto;min-height:0}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:10px 8px 4px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s;white-space:nowrap}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:10px;border-top:0.5px solid var(--border);flex-shrink:0}
+.sb-avatar{width:26px;height:26px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+/* DRIVE SIDEBAR */
+.drive-sb{width:196px;flex-shrink:0;border-right:0.5px solid var(--border);background:rgba(22,36,56,0.25);padding:10px 0;overflow-y:auto;transition:width .22s ease,opacity .2s;position:relative;flex-shrink:0}
+.drive-sb.closed{width:16px;opacity:1;overflow:hidden;background:transparent;border-right:none;padding:0}
+.ds-inner{width:196px}
+/* 경계선 핸들 — 열린 상태 */
+.drive-handle{position:absolute;top:0;right:-5px;width:10px;height:100%;cursor:col-resize;z-index:10;display:flex;align-items:center;justify-content:center}
+.drive-handle::after{content:'';width:3px;height:40px;border-radius:2px;background:rgba(255,255,255,0.1);transition:background .15s,height .15s,box-shadow .15s}
+.drive-handle:hover::after{background:#378ADD;height:56px;box-shadow:0 0 6px rgba(55,138,221,0.4)}
+/* 닫힌 상태 탭 */
+.drive-tab{display:none;width:16px;height:100%;cursor:pointer;align-items:center;justify-content:center;border-right:0.5px solid var(--border)}
+.drive-tab::after{content:'';width:3px;height:40px;border-radius:2px;background:rgba(255,255,255,0.08);transition:background .15s,height .15s}
+.drive-tab:hover::after{background:#378ADD;height:56px}
+.drive-sb.closed .drive-tab{display:flex}
+.drive-sb.closed .drive-handle{display:none}
+.ds-head{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.07em;padding:8px 12px 4px}
+.ds-item{display:flex;align-items:center;gap:8px;padding:6px 12px;font-size:12px;color:var(--text-mid);cursor:pointer;transition:all .12s;border-radius:0}
+.ds-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.ds-item.on{background:rgba(55,138,221,0.12);color:#85B7EB;border-right:2px solid #378ADD}
+.ds-count{margin-left:auto;font-size:10px;color:var(--text-dim)}
+.ds-divider{height:0.5px;background:var(--border);margin:8px 0}
+.ds-tag-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* CONTENT */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.content-hdr{height:48px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 18px;gap:8px;background:rgba(22,36,56,0.3);flex-shrink:0}
+.breadcrumb{font-size:12px;color:var(--text-mid);display:flex;align-items:center;gap:4px}
+.breadcrumb b{color:var(--text-main)}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.content{flex:1;overflow-y:auto;padding:16px 18px}
+/* UPLOAD ZONE */
+.upload-zone{border:1.5px dashed rgba(255,255,255,0.1);border-radius:10px;padding:22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;transition:all .2s;margin-bottom:14px}
+.upload-zone:hover{border-color:rgba(55,138,221,0.4);background:rgba(55,138,221,0.04)}
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.tb-btn{font-size:11px;padding:5px 11px;border-radius:7px;border:0.5px solid var(--border);background:rgba(255,255,255,0.03);color:var(--text-mid);cursor:pointer;display:flex;align-items:center;gap:4px;transition:all .12s}
+.tb-btn:hover{border-color:var(--border2);color:var(--white);background:rgba(255,255,255,0.06)}
+.tb-sep{width:0.5px;height:16px;background:var(--border)}
+.vbtn{width:26px;height:26px;border-radius:5px;border:0.5px solid var(--border);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s;color:var(--text-dim)}
+.vbtn.on{background:rgba(55,138,221,0.15);border-color:rgba(55,138,221,0.3);color:#85B7EB}
+.zip-btn{padding:5px 13px;font-size:11px;font-weight:600;border:none;border-radius:7px;background:#185FA5;color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:background .15s}
+.zip-btn:hover{background:#0C447C}
+.sel-pill{font-size:11px;color:#85B7EB;background:rgba(55,138,221,0.1);border:0.5px solid rgba(55,138,221,0.2);padding:3px 9px;border-radius:7px;display:none}
+.view-label{font-size:11px;color:var(--text-dim)}
+/* FILE GRID */
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:9px}
+.file-grid.hidden{display:none}
+.fc{background:rgba(255,255,255,0.02);border:0.5px solid var(--border);border-radius:10px;padding:13px 11px 11px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:7px;position:relative;user-select:none}
+.fc:hover{border-color:var(--border2);background:rgba(255,255,255,0.04)}
+.fc.sel{border-color:rgba(55,138,221,0.5);background:rgba(55,138,221,0.07)}
+.fc.fld{background:rgba(55,138,221,0.03);border-color:rgba(55,138,221,0.12)}
+.fc.fld:hover{background:rgba(55,138,221,0.07);border-color:rgba(55,138,221,0.22)}
+.fc-icon{width:36px;height:36px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.fc-name{font-size:12px;color:var(--text-main);font-weight:500;line-height:1.4;word-break:break-all}
+.fc-meta{font-size:10px;color:var(--text-dim)}
+.fc-tags{display:flex;gap:3px;flex-wrap:wrap}
+.ft{font-size:9px;padding:1px 5px;border-radius:5px;background:rgba(55,138,221,0.12);color:#85B7EB}
+.fc-cb{position:absolute;top:7px;right:7px;width:15px;height:15px;border-radius:3px;border:0.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center}
+.fc.sel .fc-cb{background:#185FA5;border-color:#185FA5}
+/* FILE LIST */
+.file-list{display:none;flex-direction:column;gap:2px}
+.file-list.show{display:flex}
+.fl-hdr{display:flex;align-items:center;gap:8px;padding:4px 10px;font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.06em;border-bottom:0.5px solid var(--border);margin-bottom:3px}
+.fl-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;cursor:pointer;transition:all .12s;border:0.5px solid transparent}
+.fl-row:hover{background:rgba(255,255,255,0.04);border-color:var(--border)}
+.fl-row.sel{background:rgba(55,138,221,0.07);border-color:rgba(55,138,221,0.2)}
+.fl-name{flex:1;font-size:12px;color:var(--text-main);font-weight:500}
+.fl-tags{width:160px;display:flex;gap:3px;flex-wrap:wrap}
+.fl-size{font-size:11px;color:var(--text-dim);width:55px;text-align:right}
+.fl-date{font-size:11px;color:var(--text-dim);width:50px;text-align:right}
+/* 실시간 협업 */
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:pulse 2s infinite}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.35)}}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+
+.sb-user{display:flex;align-items:center;gap:8px}
+.sb-uname{font-size:12px;color:var(--text-main)}
+.sb-urole{font-size:10px;color:#5DCAA5}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div class="sb-toggle" onclick="toggleSb()" title="메뉴 사이드바"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="rgba(255,255,255,0.55)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+  <a href="dashboard.html" class="back-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>대시보드</a>
+  <div style="width:0.5px;height:16px;background:var(--border)"></div>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <!-- 실시간 협업 -->
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2);margin-left:6px">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div style="display:flex;align-items:center;margin-left:2px">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+  </div>
+</div>
+  <div class="nav-right">
+
+    <!-- 돋보기 -->
+    <div class="nav-icon-btn" onclick="toggleSearch()" id="search-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><path d="M9 9l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+    <!-- 알림 -->
+    <div class="nav-icon-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 1.8-.8 3.4-1.5 4h12c-.7-.6-1.5-2.2-1.5-4 0-2.5-2-4.5-4.5-4.5z" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/><path d="M5.5 10c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/></svg>
+      <div class="notif-dot"></div>
+    </div>
+  </div>
+</div>
+<!-- 검색창 -->
+<div id="search-bar" style="display:none;padding:8px 16px;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.6);backdrop-filter:blur(8px)">
+  <input id="search-input" type="text" placeholder="파일명, 태그로 검색..." oninput="searchFiles(this.value)" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--border2);border-radius:8px;padding:8px 14px;color:var(--text-main);font-family:inherit;font-size:13px;outline:none">
+</div>
+
+<div class="app">
+  <!-- 메뉴 사이드바 -->
+  <div class="sidebar" id="sb" style="height:100%;display:flex;flex-direction:column;">
+    <div class="sb-inner">
+      <div class="sb-logo">
+        <div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg></div>
+        <div><div class="sb-logo-text">돈워리</div><div class="sb-logo-sub">2025 학생회</div></div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-sec">메뉴</div>
+        <a href="dashboard.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>대시보드</a>
+        <a href="events.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>행사 관리</a>
+        <a href="triple.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>3중 교차 검증<span class="sb-bdg">5</span></a>
+        <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
+        <a href="archive.html" class="sb-item active"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
+        <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <div class="sb-sec" style="margin-top:8px">설정</div>
+        <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+        <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+      </div>
+      <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">장</div>
+        <div>
+          <div class="sb-uname">장예원</div>
+          <div class="sb-urole">관리자</div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+  <!-- 드라이브 사이드바 -->
+  <div class="drive-sb" id="drive-sb">
+    <div class="drive-handle" onclick="toggleDrive()" title="닫기"></div>
+    <div class="drive-tab" onclick="toggleDrive()" title="드라이브 패널 열기"></div>
+    <div class="ds-inner">
+    <div class="ds-head">드라이브</div>
+    <div class="ds-item on" id="di-all" onclick="go('all',this)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 4h12v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4z" fill="rgba(55,138,221,0.2)" stroke="#378ADD" stroke-width="1"/><path d="M1 4l2-2h3l1 1h6" stroke="#378ADD" stroke-width="1" stroke-linecap="round"/></svg>
+      내 드라이브 <span class="ds-count">12</span>
+    </div>
+    <div class="ds-divider"></div>
+    <div class="ds-head">폴더</div>
+    <div class="ds-item" id="di-mt" onclick="go('mt',this)"><svg width="14" height="13" viewBox="0 0 14 13" fill="none"><path d="M1 3h12v8a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" fill="rgba(55,138,221,0.15)" stroke="rgba(55,138,221,0.5)" stroke-width="1"/><path d="M1 3l1.5-1.5H5l.8.8H13" stroke="rgba(55,138,221,0.5)" stroke-width="1" stroke-linecap="round"/></svg>📁 봄 MT<span class="ds-count">5</span></div>
+    <div class="ds-item" id="di-welcome" onclick="go('welcome',this)"><svg width="14" height="13" viewBox="0 0 14 13" fill="none"><path d="M1 3h12v8a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" fill="rgba(93,202,165,0.12)" stroke="rgba(93,202,165,0.5)" stroke-width="1"/><path d="M1 3l1.5-1.5H5l.8.8H13" stroke="rgba(93,202,165,0.5)" stroke-width="1" stroke-linecap="round"/></svg>📁 환영회<span class="ds-count">3</span></div>
+    <div class="ds-item" id="di-sports" onclick="go('sports',this)"><svg width="14" height="13" viewBox="0 0 14 13" fill="none"><path d="M1 3h12v8a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" fill="rgba(169,165,238,0.12)" stroke="rgba(169,165,238,0.5)" stroke-width="1"/><path d="M1 3l1.5-1.5H5l.8.8H13" stroke="rgba(169,165,238,0.5)" stroke-width="1" stroke-linecap="round"/></svg>📁 체육대회<span class="ds-count">2</span></div>
+    <div class="ds-item" id="di-common" onclick="go('common',this)"><svg width="14" height="13" viewBox="0 0 14 13" fill="none"><path d="M1 3h12v8a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" fill="rgba(239,159,39,0.12)" stroke="rgba(239,159,39,0.5)" stroke-width="1"/><path d="M1 3l1.5-1.5H5l.8.8H13" stroke="rgba(239,159,39,0.5)" stroke-width="1" stroke-linecap="round"/></svg>📁 공통 서류<span class="ds-count">2</span></div>
+    <div class="ds-divider"></div>
+    <div class="ds-head">태그 필터 <span style="font-size:9px;color:var(--text-dim);font-weight:400;text-transform:none">(폴더 무관 취합)</span></div>
+    <div class="ds-item" id="di-t-receipt" onclick="go('t-receipt',this)"><span class="ds-tag-dot" style="background:#F09595"></span>#영수증<span class="ds-count">5</span></div>
+    <div class="ds-item" id="di-t-doc" onclick="go('t-doc',this)"><span class="ds-tag-dot" style="background:#85B7EB"></span>#결의서<span class="ds-count">2</span></div>
+    <div class="ds-item" id="di-t-list" onclick="go('t-list',this)"><span class="ds-tag-dot" style="background:#5DCAA5"></span>#명단<span class="ds-count">3</span></div>
+    <div class="ds-item" id="di-t-bank" onclick="go('t-bank',this)"><span class="ds-tag-dot" style="background:#EF9F27"></span>#통장<span class="ds-count">1</span></div>
+    <div class="ds-item" id="di-t-calc" onclick="go('t-calc',this)"><span class="ds-tag-dot" style="background:#A9A5EE"></span>#결산<span class="ds-count">1</span></div>
+  </div><!-- ds-inner -->
+  </div><!-- drive-sb -->
+
+  <!-- 메인 -->
+  <div class="main">
+    <div class="content-hdr">
+      <div class="breadcrumb" id="bc"></div>
+      <div class="hdr-right">
+        <div class="sel-pill" id="sel-pill"></div>
+        <button class="zip-btn" id="sel-zip" style="display:none;padding:4px 10px;font-size:10px" onclick="dlSelected()">선택 ZIP</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="upload-zone" onclick="openUpload()" ondragover="this.classList.add('over');event.preventDefault()" ondragleave="this.classList.remove('over')" ondrop="this.classList.remove('over');event.preventDefault();openUpload()">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><rect x="2" y="2" width="22" height="22" rx="5" stroke="rgba(55,138,221,0.35)" stroke-width="1.2"/><path d="M13 7v12M8 12l5-5 5 5" stroke="rgba(55,138,221,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="font-size:13px;color:var(--text-mid)">파일 드래그 앤 드롭 또는 클릭하여 업로드</div>
+        <div style="font-size:11px;color:var(--text-dim)">JPG, PNG, PDF, XLSX, CSV · 최대 50MB</div>
+      </div>
+      <div class="toolbar">
+        <span class="view-label" id="vlabel"></span>
+        <div class="tb-sep"></div>
+        <div class="tb-btn" onclick="openUpload()"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M3 4l3-3 3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 10h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>업로드</div>
+        <div class="tb-btn" onclick="mkFolder()"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 3h10v7a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" stroke="currentColor" stroke-width="1.1"/><path d="M4 6h4M6 4v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>새 폴더</div>
+        <div class="tb-sep"></div>
+        <div class="vbtn on" id="vg" onclick="setView('grid',this)" title="그리드"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="4" height="4" rx="1" fill="currentColor"/><rect x="7" y="1" width="4" height="4" rx="1" fill="currentColor"/><rect x="1" y="7" width="4" height="4" rx="1" fill="currentColor"/><rect x="7" y="7" width="4" height="4" rx="1" fill="currentColor"/></svg></div>
+        <div class="vbtn" id="vl" onclick="setView('list',this)" title="리스트"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M1 6h10M1 9h10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tb-sep"></div>
+        <button class="zip-btn" onclick="dlAll()"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M6 1v8M3 7l3 3 3-3" stroke="#fff" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 10h10" stroke="#fff" stroke-width="1.3" stroke-linecap="round"/></svg>전체 ZIP</button>
+      </div>
+      <div class="file-grid" id="fg"></div>
+      <div class="file-list" id="fl">
+        <div class="fl-hdr"><div style="flex:1">파일명</div><div style="width:160px">태그</div><div style="width:55px;text-align:right">크기</div><div style="width:50px;text-align:right">날짜</div></div>
+        <div id="fl-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const FILES=[
+  {id:1,type:'folder',name:'봄 MT',      folder:'mt',      color:'#85B7EB',tags:['#봄MT'],                  size:'—',    date:'4/7'},
+  {id:2,type:'folder',name:'환영회',     folder:'welcome', color:'#5DCAA5',tags:['#환영회'],                 size:'—',    date:'4/10'},
+  {id:3,type:'folder',name:'체육대회',   folder:'sports',  color:'#A9A5EE',tags:['#체육대회'],               size:'—',    date:'5/1'},
+  {id:4,type:'folder',name:'공통 서류',  folder:'common',  color:'#EF9F27',tags:['#공통'],                   size:'—',    date:'4/24'},
+  {id:5,type:'jpg',   name:'영수증_GS25_봄MT.jpg',        folder:'mt',      tags:['#봄MT','#영수증','#식비'],    size:'2.4MB',date:'4/22'},
+  {id:6,type:'jpg',   name:'영수증_KTX_봄MT.jpg',         folder:'mt',      tags:['#봄MT','#영수증','#교통비'],  size:'1.8MB',date:'4/18'},
+  {id:7,type:'pdf',   name:'참가자명단_봄MT.pdf',          folder:'mt',      tags:['#봄MT','#명단'],              size:'120KB',date:'4/15'},
+  {id:8,type:'xlsx',  name:'봄MT_결산내역.xlsx',           folder:'mt',      tags:['#봄MT','#결산'],              size:'95KB', date:'4/28'},
+  {id:9,type:'jpg',   name:'영수증_올리브영_환영회.jpg',   folder:'welcome', tags:['#환영회','#영수증','#물품'],  size:'3.1MB',date:'4/25'},
+  {id:10,type:'pdf',  name:'참가자명단_환영회.pdf',        folder:'welcome', tags:['#환영회','#명단'],            size:'88KB', date:'4/8'},
+  {id:11,type:'pdf',  name:'지출결의서_환영회.pdf',        folder:'welcome', tags:['#환영회','#결의서'],          size:'210KB',date:'4/11'},
+  {id:12,type:'pdf',  name:'참가자명단_체육대회.pdf',      folder:'sports',  tags:['#체육대회','#명단'],          size:'145KB',date:'5/2'},
+  {id:13,type:'jpg',  name:'영수증_체육대회_물품.jpg',     folder:'sports',  tags:['#체육대회','#영수증'],        size:'2.2MB',date:'5/3'},
+  {id:14,type:'xlsx', name:'통장사본_입출금내역.xlsx',     folder:'common',  tags:['#통장','#공통'],              size:'88KB', date:'4/24'},
+  {id:15,type:'pdf',  name:'지출결의서_전체.pdf',          folder:'common',  tags:['#결의서','#공통'],            size:'340KB',date:'4/25'},
+];
+const TAG_MAP={'t-receipt':'#영수증','t-doc':'#결의서','t-list':'#명단','t-bank':'#통장','t-calc':'#결산'};
+const FC={'jpg':'#F09595','png':'#F09595','pdf':'#85B7EB','xlsx':'#5DCAA5','csv':'#EF9F27'};
+const BC_MAP={all:'내 드라이브',mt:'내 드라이브 › 봄 MT',welcome:'내 드라이브 › 환영회',sports:'내 드라이브 › 체육대회',common:'내 드라이브 › 공통 서류','t-receipt':'태그 › #영수증','t-doc':'태그 › #결의서','t-list':'태그 › #명단','t-bank':'태그 › #통장','t-calc':'태그 › #결산'};
+let cur='all', viewMode='grid', sel=new Set();
+
+function toggleSb(){document.getElementById('sb').classList.toggle('closed');}
+function toggleDrive(){document.getElementById('drive-sb').classList.toggle('closed');}
+function toggleSearch(){
+  const bar=document.getElementById('search-bar');
+  const isHidden=bar.style.display==='none';
+  bar.style.display=isHidden?'block':'none';
+  if(isHidden){document.getElementById('search-input').focus();}
+  else{document.getElementById('search-input').value='';render();}
+}
+function searchFiles(q){
+  if(!q){render();return;}
+  const lq=q.toLowerCase();
+  const results=FILES.filter(f=>f.name.toLowerCase().includes(lq)||f.tags.some(t=>t.toLowerCase().includes(lq)));
+  const label=`검색 "${q}" — ${results.length}개 결과`;
+  document.getElementById('bc').innerHTML=`<svg width="12" height="11" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="#85B7EB" stroke-width="1.2"/><path d="M9 9l3 3" stroke="#85B7EB" stroke-width="1.2" stroke-linecap="round"/></svg>&nbsp;${label}`;
+  document.getElementById('vlabel').textContent=label;
+  document.getElementById('fg').innerHTML=results.map(f=>cardHTML(f)).join('');
+  document.getElementById('fl-body').innerHTML=results.map(f=>rowHTML(f)).join('');
+}
+
+function go(key,el){
+  document.querySelectorAll('.ds-item').forEach(e=>e.classList.remove('on'));
+  el.classList.add('on');
+  cur=key; sel.clear(); updateSel(); render();
+}
+
+function getFiles(){
+  if(cur==='all') return FILES;
+  if(cur.startsWith('t-')){const tag=TAG_MAP[cur];return FILES.filter(f=>f.tags.includes(tag));}
+  return FILES.filter(f=>f.folder===cur);
+}
+
+function render(){
+  const files=getFiles();
+  const bc=BC_MAP[cur]||'내 드라이브';
+  const isTag=cur.startsWith('t-');
+  const label=isTag?`"${TAG_MAP[cur]}" 태그 — 폴더 전체에서 ${files.length}개 취합`:files.length+'개 항목';
+  document.getElementById('bc').innerHTML=`<svg width="12" height="11" viewBox="0 0 12 11" fill="none"><path d="M1 3h10v6a1 1 0 01-1 1H2a1 1 0 01-1-1V3z" fill="rgba(55,138,221,0.2)" stroke="#378ADD" stroke-width="0.9"/><path d="M1 3l1.3-1.3h2.5l.7.8H11" stroke="#378ADD" stroke-width="0.9" stroke-linecap="round"/></svg>&nbsp;${bc}`;
+  document.getElementById('vlabel').textContent=label;
+  document.getElementById('fg').innerHTML=files.map(f=>cardHTML(f)).join('');
+  document.getElementById('fl-body').innerHTML=files.map(f=>rowHTML(f)).join('');
+}
+
+function ficon(type,color){
+  if(type==='folder')return`<svg width="20" height="18" viewBox="0 0 20 18" fill="none"><path d="M1 4h18v12a1 1 0 01-1 1H2a1 1 0 01-1-1V4z" fill="${color}22" stroke="${color}" stroke-width="1.1"/><path d="M1 4l2-2h4l1 1h11" stroke="${color}" stroke-width="1.1" stroke-linecap="round"/></svg>`;
+  const c=FC[type]||'#85B7EB';
+  return`<svg width="16" height="20" viewBox="0 0 16 20" fill="none"><rect x="1" y="1" width="14" height="18" rx="2" fill="${c}18" stroke="${c}" stroke-width="1"/><path d="M10 1v5h5" stroke="${c}" stroke-width="1"/><text x="8" y="15" text-anchor="middle" font-size="4.5" font-weight="700" fill="${c}" font-family="sans-serif">${type.toUpperCase()}</text></svg>`;
+}
+
+function cardHTML(f){
+  const isFld=f.type==='folder';
+  const color=isFld?(f.color||'#85B7EB'):(FC[f.type]||'#85B7EB');
+  const isSel=sel.has(f.id);
+  const click=isFld?`openFolder('${f.folder}')`:`toggle(${f.id},this)`;
+  return`<div class="fc${isFld?' fld':''}${isSel?' sel':''}" data-id="${f.id}" onclick="${click}">
+    <div class="fc-cb"><svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5 4-4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="fc-icon" style="background:${color}18">${ficon(f.type,color)}</div>
+    <div class="fc-name">${f.name}</div>
+    <div class="fc-meta">${f.size} · ${f.date}</div>
+    <div class="fc-tags">${f.tags.map(t=>`<span class="ft">${t}</span>`).join('')}</div>
+  </div>`;
+}
+
+function rowHTML(f){
+  const isFld=f.type==='folder';
+  const color=isFld?(f.color||'#85B7EB'):(FC[f.type]||'#85B7EB');
+  const isSel=sel.has(f.id);
+  const click=isFld?`openFolder('${f.folder}')`:`toggle(${f.id},this)`;
+  return`<div class="fl-row${isSel?' sel':''}" data-id="${f.id}" onclick="${click}">
+    <div style="width:16px;flex-shrink:0">${ficon(f.type,color)}</div>
+    <div class="fl-name">${f.name}</div>
+    <div class="fl-tags">${f.tags.map(t=>`<span class="ft">${t}</span>`).join('')}</div>
+    <div class="fl-size">${f.size}</div>
+    <div class="fl-date">${f.date}</div>
+  </div>`;
+}
+
+function openFolder(folder){
+  const el=document.getElementById('di-'+folder);
+  if(el) go(folder,el);
+}
+
+function toggle(id,card){
+  sel.has(id)?sel.delete(id):sel.add(id);
+  document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>el.classList.toggle('sel',sel.has(id)));
+  updateSel();
+}
+
+function updateSel(){
+  const pill=document.getElementById('sel-pill');
+  const btn=document.getElementById('sel-zip');
+  if(sel.size>0){pill.style.display='block';pill.textContent=sel.size+'개 선택됨';btn.style.display='inline-flex';}
+  else{pill.style.display='none';btn.style.display='none';}
+}
+
+function setView(mode,el){
+  viewMode=mode;
+  document.querySelectorAll('.vbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('fg').classList.toggle('hidden',mode==='list');
+  document.getElementById('fl').classList.toggle('show',mode==='list');
+}
+
+function dlAll(){const files=getFiles();alert(`"${BC_MAP[cur]}" 내 ${files.length}개 항목을 ZIP으로 다운로드합니다.`);}
+function dlSelected(){const names=[...sel].map(id=>FILES.find(f=>f.id===id)?.name).filter(Boolean);alert(`선택 ${sel.size}개 파일 ZIP 다운로드:\n\n${names.join('\n')}`);}
+function openUpload(){alert('파일 업로드\n업로드 후 태그를 추가하면 자동으로 분류됩니다.');}
+function mkFolder(){const n=prompt('새 폴더 이름');if(n)alert(`"${n}" 폴더가 생성되었습니다.`);}
+
+render();
+</script>
+</body>
+</html>

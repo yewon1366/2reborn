@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 3중 교차 검증</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wlnbiy6gr3");
+</script>
+<style>
+:root{--navy:#0E1B2E;--navy2:#162438;--navy3:#1C2E45;--blue:#185FA5;--blue-mid:#378ADD;--blue-light:#85B7EB;--teal-light:#5DCAA5;--amber-light:#EF9F27;--red-light:#F09595;--white:#FAFAF8;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text-dim:rgba(255,255,255,0.38);--text-mid:rgba(255,255,255,0.62);--text-main:rgba(255,255,255,0.92)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column}
+.top-nav{height:52px;background:rgba(14,27,46,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;position:sticky;top:0;z-index:50}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);text-decoration:none;padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);transition:all .15s}
+.back-btn:hover{color:var(--white);border-color:var(--border2)}
+.nav-logo{font-size:15px;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.nav-logo span{color:#378ADD}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:26px;height:26px;border-radius:50%;border:2px solid var(--navy2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+.collab-label{font-size:11px;color:var(--text-dim);margin-left:8px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:pulse 2s infinite;margin-right:4px}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.2)}}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;position:relative}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--navy);position:absolute;top:4px;right:4px}
+.app{display:flex;flex:1}
+.sidebar{width:200px;flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease,opacity .2s;overflow:hidden}
+.sidebar.closed{width:0;opacity:0;pointer-events:none}
+.sb-inner{width:200px;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.sb-toggle{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.sb-toggle:hover{background:rgba(255,255,255,0.08)}
+/* 파일 미리보기 모달 */
+.preview-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:300;align-items:center;justify-content:center}
+.preview-modal.show{display:flex}
+.preview-box{background:#162438;border:0.5px solid rgba(255,255,255,0.14);border-radius:14px;width:700px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
+.preview-head{padding:14px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.preview-tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.ptab{font-size:12px;padding:9px 18px;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.ptab.on{color:#85B7EB;border-bottom-color:#378ADD;font-weight:500}
+.preview-content{flex:1;overflow:auto;padding:0}
+.sheet-table{width:100%;border-collapse:collapse;font-size:12px}
+.sheet-table th{background:rgba(255,255,255,0.06);color:var(--text-dim);font-weight:500;padding:7px 12px;border-bottom:0.5px solid var(--border);border-right:0.5px solid var(--border);text-align:left;position:sticky;top:0;font-size:11px}
+.sheet-table td{padding:7px 12px;border-bottom:0.5px solid rgba(255,255,255,0.04);border-right:0.5px solid rgba(255,255,255,0.04);color:var(--text-mid);font-size:12px}
+.sheet-table tr:hover td{background:rgba(255,255,255,0.03)}
+.sheet-table td.team{color:#85B7EB;font-weight:600}
+.sheet-table td.num-col{font-family:monospace;color:var(--text-main)}
+.sheet-table td.ok{color:#5DCAA5}
+.sheet-table td.warn{color:#EF9F27;font-weight:500}
+.row-num{color:var(--text-dim);font-size:10px;text-align:center;background:rgba(255,255,255,0.03)}
+.sb-logo{padding:18px 16px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px}
+.sb-logo-mark{width:28px;height:28px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main)}
+.sb-logo-sub{font-size:10px;color:var(--text-dim);margin-top:1px}
+.sb-nav{padding:10px 8px;flex:1}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:12px 8px 5px;letter-spacing:.07em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:12px 10px;border-top:0.5px solid var(--border)}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.content-header{height:52px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 22px;background:rgba(22,36,56,0.4)}
+.ch-title{font-size:15px;font-weight:600;color:var(--text-main)}
+.ch-sub{font-size:12px;color:var(--text-dim);margin-left:10px}
+.ch-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.content{padding:20px 22px;flex:1;overflow:auto}
+.card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;transition:border-color .15s}
+.card:hover{border-color:var(--border2)}
+/* UPLOAD */
+.upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.upload-box{border:1.5px dashed rgba(255,255,255,0.12);border-radius:10px;padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;transition:all .2s;background:rgba(255,255,255,0.02);position:relative}
+.upload-box:hover{border-color:rgba(55,138,221,0.4);background:rgba(55,138,221,0.04)}
+.upload-box.done{border-style:solid;border-color:rgba(29,158,117,0.5);background:rgba(29,158,117,0.06)}
+.upload-box.dragging{border-color:#378ADD;background:rgba(55,138,221,0.08);transform:scale(1.02)}
+.upload-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.upload-label{font-size:12px;font-weight:500;color:var(--text-main);text-align:center}
+.upload-sub{font-size:11px;color:var(--text-dim);text-align:center}
+.upload-done{font-size:11px;color:#5DCAA5;font-weight:500}
+/* RUN BTN */
+.run-btn{width:100%;padding:11px;font-size:13px;font-weight:600;background:#185FA5;color:#fff;border:none;border-radius:9px;cursor:pointer;margin-bottom:16px;transition:background .15s;letter-spacing:.02em}
+.run-btn:hover{background:#0C447C}
+.run-btn:disabled{background:rgba(255,255,255,0.08);color:var(--text-dim);cursor:not-allowed}
+/* SUMMARY */
+.sum-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+.sc{border-radius:9px;padding:11px 14px;text-align:center}
+.sc-ok{background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2)}
+.sc-warn{background:rgba(186,117,23,0.1);border:0.5px solid rgba(186,117,23,0.2)}
+.sc-danger{background:rgba(224,75,74,0.1);border:0.5px solid rgba(224,75,74,0.2)}
+.sc-gray{background:rgba(255,255,255,0.04);border:0.5px solid var(--border)}
+.sc-label{font-size:10px;font-weight:500;margin-bottom:4px}
+.sc-num{font-size:22px;font-weight:700}
+.sc-ok .sc-label{color:#5DCAA5}.sc-ok .sc-num{color:#5DCAA5}
+.sc-warn .sc-label{color:#EF9F27}.sc-warn .sc-num{color:#EF9F27}
+.sc-danger .sc-label{color:#F09595}.sc-danger .sc-num{color:#F09595}
+.sc-gray .sc-label{color:var(--text-dim)}.sc-gray .sc-num{color:var(--text-dim)}
+/* TABLE */
+.table-wrap{background:rgba(255,255,255,0.02);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.tbl-hdr{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid var(--border)}
+.filter-row{display:flex;gap:6px}
+.filt{font-size:11px;padding:3px 9px;border-radius:10px;border:0.5px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all .15s;background:transparent}
+.filt.on{background:rgba(55,138,221,0.15);color:#85B7EB;border-color:rgba(55,138,221,0.3)}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:11px;color:var(--text-dim);font-weight:500;padding:8px 12px;border-bottom:0.5px solid var(--border);text-align:left}
+td{font-size:12px;color:var(--text-mid);padding:9px 12px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+tr.hl-warn td{background:rgba(186,117,23,0.08)}
+tr.hl-danger td{background:rgba(224,75,74,0.07)}
+tr:hover td{filter:brightness(1.15)}
+.sb{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:500;display:inline-block}
+.s-ok{background:rgba(29,158,117,0.15);color:#5DCAA5}
+.s-warn{background:rgba(186,117,23,0.15);color:#EF9F27}
+.s-danger{background:rgba(224,75,74,0.15);color:#F09595}
+.s-gray{background:rgba(255,255,255,0.07);color:var(--text-dim)}
+.edit-btn{font-size:10px;padding:3px 8px;border-radius:6px;border:0.5px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.edit-btn:hover{border-color:var(--border2);color:var(--text-main)}
+.req-btn{font-size:10px;padding:3px 8px;border-radius:6px;border:0.5px solid rgba(239,159,39,0.3);background:rgba(239,159,39,0.08);color:#EF9F27;cursor:pointer;transition:all .15s}
+.req-btn:hover{background:rgba(239,159,39,0.15)}
+/* DETAIL PANEL */
+.detail-panel{display:none;margin-top:14px}
+.detail-panel.on{display:block}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.detail-col{background:rgba(255,255,255,0.02);border:0.5px solid var(--border);border-radius:10px;padding:12px 14px}
+.detail-col-title{font-size:11px;font-weight:600;color:var(--text-main);margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid var(--border)}
+.detail-row{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:0.5px solid rgba(255,255,255,0.04);font-size:11px}
+.detail-row:last-child{border-bottom:none}
+.detail-name{flex:1;color:var(--text-mid)}
+.detail-val{color:var(--text-main);font-weight:500}
+.match-line{font-size:10px;padding:3px 7px;border-radius:6px}
+.m-ok{background:rgba(29,158,117,0.12);color:#5DCAA5}
+.m-warn{background:rgba(186,117,23,0.12);color:#EF9F27}
+.m-no{background:rgba(224,75,74,0.12);color:#F09595}
+/* APPROVAL MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:#162438;border:0.5px solid rgba(255,255,255,0.14);border-radius:14px;width:420px;padding:0;overflow:hidden}
+.modal-head{padding:16px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-body{padding:18px}
+.modal-foot{padding:12px 18px;border-top:0.5px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.btn-cancel{font-size:12px;padding:7px 16px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer}
+.btn-confirm{font-size:12px;padding:7px 16px;border-radius:7px;border:none;background:#185FA5;color:#fff;cursor:pointer;font-weight:500}
+.btn-confirm:hover{background:#0C447C}
+.btn-approve{font-size:12px;padding:7px 16px;border-radius:7px;border:none;background:#1D9E75;color:#fff;cursor:pointer;font-weight:500}
+.btn-approve:hover{background:#15795a}
+textarea{width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text-main);font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;resize:vertical;min-height:80px;margin-top:8px}
+textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
+.approval-item{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px}
+/* EXCEL STYLE */
+.excel-view {
+  background: #f3f3f3;
+  color: #333;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+.excel-header {
+  background: #e6e6e6;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  border-bottom: 1px solid #ccc;
+}
+.excel-col-head {
+  width: 100px;
+  text-align: center;
+  font-size: 11px;
+  border-right: 1px solid #ccc;
+  color: #666;
+}
+.excel-row {
+  display: flex;
+  border-bottom: 1px solid #e0e0e0;
+}
+.excel-row-idx {
+  width: 30px;
+  background: #e6e6e6;
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  border-right: 1px solid #ccc;
+  padding-top: 4px;
+  flex-shrink: 0;
+}
+.excel-cell {
+  width: 100px;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-right: 1px solid #e0e0e0;
+  background: white;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.excel-cell.header {
+  background: #f9f9f9;
+  font-weight: 600;
+  text-align: center;
+}
+.excel-tab-bar {
+  background: #fff;
+  display: flex;
+  border-top: 1px solid #ccc;
+  padding-left: 20px;
+}
+.excel-tab {
+  padding: 4px 12px;
+  font-size: 11px;
+  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
+  background: #f9f9f9;
+  margin-top: -1px;
+  border-bottom: 2px solid #217346;
+  color: #217346;
+  font-weight: 600;
+}
+.confirm-btn{font-size:10px;padding:3px 8px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.3);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer;transition:all .15s;margin-left:4px}
+.confirm-btn:hover{background:rgba(55,138,221,0.2);border-color:rgba(55,138,221,0.5)}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.35)}}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div class="sb-toggle" onclick="toggleSb()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="rgba(255,255,255,0.55)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+  <a href="dashboard.html" class="back-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>대시보드</a>
+  <div style="width:0.5px;height:16px;background:var(--border)"></div>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,119,0.2)">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div class="collab-avatars">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+    </div>
+  </div>
+  </div>
+  <div class="nav-right">
+    <div onclick="openApproval()" style="font-size:11px;padding:5px 12px;border-radius:7px;background:rgba(239,159,39,0.1);border:0.5px solid rgba(239,159,39,0.3);color:#EF9F27;cursor:pointer;font-weight:500">승인 대기 <span style="background:rgba(239,159,39,0.2);padding:1px 5px;border-radius:6px;margin-left:3px">2</span></div>
+    <div class="nav-icon-btn" onclick="toggleSearch()" title="검색">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><path d="M9 9l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="nav-icon-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 1.8-.8 3.4-1.5 4h12c-.7-.6-1.5-2.2-1.5-4 0-2.5-2-4.5-4.5-4.5z" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/><path d="M5.5 10c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/></svg><div class="notif-dot"></div></div>
+  </div>
+</div>
+<div id="search-bar" style="display:none;padding:8px 16px;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.7);backdrop-filter:blur(8px)">
+  <input id="search-input" type="text" placeholder="이름, 연락처, 상태로 검색..." oninput="searchTable(this.value)" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--border2);border-radius:8px;padding:8px 14px;color:var(--text-main);font-family:inherit;font-size:13px;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='rgba(55,138,221,0.5)'" onblur="this.style.borderColor='var(--border2)'">
+</div>
+
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-inner">
+    <div class="sb-logo">
+      <div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg></div>
+      <div><div class="sb-logo-text">돈워리</div><div class="sb-logo-sub">2025 학생회</div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-sec">메뉴</div>
+      <a href="dashboard.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>대시보드</a>
+      <a href="events.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>행사 관리</a>
+      <a href="triple.html" class="sb-item active"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>3중 교차 검증<span class="sb-bdg">5</span></a>
+      <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
+      <a href="archive.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
+      <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <div class="sb-sec" style="margin-top:8px">설정</div>
+        <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+        <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+      </div>
+    <div class="sb-footer"><div style="display:flex;align-items:center;gap:8px"><div class="sb-avatar">장</div><div><div style="font-size:12px;color:var(--text-main)">장예원</div><div style="font-size:10px;color:#5DCAA5">관리자 · 수정 가능</div></div></div></div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="content-header">
+      <div class="ch-title">3중 교차 검증</div>
+      <div class="ch-sub">봄 MT 참가비 수납</div>
+      <div class="ch-right">
+        <select style="font-size:11px;padding:5px 8px;border-radius:7px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-mid)">
+          <option>봄 MT 참가비</option>
+          <option>연합 체육대회</option>
+          <option>졸업 기념품</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- STEP 1: UPLOAD -->
+      <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">STEP 1 — 파일 업로드 (드래그 앤 드롭)</div>
+      <div class="upload-grid">
+        <div class="upload-box done" id="ub0">
+          <div class="upload-icon" style="background:rgba(29,158,117,0.15)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#5DCAA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="upload-label">① 신청자 명단</div>
+          <div class="upload-done">applicants_0425.csv</div>
+          <div class="upload-sub">47명 · 업로드 완료</div>
+          <button onclick="openPreview('applicants')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>
+        </div>
+        <div class="upload-box done" id="ub1">
+          <div class="upload-icon" style="background:rgba(29,158,117,0.15)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#5DCAA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="upload-label">② 입금 내역</div>
+          <div class="upload-done">bank_0425.xlsx</div>
+          <div class="upload-sub">40건 · 업로드 완료</div>
+          <button onclick="openPreview('bank')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>
+        </div>
+        <div class="upload-box" id="ub2" ondragover="ev.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="dropFile(event,this)" onclick="simulateDrop(this)">
+          <div class="upload-icon" style="background:rgba(255,255,255,0.06)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v10M4 8l5-5 5 5" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="upload-label">③ 납부자 명단</div>
+          <div class="upload-sub">클릭하거나 드래그</div>
+          <div class="upload-sub" style="font-size:10px;color:rgba(55,138,221,0.6)">.csv / .xlsx 지원</div>
+        </div>
+      </div>
+
+      <button class="run-btn" id="run-btn" onclick="runCheck()">대조 실행하기 →</button>
+
+      <!-- STEP 2: RESULT -->
+      <div id="result-section" style="display:none">
+        <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">STEP 2 — 대조 결과</div>
+        <div class="sum-row">
+          <div class="sc sc-ok"><div class="sc-label">정상</div><div class="sc-num">33</div></div>
+          <div class="sc sc-warn"><div class="sc-label">확인 필요</div><div class="sc-num">7</div></div>
+          <div class="sc sc-danger"><div class="sc-label">미입금</div><div class="sc-num">5</div></div>
+          <div class="sc sc-gray"><div class="sc-label">미신청 입금</div><div class="sc-num">2</div></div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="tbl-hdr">
+            <span style="font-size:13px;font-weight:500;color:var(--text-main)">매칭 결과</span>
+            <div class="filter-row">
+              <div class="filt on" onclick="filterTable('all',this)">전체</div>
+              <div class="filt" onclick="filterTable('warn',this)">확인 필요</div>
+              <div class="filt" onclick="filterTable('danger',this)">미입금</div>
+              <div class="filt" onclick="filterTable('gray',this)">미신청</div>
+            </div>
+          </div>
+          <table>
+            <thead><tr>
+              <th style="width:12%">이름</th>
+              <th style="width:14%">연락처</th>
+              <th style="width:8%">신청</th>
+              <th style="width:13%">입금액</th>
+              <th style="width:10%">입금일</th>
+              <th style="width:13%">납부 확인</th>
+              <th style="width:12%">상태</th>
+              <th style="width:18%">액션</th>
+            </tr></thead>
+            <tbody id="table-body">
+              <!-- 팀원 7명 (상단 고정) -->
+              <tr data-st="ok"><td style="color:#85B7EB;font-weight:600">장예원 ⭐</td><td>010-1001-2001</td><td>O</td><td>30,000원</td><td>4/18</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('장예원')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:#85B7EB;font-weight:600">박경서 ⭐</td><td>010-1002-2002</td><td>O</td><td>30,000원</td><td>4/18</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('박경서')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:#85B7EB;font-weight:600">이다은 ⭐</td><td>010-1003-2003</td><td>O</td><td>30,000원</td><td>4/19</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('이다은')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:#85B7EB;font-weight:600">정찬우 ⭐</td><td>010-1004-2004</td><td>O</td><td>30,000원</td><td>4/19</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('정찬우')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:#85B7EB;font-weight:600">박건령 ⭐</td><td>010-1005-2005</td><td>O</td><td>30,000원</td><td>4/20</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('박건령')">수정</button></td></tr>
+              <tr data-st="warn" class="hl-warn"><td style="color:#85B7EB;font-weight:600">김준서 ⭐</td><td>010-1006-2006</td><td>O</td><td style="color:#EF9F27;font-weight:500">15,000원</td><td>4/20</td><td><span class="match-line m-warn">금액 불일치</span></td><td><span class="sb s-warn">확인 필요</span></td><td><button class="edit-btn" onclick="openDetail()">자세히 보기</button> <button class="req-btn" onclick="openReq('김준서')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:#85B7EB;font-weight:600">이예지 ⭐</td><td>010-1007-2007</td><td>O</td><td>30,000원</td><td>4/21</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('이예지')">수정</button></td></tr>
+              <!-- 나머지 참가자 40명 -->
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">김민지</td><td>010-2101-3101</td><td>O</td><td>30,000원</td><td>4/18</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('김민지')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">이수현</td><td>010-2102-3102</td><td>O</td><td>30,000원</td><td>4/18</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('이수현')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">박지훈</td><td>010-2103-3103</td><td>O</td><td>30,000원</td><td>4/19</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('박지훈')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">최유리</td><td>010-2104-3104</td><td>O</td><td>30,000원</td><td>4/19</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('최유리')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">정민호</td><td>010-2105-3105</td><td>O</td><td>30,000원</td><td>4/20</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('정민호')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">한소희</td><td>010-2106-3106</td><td>O</td><td>30,000원</td><td>4/20</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('한소희')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">오준혁</td><td>010-2107-3107</td><td>O</td><td>30,000원</td><td>4/20</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('오준혁')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">윤서아</td><td>010-2108-3108</td><td>O</td><td>30,000원</td><td>4/21</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('윤서아')">수정</button></td></tr>
+              <tr data-st="warn" class="hl-warn"><td style="color:var(--text-main);font-weight:500">강동현</td><td>010-2109-3109</td><td>O</td><td style="color:#EF9F27;font-weight:500">10,000원</td><td>4/21</td><td><span class="match-line m-warn">금액 불일치</span></td><td><span class="sb s-warn">확인 필요</span></td><td><button class="edit-btn" onclick="openDetail()">자세히 보기</button> <button class="req-btn" onclick="openReq('강동현')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">임나연</td><td>010-2110-3110</td><td>O</td><td>30,000원</td><td>4/21</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('임나연')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">신우진</td><td>010-2111-3111</td><td>O</td><td>30,000원</td><td>4/22</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('신우진')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">백채원</td><td>010-2112-3112</td><td>O</td><td>30,000원</td><td>4/22</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('백채원')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">조현우</td><td>010-2113-3113</td><td>O</td><td>30,000원</td><td>4/22</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('조현우')">수정</button></td></tr>
+              <tr data-st="danger" class="hl-danger"><td style="color:var(--text-main);font-weight:500">류하은</td><td>010-2114-3114</td><td>O</td><td style="color:#F09595">—</td><td>—</td><td><span class="match-line m-no">미매칭</span></td><td><span class="sb s-danger">미입금</span></td><td><button class="edit-btn" onclick="openEdit('류하은')">수정</button> <button class="req-btn" onclick="openReq('류하은')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">문지호</td><td>010-2115-3115</td><td>O</td><td>30,000원</td><td>4/23</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('문지호')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">서다희</td><td>010-2116-3116</td><td>O</td><td>30,000원</td><td>4/23</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('서다희')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">고은서</td><td>010-2117-3117</td><td>O</td><td>30,000원</td><td>4/23</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('고은서')">수정</button></td></tr>
+              <tr data-st="warn" class="hl-warn"><td style="color:var(--text-main);font-weight:500">남기준</td><td>010-2118-3118</td><td>O</td><td style="color:#EF9F27;font-weight:500">20,000원</td><td>4/23</td><td><span class="match-line m-warn">금액 불일치</span></td><td><span class="sb s-warn">확인 필요</span></td><td><button class="edit-btn" onclick="openDetail()">자세히 보기</button> <button class="req-btn" onclick="openReq('남기준')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">김태양</td><td>010-2119-3119</td><td>O</td><td>30,000원</td><td>4/24</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('김태양')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">이루다</td><td>010-2120-3120</td><td>O</td><td>30,000원</td><td>4/24</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('이루다')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">박하늘</td><td>010-2121-3121</td><td>O</td><td>30,000원</td><td>4/24</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('박하늘')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">장수빈</td><td>010-2122-3122</td><td>O</td><td>30,000원</td><td>4/24</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('장수빈')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">홍민재</td><td>010-2123-3123</td><td>O</td><td>30,000원</td><td>4/25</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('홍민재')">수정</button></td></tr>
+              <tr data-st="danger" class="hl-danger"><td style="color:var(--text-main);font-weight:500">최보람</td><td>010-2124-3124</td><td>O</td><td style="color:#F09595">—</td><td>—</td><td><span class="match-line m-no">미매칭</span></td><td><span class="sb s-danger">미입금</span></td><td><button class="edit-btn" onclick="openEdit('최보람')">수정</button> <button class="req-btn" onclick="openReq('최보람')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">송지안</td><td>010-2125-3125</td><td>O</td><td>30,000원</td><td>4/25</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('송지안')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">안도현</td><td>010-2126-3126</td><td>O</td><td>30,000원</td><td>4/25</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('안도현')">수정</button></td></tr>
+              <tr data-st="warn" class="hl-warn"><td style="color:var(--text-main);font-weight:500">전수연</td><td>010-2127-3127</td><td>O</td><td style="color:#EF9F27;font-weight:500">15,000원</td><td>4/25</td><td><span class="match-line m-warn">금액 불일치</span></td><td><span class="sb s-warn">확인 필요</span></td><td><button class="edit-btn" onclick="openDetail()">자세히 보기</button> <button class="req-btn" onclick="openReq('전수연')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">권나영</td><td>010-2128-3128</td><td>O</td><td>30,000원</td><td>4/26</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('권나영')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">황준하</td><td>010-2129-3129</td><td>O</td><td>30,000원</td><td>4/26</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('황준하')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">유서진</td><td>010-2130-3130</td><td>O</td><td>30,000원</td><td>4/26</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('유서진')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">나현준</td><td>010-2131-3131</td><td>O</td><td>30,000원</td><td>4/26</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('나현준')">수정</button></td></tr>
+              <tr data-st="danger" class="hl-danger"><td style="color:var(--text-main);font-weight:500">마준영</td><td>010-2132-3132</td><td>O</td><td style="color:#F09595">—</td><td>—</td><td><span class="match-line m-no">미매칭</span></td><td><span class="sb s-danger">미입금</span></td><td><button class="edit-btn" onclick="openEdit('마준영')">수정</button> <button class="req-btn" onclick="openReq('마준영')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">도하린</td><td>010-2133-3133</td><td>O</td><td>30,000원</td><td>4/27</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('도하린')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">석유찬</td><td>010-2134-3134</td><td>O</td><td>30,000원</td><td>4/27</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('석유찬')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">봉아린</td><td>010-2135-3135</td><td>O</td><td>30,000원</td><td>4/27</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('봉아린')">수정</button></td></tr>
+              <tr data-st="warn" class="hl-warn"><td style="color:var(--text-main);font-weight:500">태윤서</td><td>010-2136-3136</td><td>O</td><td style="color:#EF9F27;font-weight:500">5,000원</td><td>4/27</td><td><span class="match-line m-warn">금액 불일치</span></td><td><span class="sb s-warn">확인 필요</span></td><td><button class="edit-btn" onclick="openDetail()">자세히 보기</button> <button class="req-btn" onclick="openReq('태윤서')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">구민채</td><td>010-2137-3137</td><td>O</td><td>30,000원</td><td>4/28</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('구민채')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">엄지원</td><td>010-2138-3138</td><td>O</td><td>30,000원</td><td>4/28</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('엄지원')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">차세빈</td><td>010-2139-3139</td><td>O</td><td>30,000원</td><td>4/28</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('차세빈')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">천지혁</td><td>010-2140-3140</td><td>O</td><td>30,000원</td><td>4/28</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('천지혁')">수정</button></td></tr>
+              <tr data-st="gray"><td style="color:var(--text-main);font-weight:500">황보라</td><td>—</td><td style="color:#F09595">X</td><td>30,000원</td><td>4/29</td><td><span class="match-line m-no">신청 없음</span></td><td><span class="sb s-gray">미신청 입금</span></td><td><button class="edit-btn" onclick="openEdit('황보라')">수정</button></td></tr>
+              <tr data-st="gray"><td style="color:var(--text-main);font-weight:500">손민규</td><td>—</td><td style="color:#F09595">X</td><td>30,000원</td><td>4/29</td><td><span class="match-line m-no">신청 없음</span></td><td><span class="sb s-gray">미신청 입금</span></td><td><button class="edit-btn" onclick="openEdit('손민규')">수정</button></td></tr>
+              <tr data-st="danger" class="hl-danger"><td style="color:var(--text-main);font-weight:500">양도훈</td><td>010-2143-3143</td><td>O</td><td style="color:#F09595">—</td><td>—</td><td><span class="match-line m-no">미매칭</span></td><td><span class="sb s-danger">미입금</span></td><td><button class="edit-btn" onclick="openEdit('양도훈')">수정</button> <button class="req-btn" onclick="openReq('양도훈')">수정 요청</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">진서율</td><td>010-2144-3144</td><td>O</td><td>30,000원</td><td>4/29</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('진서율')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">표나은</td><td>010-2145-3145</td><td>O</td><td>30,000원</td><td>4/29</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('표나은')">수정</button></td></tr>
+              <tr data-st="ok"><td style="color:var(--text-main);font-weight:500">하승민</td><td>010-2146-3146</td><td>O</td><td>30,000원</td><td>4/30</td><td><span class="match-line m-ok">일치</span></td><td><span class="sb s-ok">정상</span></td><td><button class="edit-btn" onclick="openEdit('하승민')">수정</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- DETAIL PANEL -->
+        <div class="detail-panel" id="detail-panel">
+          <div style="font-size:10px;color:#EF9F27;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#EF9F27;display:inline-block"></span>김도현 — 3중 상세 매칭 뷰</div>
+          <div class="detail-grid">
+            <div class="detail-col">
+              <div class="detail-col-title" style="color:#85B7EB">① 신청자 명단</div>
+              <div class="detail-row"><span class="detail-name">이름</span><span class="detail-val">김도현</span></div>
+              <div class="detail-row"><span class="detail-name">신청일</span><span class="detail-val">4/15</span></div>
+              <div class="detail-row"><span class="detail-name">신청 금액</span><span class="detail-val">30,000원</span></div>
+              <div class="detail-row"><span class="detail-name">연락처</span><span class="detail-val">010-3456-7890</span></div>
+            </div>
+            <div class="detail-col" style="border-color:rgba(239,159,39,0.3);background:rgba(239,159,39,0.04)">
+              <div class="detail-col-title" style="color:#EF9F27">② 입금 내역</div>
+              <div class="detail-row"><span class="detail-name">이름</span><span class="detail-val">김도현</span></div>
+              <div class="detail-row"><span class="detail-name">입금일</span><span class="detail-val">4/22</span></div>
+              <div class="detail-row"><span class="detail-name">입금액</span><span class="detail-val" style="color:#EF9F27">15,000원 ⚠</span></div>
+              <div class="detail-row"><span class="detail-name">은행</span><span class="detail-val">카카오뱅크</span></div>
+            </div>
+            <div class="detail-col">
+              <div class="detail-col-title" style="color:#5DCAA5">③ 납부 확인</div>
+              <div class="detail-row"><span class="detail-name">이름</span><span class="detail-val">김도현</span></div>
+              <div class="detail-row"><span class="detail-name">확인일</span><span class="detail-val">—</span></div>
+              <div class="detail-row"><span class="detail-name">납부 금액</span><span class="detail-val" style="color:#F09595">미확인</span></div>
+              <div class="detail-row"><span class="detail-name">비고</span><span class="detail-val">—</span></div>
+            </div>
+          </div>
+          <div style="background:rgba(239,159,39,0.08);border:0.5px solid rgba(239,159,39,0.25);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:12px;color:#EF9F27">
+            ⚠ 신청 금액(30,000원)과 실제 입금액(15,000원)이 15,000원 불일치합니다. 당사자에게 나머지 금액 입금을 요청하세요.
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+            <button class="edit-btn" onclick="document.getElementById('detail-panel').classList.remove('on')">닫기</button>
+            <button class="req-btn" onclick="openReq('김도현')">수정 신청 →</button>
+            <button style="font-size:12px;padding:6px 14px;border-radius:7px;border:none;background:#185FA5;color:#fff;cursor:pointer;font-weight:500" onclick="alert('입금 요청 메시지 발송')">입금 요청 발송</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 수정 신청 모달 -->
+<div class="modal-overlay" id="req-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <span style="font-size:14px;font-weight:600;color:var(--text-main)" id="req-modal-title">수정 신청</span>
+      <span onclick="document.getElementById('req-modal').classList.remove('show')" style="cursor:pointer;color:var(--text-dim);font-size:18px">×</span>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:12px;color:var(--text-mid);margin-bottom:8px">국원 권한으로는 직접 수정이 불가합니다.<br>수정 사유를 작성하면 관리자(국장)에게 승인 요청이 전송됩니다.</div>
+      <div style="background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:10px">
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:3px">대상 항목</div>
+        <div style="font-size:13px;color:var(--text-main);font-weight:500" id="req-target">김도현 — 입금액 수정</div>
+      </div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">수정 사유 <span style="color:#F09595">*</span></div>
+      <textarea placeholder="예) 분할 입금으로 나머지 15,000원 추가 입금 예정입니다."></textarea>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="document.getElementById('req-modal').classList.remove('show')">취소</button>
+      <button class="btn-confirm" onclick="submitReq()">수정 요청 전송 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 승인 대기 모달 -->
+<div class="modal-overlay" id="approval-modal">
+  <div class="modal" style="width:480px">
+    <div class="modal-head">
+      <span style="font-size:14px;font-weight:600;color:var(--text-main)">승인 대기함</span>
+      <span onclick="document.getElementById('approval-modal').classList.remove('show')" style="cursor:pointer;color:var(--text-dim);font-size:18px">×</span>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:12px">국원의 수정 요청 목록입니다. 승인 시 장부에 반영됩니다.</div>
+      <div class="approval-item">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:#EF9F27"></div><span style="font-size:12px;font-weight:500;color:var(--text-main)">김도현 — 입금액 수정 요청</span></div>
+          <span style="font-size:10px;color:var(--text-dim)">이채원 · 10분 전</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-mid);margin-bottom:10px">분할 입금으로 나머지 15,000원 추가 입금 예정입니다.</div>
+        <div style="display:flex;gap:6px;justify-content:flex-end">
+          <button class="btn-cancel" style="font-size:11px;padding:5px 12px" onclick="rejectReq(this)">반려</button>
+          <button class="btn-approve" style="font-size:11px;padding:5px 12px" onclick="approveReq(this)">최종 승인 ✓</button>
+        </div>
+      </div>
+      <div class="approval-item">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <div style="display:flex;align-items:center;gap:6px"><div style="width:6px;height:6px;border-radius:50%;background:#F09595"></div><span style="font-size:12px;font-weight:500;color:var(--text-main)">오채린 — 미입금 사유 기재</span></div>
+          <span style="font-size:10px;color:var(--text-dim)">박민준 · 25분 전</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-mid);margin-bottom:10px">개인 사정으로 불참 확정, 환불 처리 필요합니다.</div>
+        <div style="display:flex;gap:6px;justify-content:flex-end">
+          <button class="btn-cancel" style="font-size:11px;padding:5px 12px" onclick="rejectReq(this)">반려</button>
+          <button class="btn-approve" style="font-size:11px;padding:5px 12px" onclick="approveReq(this)">최종 승인 ✓</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="document.getElementById('approval-modal').classList.remove('show')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- 파일 미리보기 모달 -->
+<div class="preview-modal" id="preview-modal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="preview-box">
+    <div class="preview-head">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" stroke="#85B7EB" stroke-width="1.2"/><path d="M3 4h8M3 7h6M3 10h4" stroke="#85B7EB" stroke-width="1" stroke-linecap="round"/></svg>
+      <span style="font-size:14px;font-weight:600;color:var(--text-main)" id="preview-title">파일 미리보기</span>
+      <span style="font-size:11px;color:var(--text-dim);margin-left:4px" id="preview-subtitle"></span>
+      <span onclick="document.getElementById('preview-modal').classList.remove('show')" style="margin-left:auto;cursor:pointer;color:var(--text-dim);font-size:18px;line-height:1">×</span>
+    </div>
+    <div class="preview-tabs" id="preview-tabs"></div>
+    <div class="preview-content" id="preview-content"></div>
+  </div>
+</div>
+
+<!-- 상세 데이터 확인 모달 -->
+<div class="modal-overlay" id="person-modal">
+  <div class="modal" style="width:600px">
+    <div class="modal-head">
+      <span style="font-size:14px;font-weight:600;color:var(--text-main)" id="person-modal-title">상세 데이터 확인</span>
+      <span onclick="document.getElementById('person-modal').classList.remove('show')" style="cursor:pointer;color:var(--text-dim);font-size:18px">×</span>
+    </div>
+    <div class="modal-body" id="person-modal-body" style="max-height:60vh; overflow-y:auto;">
+      <!-- 데이터가 여기에 동적으로 삽입됩니다 -->
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" onclick="document.getElementById('person-modal').classList.remove('show')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleSb(){document.getElementById('sidebar').classList.toggle('closed');}
+function toggleSearch(){
+  const bar=document.getElementById('search-bar');
+  const open=bar.style.display==='none'||bar.style.display==='';
+  bar.style.display=open?'block':'none';
+  if(open) document.getElementById('search-input').focus();
+}
+function searchTable(q){
+  const lq=q.toLowerCase();
+  document.querySelectorAll('#table-body tr').forEach(tr=>{
+    const text=tr.textContent.toLowerCase();
+    tr.style.display=(!q||text.includes(lq))?'':'none';
+  });
+}
+
+// 파일 미리보기 데이터
+const TEAM=['장예원','박경서','이다은','정찬우','박건령','김준서','이예지'];
+const ALL_NAMES=[...TEAM,'김민지','이수현','박지훈','최유리','정민호','한소희','오준혁','윤서아','강동현','임나연','신우진','백채원','조현우','류하은','문지호','서다희','고은서','남기준','김태양','이루다','박하늘','장수빈','홍민재','최보람','송지안','안도현','전수연','권나영','황준하','유서진','나현준','마준영','도하린','석유찬','봉아린','태윤서','구민채','엄지원','차세빈'];
+
+const PREVIEW_DATA = {
+  applicants: {
+    title:'① 신청자 명단',
+    subtitle:'applicants_0425.csv · 47명',
+    sheets:['전체 명단'],
+    headers:['#','이름','학번','연락처','신청일','비고'],
+    rows: ALL_NAMES.map((n,i)=>[i+1, n, `2025${String(i+1).padStart(4,'0')}`, `010-${1001+i}-${2001+i}`, `4/${18+Math.floor(i/6)}`, i<7?'팀원':''])
+  },
+  bank: {
+    title:'② 입금 내역',
+    subtitle:'bank_0425.xlsx · 40건',
+    sheets:['입금 내역','요약'],
+    headers:['#','입금자명','금액','입금일시','은행','비고'],
+    rows: ALL_NAMES.slice(0,40).map((n,i)=>{
+      const warn=i===5||i===8||i===17||i===26;
+      return [i+1, n, warn?`${[15,10,20,15][warn?[5,8,17,26].indexOf(i):0]*1000||30000}원`:'30,000원', `2025.04.${18+Math.floor(i/6)} ${9+Math.floor(i/4)}:${String((i*7)%60).padStart(2,'0')}`, ['카카오뱅크','토스','국민은행','신한은행','하나은행'][i%5], warn?'⚠ 금액 불일치':''];
+    })
+  }
+};
+
+function openPreview(type) {
+  const d = PREVIEW_DATA[type];
+  document.getElementById('preview-title').textContent = d.title;
+  document.getElementById('preview-subtitle').textContent = d.subtitle;
+  // 탭
+  document.getElementById('preview-tabs').innerHTML = d.sheets.map((s,i)=>
+    `<div class="ptab${i===0?' on':''}" onclick="switchSheet(this,'${type}',${i})">${s}</div>`
+  ).join('');
+  renderSheet(type, 0);
+  document.getElementById('preview-modal').classList.add('show');
+}
+
+function switchSheet(el, type, idx){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  renderSheet(type, idx);
+}
+
+function renderSheet(type, idx){
+  const d = PREVIEW_DATA[type];
+  const rows = idx===0 ? d.rows : d.rows.slice(0,5);
+  const isTeam = (i) => i < 7;
+  let html = `<table class="sheet-table"><thead><tr>`;
+  d.headers.forEach(h => html+=`<th>${h}</th>`);
+  html += '</tr></thead><tbody>';
+  rows.forEach((row,ri) => {
+    const team = type==='applicants' && ri<7;
+    html += `<tr>`;
+    row.forEach((cell,ci) => {
+      let cls = '';
+      if(ci===0) cls='row-num';
+      else if(team && ci===1) cls='team';
+      else if(ci===2 && type==='bank' && String(cell).includes('⚠')==false && String(cell)!=='30,000원') cls='warn';
+      else if(ci===5 && String(cell).includes('⚠')) cls='warn';
+      else if(ci===5 && String(cell)==='팀원') cls='team';
+      else if(ci===2 && type==='applicants') cls='num-col';
+      html += `<td class="${cls}">${cell}</td>`;
+    });
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  document.getElementById('preview-content').innerHTML = html;
+}
+
+function simulateDrop(box){
+  box.classList.add('dragging');
+  setTimeout(()=>{
+    box.classList.remove('dragging');
+    box.classList.add('done');
+    box.innerHTML=`<div class="upload-icon" style="background:rgba(29,158,117,0.15)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#5DCAA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="upload-label">③ 납부자 명단</div><div class="upload-done">payers_0425.csv</div><div class="upload-sub">45명 · 업로드 완료</div><button onclick="openPreview('applicants')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>`;
+  },600);
+}
+function dropFile(e,box){e.preventDefault();box.classList.remove('dragging');simulateDrop(box);}
+function runCheck(){
+  const btn=document.getElementById('run-btn');
+  btn.textContent='대조 중...';btn.disabled=true;
+  setTimeout(()=>{
+    btn.textContent='대조 완료 ✓';
+    document.getElementById('result-section').style.display='block';
+    document.getElementById('result-section').scrollIntoView({behavior:'smooth'});
+  },1200);
+}
+function openDetail(){document.getElementById('detail-panel').classList.add('on');document.getElementById('detail-panel').scrollIntoView({behavior:'smooth'});}
+function openEdit(name){alert(`[관리자 권한] ${name} 항목을 직접 수정합니다.`);}
+function openReq(name){document.getElementById('req-target').textContent=name+' — 입금액 수정';document.getElementById('req-modal').classList.add('show');}
+function submitReq(){document.getElementById('req-modal').classList.remove('show');alert('수정 요청이 전송됐어요!');}
+function openApproval(){document.getElementById('approval-modal').classList.add('show');}
+function approveReq(btn){btn.closest('.approval-item').style.opacity='.4';btn.textContent='승인됨 ✓';btn.disabled=true;btn.previousElementSibling.disabled=true;}
+function rejectReq(btn){btn.closest('.approval-item').style.opacity='.4';btn.textContent='반려됨';btn.disabled=true;btn.nextElementSibling.disabled=true;}
+function filterTable(type,el){
+  document.querySelectorAll('.filt').forEach(f=>f.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('#table-body tr').forEach(tr=>{
+    tr.style.display=(type==='all'||tr.dataset.st===type)?'':'none';
+  });
+}
+
+function openPersonConfirm(name) {
+  const modal = document.getElementById('person-modal');
+  const title = document.getElementById('person-modal-title');
+  const body = document.getElementById('person-modal-body');
+
+  title.textContent = `${name} — 원본 데이터 대조 (Excel 스니펫)`;
+
+  function renderExcel(sheetName, headers, dataRow) {
+    const cols = ['A', 'B', 'C', 'D', 'E', 'F'];
+    return `
+      <div style="font-size:11px; color:#85B7EB; margin-bottom:6px; font-weight:600; display:flex; align-items:center; gap:5px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+        ${sheetName} 원본 스니펫
+      </div>
+      <div class="excel-view">
+        <div class="excel-header">
+          ${headers.map((_, i) => `<div class="excel-col-head">${cols[i]}</div>`).join('')}
+        </div>
+        <div class="excel-row">
+          <div class="excel-row-idx">1</div>
+          ${headers.map(h => `<div class="excel-cell header">${h}</div>`).join('')}
+        </div>
+        <div class="excel-row">
+          <div class="excel-row-idx">14</div>
+          ${dataRow.map(d => `<div class="excel-cell">${d}</div>`).join('')}
+        </div>
+        <div class="excel-tab-bar">
+          <div class="excel-tab">Sheet1</div>
+        </div>
+      </div>
+    `;
+  }
+
+  const snippet1 = renderExcel('① 신청자 명단', ['이름', '학번', '연락처', '신청일', '상태'], [name, '20251024', '010-1234-5678', '4/15', '참가']);
+  const snippet2 = renderExcel('② 입금 내역', ['입금자명', '금액', '입금일시', '은행', '메모'], [name, '30,000원', '2025.04.20 14:22', '카카오뱅크', 'MT비']);
+  const snippet3 = renderExcel('③ 납부 확인', ['이름', '확인여부', '확인일', '담당자', '비고'], [name, '확인완료', '4/21', '장예원', '-']);
+
+  body.innerHTML = `
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      ${snippet1}
+      ${snippet2}
+      ${snippet3}
+    </div>
+    <div style="margin-top:16px; padding:12px; background:rgba(29,158,117,0.05); border:0.5px solid rgba(29,158,117,0.2); border-radius:8px; font-size:12px; color:#5DCAA5;">
+      ✓ 모든 원본 시트에서 <b>${name}</b> 님의 데이터가 일치함을 확인했습니다.
+    </div>
+  `;
+
+  modal.classList.add('show');
+}
+
+// 확인 버튼 일괄 추가 스크립트
+window.addEventListener('DOMContentLoaded', () => {
+  const rows = document.querySelectorAll('#table-body tr');
+  rows.forEach(tr => {
+    const nameTd = tr.querySelector('td');
+    if (!nameTd) return;
+    const name = nameTd.textContent.replace(' ⭐', '').trim();
+    const actionTd = tr.querySelector('td:last-child');
+    
+    if (actionTd && !actionTd.querySelector('.confirm-btn')) {
+      const btn = document.createElement('button');
+      btn.className = 'confirm-btn';
+      btn.textContent = '확인';
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        openPersonConfirm(name);
+      };
+      actionTd.appendChild(btn);
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — OCR 영수증 관리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wlnbiy6gr3");
+</script>
+<style>
+:root{--navy:#0E1B2E;--navy2:#162438;--navy3:#1C2E45;--blue:#185FA5;--blue-mid:#378ADD;--blue-light:#85B7EB;--teal-light:#5DCAA5;--amber-light:#EF9F27;--red-light:#F09595;--white:#FAFAF8;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text-dim:rgba(255,255,255,0.38);--text-mid:rgba(255,255,255,0.62);--text-main:rgba(255,255,255,0.92)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column}
+.top-nav{height:52px;background:rgba(14,27,46,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;position:sticky;top:0;z-index:50}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);text-decoration:none;padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);transition:all .15s}
+.back-btn:hover{color:var(--white);border-color:var(--border2)}
+.nav-logo{font-size:15px;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.nav-logo span{color:#378ADD}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;position:relative}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--navy);position:absolute;top:4px;right:4px}
+.app{display:flex;flex:1}
+.sidebar{width:200px;flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease,opacity .2s;overflow:hidden}
+.sidebar.closed{width:0;opacity:0;pointer-events:none}
+.sb-inner{width:200px;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.sb-logo{padding:18px 16px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px}
+.sb-logo-mark{width:28px;height:28px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main)}
+.sb-logo-sub{font-size:10px;color:var(--text-dim);margin-top:1px}
+.sb-nav{padding:10px 8px;flex:1}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:12px 8px 5px;letter-spacing:.07em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:12px 10px;border-top:0.5px solid var(--border)}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.content-header{height:52px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 22px;background:rgba(22,36,56,0.4)}
+.ch-title{font-size:15px;font-weight:600;color:var(--text-main)}
+.ch-sub{font-size:12px;color:var(--text-dim);margin-left:10px}
+.ch-right{margin-left:auto;display:flex;align-items:center;gap:6px}
+.content{padding:20px 22px;flex:1;overflow:auto}
+.card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;transition:border-color .15s}
+/* THUMB ROW */
+.thumb-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.thumb{width:54px;height:66px;border-radius:6px;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:4px;transition:all .15s;position:relative}
+.thumb:hover{border-color:var(--border2)}
+.thumb.active{border:1.5px solid #378ADD;background:rgba(55,138,221,0.1)}
+.thumb-num{font-size:10px;color:var(--text-dim)}
+.thumb.active .thumb-num{color:#85B7EB}
+.thumb-warn{position:absolute;top:3px;right:3px;width:8px;height:8px;border-radius:50%;background:#EF9F27}
+/* SPLIT */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:14px;margin-bottom:14px}
+.panel{background:rgba(255,255,255,0.02);border:0.5px solid var(--border);border-radius:12px;overflow:hidden}
+.panel-head{padding:10px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.panel-title{font-size:12px;font-weight:500;color:var(--text-main)}
+.panel-body{padding:14px}
+/* RECEIPT IMAGE MOCK */
+.receipt-canvas{background:#1a1a1a;border-radius:8px;min-height:460px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:20px 16px 16px;gap:12px;position:relative;overflow:hidden;border:0.5px solid var(--border)}
+.receipt-paper{width:100%;max-width:280px;background:#f8f6f0;border-radius:2px;padding:16px 14px 20px;display:flex;flex-direction:column;gap:0;position:relative;box-shadow:0 4px 24px rgba(0,0,0,0.5)}
+.receipt-paper::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:8px;background:repeating-linear-gradient(-45deg,#f8f6f0 0px,#f8f6f0 4px,transparent 4px,transparent 8px)}
+.rt{font-family:'Noto Sans KR',sans-serif;color:#1a1a1a}
+.rt-center{text-align:center}
+.rt-bold{font-weight:700}
+.rt-sm{font-size:10px;line-height:1.6;color:#444}
+.rt-xs{font-size:9px;line-height:1.5;color:#666}
+.rt-lg{font-size:14px;font-weight:700;color:#1a1a1a}
+.rt-divider{border:none;border-top:1px dashed #bbb;margin:6px 0}
+.rt-divider-solid{border:none;border-top:1px solid #999;margin:6px 0}
+.rt-row{display:flex;justify-content:space-between;align-items:baseline}
+.rt-hl{position:relative;display:inline-block}
+.hl-ok-r{background:rgba(93,202,165,0.3);outline:1.5px solid #5DCAA5;border-radius:2px}
+.hl-warn-r{background:rgba(239,159,39,0.3);outline:1.5px solid #EF9F27;border-radius:2px}
+.hl-danger-r{background:rgba(240,149,149,0.35);outline:1.5px solid #F09595;border-radius:2px}
+/* 하이라이팅 */
+.hl-box{position:absolute;border-radius:2px;pointer-events:none}
+.hl-warn{border:1.5px solid #EF9F27;background:rgba(239,159,39,0.15)}
+.hl-ok{border:1.5px solid #5DCAA5;background:rgba(93,202,165,0.1)}
+.hl-danger{border:1.5px solid #F09595;background:rgba(240,149,149,0.12)}
+.receipt-legend{font-size:10px;color:var(--text-dim);display:flex;gap:10px;flex-wrap:wrap}
+.hl-dot{width:8px;height:8px;border-radius:2px;display:inline-block;margin-right:4px}
+/* FIELDS */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.field{display:flex;flex-direction:column;gap:3px}
+.field-label{font-size:10px;color:var(--text-dim)}
+.field-val{font-size:13px;color:var(--text-main);background:rgba(255,255,255,0.04);border-radius:6px;padding:7px 10px;border:0.5px solid var(--border)}
+.field-val.editable{border-color:rgba(55,138,221,0.3);background:rgba(55,138,221,0.06)}
+.field-val.warn-field{border-color:rgba(239,159,39,0.4);background:rgba(239,159,39,0.06);color:#EF9F27}
+/* ITEMS TABLE */
+.items-table{width:100%;border-collapse:collapse;margin-bottom:12px}
+.items-table th{font-size:10px;color:var(--text-dim);font-weight:500;padding:5px 8px;border-bottom:0.5px solid var(--border);text-align:left}
+.items-table td{font-size:12px;color:var(--text-mid);padding:7px 8px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.items-table tr:last-child td{border-bottom:none}
+.prob-bar{width:40px;height:5px;border-radius:3px;display:inline-block;vertical-align:middle;margin-left:4px}
+/* WARN BOX */
+.warn-box{background:rgba(224,75,74,0.08);border:0.5px solid rgba(224,75,74,0.25);border-radius:8px;padding:10px 12px;font-size:12px;color:#F09595;line-height:1.6;margin-bottom:12px}
+/* TAG */
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tag{font-size:11px;padding:3px 9px;border-radius:10px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-mid);cursor:pointer;transition:all .15s}
+.tag:hover{border-color:rgba(55,138,221,0.4);color:#85B7EB}
+.tag.active{background:rgba(55,138,221,0.15);color:#85B7EB;border-color:rgba(55,138,221,0.3)}
+.tag-add{font-size:11px;padding:3px 9px;border-radius:10px;border:1px dashed rgba(255,255,255,0.15);color:var(--text-dim);cursor:pointer}
+.tag-add:hover{border-color:rgba(55,138,221,0.4);color:#85B7EB}
+/* ACTION ROW */
+.action-row{display:flex;gap:8px}
+.btn-sec{font-size:12px;padding:8px 14px;border-radius:8px;border:0.5px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer;transition:all .15s}
+.btn-sec:hover{border-color:var(--border2);color:var(--text-main)}
+.btn-pri{font-size:12px;padding:8px 18px;border-radius:8px;border:none;background:#185FA5;color:#fff;cursor:pointer;font-weight:500;transition:background .15s;flex:1}
+.btn-pri:hover{background:#0C447C}
+/* LEDGER CONFIRM */
+.ledger-confirm{display:none;background:rgba(29,158,117,0.08);border:0.5px solid rgba(29,158,117,0.3);border-radius:8px;padding:14px 16px;margin-top:12px}
+.ledger-confirm.show{display:block}
+.sb-toggle{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.sb-toggle:hover{background:rgba(255,255,255,0.08)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div class="sb-toggle" onclick="toggleSb()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="rgba(255,255,255,0.55)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+  <a href="dashboard.html" class="back-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>대시보드</a>
+  <div style="width:0.5px;height:16px;background:var(--border)"></div>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2);margin-left:4px">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div style="display:flex;align-items:center;margin-left:2px">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+  </div>
+</div>
+  <div class="nav-right">
+    <div class="nav-icon-btn" id="search-btn" onclick="toggleSearch()" title="검색">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><path d="M9 9l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="nav-icon-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 1.8-.8 3.4-1.5 4h12c-.7-.6-1.5-2.2-1.5-4 0-2.5-2-4.5-4.5-4.5z" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/><path d="M5.5 10c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/></svg>
+      <div class="notif-dot"></div>
+    </div>
+  </div>
+</div>
+<div id="search-bar" style="display:none;padding:8px 16px;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.7);backdrop-filter:blur(8px)">
+  <input id="search-input" type="text" placeholder="영수증 검색 — 업체명, 태그, 금액..." style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--border2);border-radius:8px;padding:8px 14px;color:var(--text-main);font-family:inherit;font-size:13px;outline:none;transition:border-color .15s" onfocus="this.style.borderColor='rgba(55,138,221,0.5)'" onblur="this.style.borderColor='var(--border2)'">
+</div>
+
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-inner">
+    <div class="sb-logo">
+      <div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg></div>
+      <div><div class="sb-logo-text">돈워리</div><div class="sb-logo-sub">2025 학생회</div></div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-sec">메뉴</div>
+      <a href="dashboard.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>대시보드</a>
+      <a href="events.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>행사 관리</a>
+      <a href="triple.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>3중 교차 검증<span class="sb-bdg">5</span></a>
+      <a href="ocr.html" class="sb-item active"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
+      <a href="archive.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
+      <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <div class="sb-sec" style="margin-top:8px">설정</div>
+        <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+        <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+      </div>
+    <div class="sb-footer"><div style="display:flex;align-items:center;gap:8px"><div class="sb-avatar">장</div><div><div style="font-size:12px;color:var(--text-main)">장예원</div><div style="font-size:10px;color:#5DCAA5">관리자 · 수정 가능</div></div></div></div>
+    </div><!-- sb-inner -->
+  </div>
+
+  <div class="main">
+    <div class="content-header">
+      <div class="ch-title">OCR 영수증 관리</div>
+      <div class="ch-sub">미검토 3건 대기 중</div>
+      <div class="ch-right">
+        <select style="font-size:11px;padding:5px 8px;border-radius:7px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-mid)">
+          <option>봄 MT 식비</option>
+          <option>봄 MT 교통비</option>
+          <option>환영회 인쇄</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- THUMB ROW -->
+      <div class="thumb-row">
+        <div class="thumb active" onclick="selectThumb(this,0)">
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="none"><rect x="1" y="1" width="18" height="22" rx="2" stroke="#378ADD" stroke-width="1.2"/><path d="M4 7h12M4 10h12M4 13h8" stroke="#378ADD" stroke-width="1" stroke-linecap="round"/></svg>
+          <span class="thumb-num" style="color:#85B7EB">1/3</span>
+          <div class="thumb-warn"></div>
+        </div>
+        <div class="thumb" onclick="selectThumb(this,1)">
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="none"><rect x="1" y="1" width="18" height="22" rx="2" stroke="rgba(255,255,255,0.2)" stroke-width="1.2"/><path d="M4 7h12M4 10h12M4 13h8" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-linecap="round"/></svg>
+          <span class="thumb-num">2/3</span>
+          <div class="thumb-warn"></div>
+        </div>
+        <div class="thumb" onclick="selectThumb(this,2)">
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="none"><rect x="1" y="1" width="18" height="22" rx="2" stroke="rgba(255,255,255,0.2)" stroke-width="1.2"/><path d="M4 7h12M4 10h12M4 13h8" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-linecap="round"/></svg>
+          <span class="thumb-num">3/3</span>
+        </div>
+        <div class="thumb" onclick="openUpload()" style="border-style:dashed;border-color:rgba(55,138,221,0.3)">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="rgba(55,138,221,0.7)" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span class="thumb-num" style="color:rgba(55,138,221,0.7)">추가</span>
+        </div>
+        <div style="margin-left:auto;font-size:11px;color:var(--text-dim);display:flex;align-items:center;gap:10px">
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;border:1.5px solid #5DCAA5;display:inline-block"></span>높은 확률(95%+)</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;border:1.5px solid #EF9F27;display:inline-block"></span>중간(70~94%)</div>
+          <div style="display:flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:2px;border:1.5px solid #F09595;display:inline-block"></span>낮은 확률(~69%)</div>
+        </div>
+      </div>
+
+      <div class="split">
+        <!-- 원본 이미지 패널 -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">원본 이미지</span>
+            <span id="img-label" style="font-size:10px;background:rgba(55,138,221,0.12);color:#85B7EB;padding:2px 8px;border-radius:8px">GS25 성균관대점</span>
+          </div>
+          <div class="panel-body">
+            <div class="receipt-canvas" id="receipt-canvas">
+              <!-- 영수증 1 기본 렌더 — JS로 교체됨 -->
+            </div>
+          </div>
+        </div>
+
+        <!-- AI 추출 결과 패널 -->
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">AI 추출 결과</span>
+            <div id="result-badges" style="display:flex;gap:6px"></div>
+          </div>
+          <div class="panel-body">
+            <div class="field-grid" id="field-grid"></div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">품목 내역 <span style="font-size:10px;color:var(--text-dim);margin-left:4px">— 색상: 판독 확률</span></div>
+            <table class="items-table">
+              <thead><tr><th>품목명</th><th>수량</th><th>금액</th><th>확률</th></tr></thead>
+              <tbody id="items-tbody"></tbody>
+            </table>
+            <div id="warn-area"></div>
+            <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">파일 태그</div>
+            <div class="tag-row" id="tag-row"></div>
+            <div class="action-row">
+              <button class="btn-sec" onclick="toggleEdit()">직접 수정</button>
+              <button class="btn-pri" onclick="reflectLedger()">장부에 반영 →</button>
+            </div>
+            <div class="ledger-confirm" id="ledger-confirm">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5 7-7" stroke="#5DCAA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span style="font-size:13px;font-weight:500;color:#5DCAA5">장부 반영 완료</span>
+              </div>
+              <div style="font-size:11px;color:var(--text-mid)" id="ledger-msg"></div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <a href="archive.html" style="font-size:11px;padding:5px 12px;border-radius:6px;background:rgba(29,158,117,0.15);color:#5DCAA5;text-decoration:none;border:0.5px solid rgba(29,158,119,0.25)">아카이브에서 보기 →</a>
+                <a href="archive.html" style="font-size:11px;padding:5px 12px;border-radius:6px;background:rgba(55,138,221,0.12);color:#85B7EB;text-decoration:none;border:0.5px solid rgba(55,138,221,0.2)">감사 준비로 →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const receipts = [
+  {
+    label: 'GS25 성균관대점',
+    badge: [{text:'누락 1건',color:'#F09595',bg:'rgba(224,75,74,0.12)'},{text:'추출 완료',color:'#5DCAA5',bg:'rgba(29,158,117,0.12)'}],
+    fields: [{l:'업체명',v:'GS25 성균관대점'},{l:'결제일시',v:'2025.04.22 14:37'},{l:'결제수단',v:'법인카드'},{l:'합계금액',v:'47,500원'}],
+    items: [
+      {name:'생수 2L',qty:'10개',price:'15,000원',prob:98,color:'#5DCAA5'},
+      {name:'컵라면 신라면',qty:'15개',price:'18,000원',prob:82,color:'#EF9F27'},
+      {name:'??? (판독 불가)',qty:'1개',price:'14,500원',prob:34,color:'#F09595',warn:true},
+    ],
+    warn: '⚠ 품목 "???"의 판독 확률이 34%로 낮습니다. 직접 수정 버튼을 눌러 확인하세요.',
+    tags: ['#봄MT','#식비','#편의점'],
+    total: '47,500원',
+    receipt: `
+      <div class="receipt-paper">
+        <div class="rt rt-center rt-bold" style="font-size:15px;margin-bottom:2px">GS25</div>
+        <div class="rt rt-center rt-xs" style="margin-bottom:2px">성균관대점 | 사업자 204-05-XXXXX</div>
+        <div class="rt rt-center rt-xs" style="margin-bottom:6px">서울 종로구 성균관로 25-2 | 02-XXX-XXXX</div>
+        <hr class="rt-divider-solid">
+        <div class="rt rt-sm rt-row" style="margin-bottom:3px"><span>거래일시</span><span class="rt-hl hl-ok-r">2025-04-22 14:37:08</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:3px"><span>결제수단</span><span class="rt-hl hl-ok-r">법인카드 **** 4471</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:8px"><span>승인번호</span><span class="rt-hl hl-ok-r">59012847</span></div>
+        <hr class="rt-divider">
+        <div class="rt rt-xs" style="margin-bottom:4px;color:#888">──────── 판매 내역 ────────</div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span class="rt-hl hl-ok-r">생수 2L×10</span><span class="rt-hl hl-ok-r">15,000</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:4px;color:#888"><span>&nbsp;&nbsp;단가 1,500원</span><span></span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span class="rt-hl hl-warn-r">컵라면(신라면)×15</span><span class="rt-hl hl-warn-r">18,000</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:4px;color:#888"><span>&nbsp;&nbsp;단가 1,200원</span><span></span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span class="rt-hl hl-danger-r" style="font-size:10px">??? ×1</span><span class="rt-hl hl-danger-r">14,500</span></div>
+        <div class="rt rt-xs" style="color:#F09595;margin-bottom:6px">&nbsp;&nbsp;⚠ 판독 불가 (34%)</div>
+        <hr class="rt-divider">
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span>공급가액</span><span>43,182</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:4px"><span>부가세(10%)</span><span>4,318</span></div>
+        <hr class="rt-divider-solid">
+        <div class="rt rt-row" style="margin-bottom:8px"><span class="rt-bold" style="font-size:13px">합 계</span><span class="rt-bold rt-hl hl-ok-r" style="font-size:15px">47,500원</span></div>
+        <div class="rt rt-center rt-xs" style="color:#888;margin-top:4px">감사합니다. 영수증을 보관하세요.</div>
+      </div>`
+  },
+  {
+    label: '한국철도공사 (KTX)',
+    badge: [{text:'정상 추출',color:'#5DCAA5',bg:'rgba(29,158,117,0.12)'}],
+    fields: [{l:'업체명',v:'한국철도공사'},{l:'결제일시',v:'2025.04.18 08:52'},{l:'결제수단',v:'법인카드'},{l:'합계금액',v:'124,400원'}],
+    items: [
+      {name:'서울→춘천 KTX (왕복)',qty:'4매',price:'87,200원',prob:97,color:'#5DCAA5'},
+      {name:'좌석 지정 수수료',qty:'4건',price:'12,000원',prob:95,color:'#5DCAA5'},
+      {name:'환경부담금',qty:'1건',price:'25,200원',prob:91,color:'#EF9F27'},
+    ],
+    warn: null,
+    tags: ['#봄MT','#교통비','#KTX'],
+    total: '124,400원',
+    receipt: `
+      <div class="receipt-paper">
+        <div class="rt rt-center rt-bold" style="font-size:15px;margin-bottom:2px">한국철도공사</div>
+        <div class="rt rt-center rt-xs" style="margin-bottom:2px">KORAIL | 사업자 314-82-XXXXX</div>
+        <div class="rt rt-center rt-xs" style="margin-bottom:6px">승차권 구매 영수증</div>
+        <hr class="rt-divider-solid">
+        <div class="rt rt-sm rt-row" style="margin-bottom:3px"><span>거래일시</span><span class="rt-hl hl-ok-r">2025-04-18 08:52:14</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:3px"><span>결제수단</span><span class="rt-hl hl-ok-r">법인카드 **** 4471</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:8px"><span>예약번호</span><span class="rt-hl hl-ok-r">K2025-041847</span></div>
+        <hr class="rt-divider">
+        <div class="rt rt-xs" style="margin-bottom:4px;color:#888">──────── 승차권 내역 ────────</div>
+        <div class="rt rt-sm" style="margin-bottom:1px"><span class="rt-hl hl-ok-r">KTX 서울→춘천 (왕복)</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:4px"><span>&nbsp;&nbsp;2025.04.19~04.20 / 4매</span><span class="rt-hl hl-ok-r">87,200</span></div>
+        <div class="rt rt-sm" style="margin-bottom:1px"><span class="rt-hl hl-ok-r">좌석 지정 수수료</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:4px"><span>&nbsp;&nbsp;4인 × 3,000원</span><span class="rt-hl hl-ok-r">12,000</span></div>
+        <div class="rt rt-sm" style="margin-bottom:1px"><span class="rt-hl hl-warn-r">환경부담금</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:8px"><span>&nbsp;&nbsp;자동 부과</span><span class="rt-hl hl-warn-r">25,200</span></div>
+        <hr class="rt-divider">
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span>공급가액</span><span>113,091</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:4px"><span>부가세</span><span>11,309</span></div>
+        <hr class="rt-divider-solid">
+        <div class="rt rt-row" style="margin-bottom:8px"><span class="rt-bold" style="font-size:13px">합 계</span><span class="rt-bold rt-hl hl-ok-r" style="font-size:15px">124,400원</span></div>
+        <div class="rt rt-center rt-xs" style="color:#888;margin-top:4px">코레일 고객센터 1544-7788</div>
+      </div>`
+  },
+  {
+    label: '올리브영 홍대입구점',
+    badge: [{text:'누락 2건',color:'#F09595',bg:'rgba(224,75,74,0.12)'},{text:'수정 필요',color:'#EF9F27',bg:'rgba(186,117,23,0.12)'}],
+    fields: [{l:'업체명',v:'올리브영 홍대입구점'},{l:'결제일시',v:'2025.04.25 16:04'},{l:'결제수단',v:'개인카드 ⚠'},{l:'합계금액',v:'38,700원'}],
+    items: [
+      {name:'손소독제 500ml',qty:'3개',price:'14,700원',prob:88,color:'#EF9F27'},
+      {name:'일회용 마스크 50매',qty:'1박스',price:'12,000원',prob:76,color:'#EF9F27'},
+      {name:'??? 외 2종',qty:'—',price:'12,000원',prob:28,color:'#F09595',warn:true},
+    ],
+    warn: '⚠ 개인카드 결제 감지! 법인카드 사용 원칙에 어긋납니다. 담당자에게 확인이 필요합니다. 또한 판독 불가 품목이 2건 있습니다.',
+    tags: ['#환영회','#물품구매'],
+    total: '38,700원',
+    receipt: `
+      <div class="receipt-paper">
+        <div class="rt rt-center rt-bold" style="font-size:15px;margin-bottom:2px">OLIVEYOUNG</div>
+        <div class="rt rt-center rt-xs" style="margin-bottom:2px">올리브영 홍대입구점 | 사업자 106-81-XXXXX</div>
+        <div class="rt rt-center rt-xs" style="margin-bottom:6px">서울 마포구 양화로 141 | 02-XXX-XXXX</div>
+        <hr class="rt-divider-solid">
+        <div class="rt rt-sm rt-row" style="margin-bottom:3px"><span>거래일시</span><span class="rt-hl hl-warn-r">2025-04-25 16:04:33</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:3px"><span>결제수단</span><span class="rt-hl hl-danger-r" style="color:#c0392b;font-weight:700">개인카드 **** 8823 ⚠</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:8px"><span>승인번호</span><span class="rt-hl hl-warn-r">73841920</span></div>
+        <hr class="rt-divider">
+        <div class="rt rt-xs" style="margin-bottom:4px;color:#888">──────── 판매 내역 ────────</div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span class="rt-hl hl-warn-r">손소독제 500ml×3</span><span class="rt-hl hl-warn-r">14,700</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:4px;color:#888"><span>&nbsp;&nbsp;단가 4,900원</span><span></span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span class="rt-hl hl-warn-r">일회용마스크 50매×1</span><span class="rt-hl hl-warn-r">12,000</span></div>
+        <div class="rt rt-xs rt-row" style="margin-bottom:4px;color:#888"><span>&nbsp;&nbsp;KF94 대형</span><span></span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span class="rt-hl hl-danger-r" style="font-size:10px">??? 외 2종</span><span class="rt-hl hl-danger-r">12,000</span></div>
+        <div class="rt rt-xs" style="color:#F09595;margin-bottom:6px">&nbsp;&nbsp;⚠ 판독 불가 (28%)</div>
+        <hr class="rt-divider">
+        <div class="rt rt-sm rt-row" style="margin-bottom:2px"><span>공급가액</span><span>35,182</span></div>
+        <div class="rt rt-sm rt-row" style="margin-bottom:4px"><span>부가세(10%)</span><span>3,518</span></div>
+        <hr class="rt-divider-solid">
+        <div class="rt rt-row" style="margin-bottom:6px"><span class="rt-bold" style="font-size:13px">합 계</span><span class="rt-bold rt-hl hl-warn-r" style="font-size:15px">38,700원</span></div>
+        <div class="rt rt-center rt-xs" style="color:#c0392b;font-weight:600;margin-top:4px">⚠ 개인카드 사용 — 확인 필요</div>
+      </div>`
+  }
+];
+
+function probBar(prob, color) {
+  const w = Math.round(prob * 0.4);
+  return `<span style="font-size:10px;color:${color}">${prob}%</span><div style="background:${color};opacity:0.6;width:${w}px;height:4px;border-radius:2px;display:block;margin-top:3px"></div>`;
+}
+
+function renderReceipt(idx) {
+  const d = receipts[idx];
+
+  // 이미지 패널 레이블
+  document.getElementById('img-label').textContent = d.label;
+
+  // 영수증 이미지
+  const canvas = document.getElementById('receipt-canvas');
+  canvas.innerHTML = d.receipt + `
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:4px">
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.45)"><span style="width:8px;height:8px;border-radius:2px;border:1.5px solid #5DCAA5;background:rgba(93,202,165,0.2);display:inline-block"></span>높은 확률</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.45)"><span style="width:8px;height:8px;border-radius:2px;border:1.5px solid #EF9F27;background:rgba(239,159,39,0.2);display:inline-block"></span>중간 확률</div>
+      <div style="display:flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.45)"><span style="width:8px;height:8px;border-radius:2px;border:1.5px solid #F09595;background:rgba(240,149,149,0.2);display:inline-block"></span>낮은 확률</div>
+    </div>`;
+
+  // 배지
+  document.getElementById('result-badges').innerHTML = d.badge.map(b =>
+    `<span style="font-size:10px;background:${b.bg};color:${b.color};padding:2px 7px;border-radius:8px">${b.text}</span>`
+  ).join('');
+
+  // 기본 필드
+  document.getElementById('field-grid').innerHTML = d.fields.map(f => {
+    const isWarn = f.v.includes('⚠');
+    return `<div class="field"><div class="field-label">${f.l}</div><div class="field-val${isWarn?' warn-field':''}">${f.v}</div></div>`;
+  }).join('');
+
+  // 품목 테이블
+  document.getElementById('items-tbody').innerHTML = d.items.map(item => {
+    const bg = item.warn ? 'background:rgba(240,149,149,0.05);' : '';
+    const nc = item.warn ? `color:${item.color};font-weight:500` : 'color:var(--text-main)';
+    const pc = item.warn ? `color:${item.color}` : '';
+    return `<tr style="${bg}">
+      <td style="${nc}">${item.name}</td>
+      <td>${item.qty}</td>
+      <td style="${pc}">${item.price}</td>
+      <td>${probBar(item.prob, item.color)}</td>
+    </tr>`;
+  }).join('');
+
+  // 경고 박스
+  document.getElementById('warn-area').innerHTML = d.warn
+    ? `<div class="warn-box" style="margin-bottom:12px">${d.warn}</div>`
+    : '';
+
+  // 태그
+  document.getElementById('tag-row').innerHTML =
+    d.tags.map(t => `<div class="tag active" onclick="this.classList.toggle('active')">${t}</div>`).join('') +
+    `<div class="tag-add" onclick="addTag()">+ 태그 추가</div>`;
+
+  // 장부 반영 메시지
+  document.getElementById('ledger-msg').textContent =
+    `지출 장부에 ${d.total}이 기록되었습니다. ${d.tags.join(' ')} 태그로 아카이브에 저장됩니다.`;
+
+  // 장부 반영 버튼 초기화
+  document.getElementById('ledger-confirm').classList.remove('show');
+}
+
+function selectThumb(el, idx) {
+  document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderReceipt(idx);
+}
+
+function toggleEdit() {
+  const fields = document.querySelectorAll('.field-val');
+  fields.forEach(f => {
+    if (f.contentEditable === 'true') { f.contentEditable = 'false'; f.classList.remove('editable'); }
+    else { f.contentEditable = 'true'; f.classList.add('editable'); }
+  });
+}
+
+function addTag() {
+  const t = prompt('태그 이름을 입력하세요 (예: 환영회)');
+  if (t) {
+    const row = document.getElementById('tag-row');
+    const add = row.querySelector('.tag-add');
+    const tag = document.createElement('div');
+    tag.className = 'tag active';
+    tag.textContent = '#' + t;
+    tag.onclick = () => tag.classList.toggle('active');
+    row.insertBefore(tag, add);
+  }
+}
+
+function reflectLedger() {
+  document.getElementById('ledger-confirm').classList.add('show');
+  document.getElementById('ledger-confirm').scrollIntoView({ behavior: 'smooth' });
+}
+
+function openUpload() { alert('영수증 사진 업로드 — 카메라 또는 파일 선택'); }
+
+function toggleSb() { document.getElementById('sidebar').classList.toggle('closed'); }
+
+function toggleSearch() {
+  const bar = document.getElementById('search-bar');
+  const open = bar.style.display === 'none' || bar.style.display === '';
+  bar.style.display = open ? 'block' : 'none';
+  if (open) document.getElementById('search-input').focus();
+}
+
+// 초기 렌더
+renderReceipt(0);
+</script>
+</body>
+</html>

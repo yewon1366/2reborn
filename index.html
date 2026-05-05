@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 총무국 전용 행정 OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0E1B2E;
+  --navy2: #162438;
+  --blue: #185FA5;
+  --blue-light: #E6F1FB;
+  --teal: #1D9E75;
+  --teal-light: #E1F5EE;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --red: #A32D2D;
+  --red-light: #FCEBEB;
+  --gray: #888780;
+  --gray-light: #F5F4F0;
+  --white: #FAFAF8;
+  --border: rgba(255,255,255,0.08);
+  --text-dim: rgba(255,255,255,0.5);
+  --text-mid: rgba(255,255,255,0.75);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 40px;height:60px;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid var(--border);backdrop-filter:blur(12px);background:rgba(14,27,46,0.85)}
+.nav-logo{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:20px;letter-spacing:-0.2px;color:var(--white)}
+.nav-logo span{color:#378ADD}
+.nav-links{display:flex;gap:28px}
+.nav-links a{font-size:13px;color:var(--text-dim);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{font-size:12px;padding:7px 18px;border-radius:6px;background:#185FA5;color:var(--white);text-decoration:none;font-weight:500;transition:background .2s}
+.nav-cta:hover{background:#0C447C}
+
+/* ─── HERO ─── */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 60px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%, rgba(24,95,165,0.18) 0%, transparent 70%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:48px 48px;pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:0.5px solid rgba(55,138,221,0.4);background:rgba(55,138,221,0.1);color:#85B7EB;margin-bottom:28px;letter-spacing:.04em}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:#378ADD;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:clamp(38px,6.5vw,72px);line-height:1.08;letter-spacing:-0.3px;margin-bottom:20px;max-width:720px}
+.hero h1 em{font-style:normal;color:#378ADD;font-weight:700}
+.hero-sub{font-size:clamp(14px,2vw,17px);color:var(--text-mid);max-width:480px;line-height:1.75;margin-bottom:40px;font-weight:300}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn-primary{padding:13px 28px;border-radius:8px;background:#185FA5;color:#fff;font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:background .2s,transform .1s}
+.btn-primary:hover{background:#0C447C;transform:translateY(-1px)}
+.btn-secondary{padding:13px 28px;border-radius:8px;background:transparent;color:var(--white);font-size:14px;font-weight:400;text-decoration:none;border:0.5px solid rgba(255,255,255,0.2);cursor:pointer;transition:border-color .2s,transform .1s}
+.btn-secondary:hover{border-color:rgba(255,255,255,0.5);transform:translateY(-1px)}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;opacity:.4}
+.hero-scroll span{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,0.6),transparent);animation:scroll-anim 1.8s ease-in-out infinite}
+@keyframes scroll-anim{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ─── SCENARIO STRIP ─── */
+.scenario{padding:32px 0;border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);overflow:hidden;position:relative}
+.scenario-track{display:flex;gap:0;animation:marquee 22s linear infinite;width:max-content}
+@keyframes marquee{to{transform:translateX(-50%)}}
+.scenario-item{display:flex;align-items:center;gap:10px;padding:0 28px;font-size:13px;color:var(--text-dim);white-space:nowrap}
+.scenario-item svg{flex-shrink:0;opacity:.5}
+.scenario-sep{color:rgba(255,255,255,0.15);font-size:18px;padding:0 4px}
+
+/* ─── SECTION COMMON ─── */
+section{padding:100px 40px;max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#378ADD;margin-bottom:14px}
+.section-title{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:clamp(28px,4vw,46px);line-height:1.15;letter-spacing:-0.2px;margin-bottom:16px}
+.section-title em{font-style:normal;color:#378ADD;font-weight:700}
+.section-sub{font-size:15px;color:var(--text-mid);line-height:1.75;max-width:520px;font-weight:300}
+.divider{width:100%;height:0.5px;background:var(--border);max-width:1100px;margin:0 auto}
+
+/* ─── FEATURE GRID (S1) ─── */
+.feat-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:52px}
+.feat-card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:14px;padding:28px 24px;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.feat-card:hover{border-color:rgba(55,138,221,0.3);background:rgba(24,95,165,0.06)}
+.feat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:18px;flex-shrink:0}
+.feat-num{position:absolute;top:20px;right:20px;font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:44px;color:rgba(255,255,255,0.04);line-height:1}
+.feat-title{font-size:15px;font-weight:500;margin-bottom:8px;color:var(--white)}
+.feat-desc{font-size:13px;color:var(--text-mid);line-height:1.7;font-weight:300}
+
+/* ─── STEP FLOW (S2) ─── */
+.step-section{padding:100px 40px;background:rgba(22,36,56,0.5);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border)}
+.step-inner{max-width:1100px;margin:0 auto}
+.step-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:52px;position:relative}
+.step-flow::after{content:'';position:absolute;top:30px;left:10%;right:10%;height:1px;background:linear-gradient(to right,transparent,rgba(55,138,221,0.3),rgba(55,138,221,0.3),transparent);z-index:0}
+.step-item{position:relative;z-index:1;padding:28px 20px 24px;background:var(--navy2);border:0.5px solid var(--border);border-radius:12px;text-align:center;transition:border-color .2s}
+.step-item:hover{border-color:rgba(55,138,221,0.4)}
+.step-circle{width:40px;height:40px;border-radius:50%;border:0.5px solid rgba(55,138,221,0.5);background:rgba(24,95,165,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:13px;font-weight:500;color:#85B7EB}
+.step-title{font-size:13px;font-weight:500;margin-bottom:6px;color:var(--white)}
+.step-desc{font-size:12px;color:var(--text-dim);line-height:1.6;font-weight:300}
+
+/* ─── UI PREVIEW (S3) ─── */
+.preview-section{padding:100px 40px}
+.preview-inner{max-width:1100px;margin:0 auto}
+.preview-tabs{display:flex;gap:8px;margin-top:40px;flex-wrap:wrap}
+.ptab{font-size:12px;padding:7px 16px;border-radius:20px;border:0.5px solid var(--border);color:var(--text-dim);cursor:pointer;transition:all .2s;background:transparent}
+.ptab.on{background:#185FA5;color:#fff;border-color:#185FA5}
+.preview-screens{margin-top:20px;position:relative}
+.pscreen{display:none;animation:fadein .35s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.pscreen.on{display:block}
+.mock-window{background:#162438;border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;overflow:hidden}
+.mock-bar{height:38px;background:rgba(255,255,255,0.04);border-bottom:0.5px solid rgba(255,255,255,0.07);display:flex;align-items:center;padding:0 16px;gap:7px}
+.mock-dot{width:9px;height:9px;border-radius:50%}
+.mock-title{margin-left:10px;font-size:11px;color:var(--text-dim)}
+.mock-body{padding:20px;display:flex;gap:16px}
+.mock-sidebar{width:140px;flex-shrink:0;background:rgba(255,255,255,0.03);border-radius:8px;padding:14px 10px}
+.mock-logo{font-size:12px;font-weight:500;color:#85B7EB;margin-bottom:16px;padding:0 4px}
+.mock-nav-item{font-size:11px;padding:7px 8px;border-radius:6px;color:var(--text-dim);margin-bottom:2px;cursor:pointer}
+.mock-nav-item.on{background:rgba(24,95,165,0.25);color:#85B7EB}
+.mock-content{flex:1;display:flex;flex-direction:column;gap:12px}
+.mock-header{font-size:13px;font-weight:500;color:var(--white);margin-bottom:4px}
+.mock-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.mock-card{background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;border:0.5px solid rgba(255,255,255,0.07)}
+.mock-card-label{font-size:10px;color:var(--text-dim);margin-bottom:4px}
+.mock-card-val{font-size:18px;font-weight:500;color:var(--white)}
+.mock-card-val.red{color:#F09595}
+.mock-card-val.green{color:#5DCAA5}
+.mock-card-val.amber{color:#EF9F27}
+.mock-row{background:rgba(255,255,255,0.03);border-radius:8px;padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mock-list-item{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:0.5px solid rgba(255,255,255,0.05)}
+.mock-list-item:last-child{border-bottom:none}
+.mock-dot2{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.mock-list-name{font-size:11px;color:var(--text-mid);flex:1}
+.mock-badge{font-size:9px;padding:2px 6px;border-radius:10px}
+.mock-alert{background:rgba(162,45,45,0.12);border:0.5px solid rgba(162,45,45,0.3);border-radius:6px;padding:8px 10px;font-size:11px;color:#F09595}
+
+/* 3중 대조기 mock */
+.mock-upload-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.mock-upload-box{border:1px dashed rgba(255,255,255,0.15);border-radius:8px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.mock-upload-box.done{border-style:solid;border-color:#1D9E75;background:rgba(29,158,117,0.08)}
+.mock-upload-label{font-size:10px;color:var(--text-dim);text-align:center}
+.mock-upload-done{font-size:10px;color:#5DCAA5;font-weight:500}
+.mock-table{width:100%;border-collapse:collapse}
+.mock-table th{font-size:10px;color:var(--text-dim);padding:6px 8px;border-bottom:0.5px solid rgba(255,255,255,0.07);text-align:left;font-weight:400}
+.mock-table td{font-size:11px;color:var(--text-mid);padding:7px 8px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.mock-status{font-size:9px;padding:2px 6px;border-radius:8px;font-weight:500}
+.st-ok{background:rgba(29,158,117,0.2);color:#5DCAA5}
+.st-warn{background:rgba(186,117,23,0.2);color:#EF9F27}
+.st-danger{background:rgba(162,45,45,0.2);color:#F09595}
+.st-gray{background:rgba(136,135,128,0.2);color:#B4B2A9}
+
+/* OCR mock */
+.mock-split{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mock-img-box{background:rgba(255,255,255,0.04);border-radius:8px;border:0.5px solid rgba(255,255,255,0.1);height:180px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.mock-receipt{width:80px;background:rgba(255,255,255,0.06);border-radius:3px;padding:8px 6px;display:flex;flex-direction:column;gap:4px}
+.mock-rl{height:5px;border-radius:2px;background:rgba(255,255,255,0.15)}
+.mock-rl.hl{background:rgba(239,159,39,0.7);box-shadow:0 0 4px rgba(239,159,39,0.4)}
+.mock-field{background:rgba(255,255,255,0.04);border-radius:6px;padding:6px 8px;margin-bottom:6px}
+.mock-field-label{font-size:9px;color:var(--text-dim);margin-bottom:2px}
+.mock-field-val{font-size:11px;color:var(--white)}
+.mock-field-val.warn{color:#EF9F27}
+.mock-warn-box{background:rgba(162,45,45,0.12);border:0.5px solid rgba(162,45,45,0.3);border-radius:6px;padding:8px;font-size:10px;color:#F09595;line-height:1.5;margin-top:8px}
+
+/* ─── STATS (S4) ─── */
+.stats-section{background:rgba(22,36,56,0.4);border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);padding:80px 40px}
+.stats-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.stat-card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:24px 22px}
+.stat-num{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:40px;line-height:1;margin-bottom:6px;color:var(--white)}
+.stat-num span{font-size:22px;vertical-align:super;color:#378ADD}
+.stat-label{font-size:12px;color:var(--text-mid);font-weight:300}
+.stat-change{font-size:11px;margin-top:6px;color:#5DCAA5}
+
+/* ─── COMPARISON (S5) ─── */
+.compare-section{padding:100px 40px}
+.compare-inner{max-width:900px;margin:0 auto}
+.compare-table{margin-top:48px;width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:0.5px solid var(--border)}
+.compare-table th{font-size:12px;padding:14px 20px;text-align:center;font-weight:500;border-bottom:0.5px solid var(--border)}
+.compare-table th:first-child{text-align:left;color:var(--text-dim)}
+.compare-table th.hl{background:rgba(24,95,165,0.2);color:#85B7EB}
+.compare-table td{font-size:13px;padding:13px 20px;border-bottom:0.5px solid rgba(255,255,255,0.04);text-align:center;color:var(--text-mid)}
+.compare-table td:first-child{text-align:left;color:var(--white);font-size:12px}
+.compare-table td.hl{background:rgba(24,95,165,0.08);color:var(--white)}
+.compare-table tr:last-child td{border-bottom:none}
+.check{color:#5DCAA5;font-size:16px}
+.cross{color:rgba(255,255,255,0.2);font-size:16px}
+
+/* ─── CTA (S6) ─── */
+.cta-section{padding:120px 40px;text-align:center;position:relative;overflow:hidden}
+.cta-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 50%,rgba(24,95,165,0.2) 0%,transparent 70%);pointer-events:none}
+.cta-section h2{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:clamp(32px,5vw,58px);line-height:1.1;letter-spacing:-0.2px;margin-bottom:20px}
+.cta-section h2 em{font-style:normal;color:#378ADD;font-weight:700}
+.cta-sub{font-size:15px;color:var(--text-mid);margin-bottom:40px;font-weight:300}
+.cta-tags{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:40px}
+.cta-tag{font-size:11px;padding:4px 12px;border-radius:20px;border:0.5px solid rgba(255,255,255,0.15);color:var(--text-dim)}
+
+/* ─── FOOTER ─── */
+footer{padding:36px 40px;border-top:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;font-size:16px;color:var(--text-dim)}
+.footer-logo span{color:#378ADD}
+.footer-copy{font-size:11px;color:rgba(255,255,255,0.2)}
+
+/* ─── REVEAL ANIMATIONS ─── */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  section{padding:70px 20px}
+  .feat-grid{grid-template-columns:1fr}
+  .step-flow{grid-template-columns:1fr 1fr}
+  .step-flow::after{display:none}
+  .stats-inner{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .mock-cards{grid-template-columns:1fr 1fr}
+  footer{padding:28px 20px;flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <div class="nav-links">
+    <a href="#features">기능</a>
+    <a href="#flow">흐름</a>
+    <a href="#preview">화면</a>
+    <a href="#compare">비교</a>
+    <a href="dashboard.html" style="color:#85B7EB">대시보드 →</a>
+  </div>
+  <a href="dashboard.html" class="nav-cta">지금 시작하기</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    총무국 전용 행정 OS · MVP 설계 공개
+  </div>
+  <h1>감사 걱정 없는<br><em>총무국의 하루</em></h1>
+  <p class="hero-sub">돈워리은 학생회 총무국의 회계·감사 업무를 처음부터 끝까지 자동화하는 올인원 솔루션입니다. 수기 장부는 이제 그만.</p>
+  <div class="hero-btns">
+    <a href="dashboard.html" class="btn-primary">지금 시작하기</a>
+    <a href="#features" class="btn-secondary">기능 살펴보기</a>
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</div>
+
+<!-- SCENARIO MARQUEE -->
+<div class="scenario">
+  <div class="scenario-track">
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1"/></svg>축제 기획</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1"/></svg>참가자 모집</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>입금 확인</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M3 7h6M3 10h4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>영수증 처리</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h10M5 2v2M9 2v2M2 5v7h10V5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>결산 분석</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v3.5c0 3 2.5 4.5 5.5 5 3-.5 5.5-2 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.1"/></svg>감사 A+</div>
+    <span class="scenario-sep" style="padding:0 20px">·</span>
+    <!-- 반복 -->
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1"/></svg>축제 기획</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1"/></svg>참가자 모집</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>입금 확인</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 4h8M3 7h6M3 10h4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>영수증 처리</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 5h10M5 2v2M9 2v2M2 5v7h10V5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>결산 분석</div>
+    <span class="scenario-sep">→</span>
+    <div class="scenario-item"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v3.5c0 3 2.5 4.5 5.5 5 3-.5 5.5-2 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.1"/></svg>감사 A+</div>
+  </div>
+</div>
+
+<!-- S1: FEATURES -->
+<section id="features">
+  <div class="section-label reveal">핵심 기능</div>
+  <h2 class="section-title reveal reveal-delay-1">총무국이 겪는 <em>모든 고통</em>을<br>한 곳에서 해결합니다</h2>
+  <p class="section-sub reveal reveal-delay-2">수기 장부, 카톡 명단 공유, 감사 전날의 야근. 돈워리이 모두 대신합니다.</p>
+  <div class="feat-grid">
+    <div class="feat-card reveal reveal-delay-1" style="cursor:pointer" onclick="location.href='dashboard.html'">
+      <div class="feat-icon" style="background:rgba(24,95,165,0.15)">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="4" width="16" height="13" rx="2" stroke="#378ADD" stroke-width="1.3"/><path d="M7 4V3M13 4V3" stroke="#378ADD" stroke-width="1.3" stroke-linecap="round"/><path d="M2 8h16" stroke="#378ADD" stroke-width="1"/></svg>
+      </div>
+      <div class="feat-num">01</div>
+      <div class="feat-title">통합 행사 대시보드 <span style="font-size:11px;color:#378ADD;font-weight:400">→ 바로가기</span></div>
+      <div class="feat-desc">캘린더로 행사 일정을 한눈에 파악하고, 전년도 예산과 실시간 비교. 미입금·미검토 영수증 수를 즉시 확인.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon" style="background:rgba(29,158,117,0.15)">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 3h14v14H3z" stroke="#1D9E75" stroke-width="1.3"/><path d="M7 7h6M7 10.5h4" stroke="#1D9E75" stroke-width="1.1" stroke-linecap="round"/></svg>
+      </div>
+      <div class="feat-num">02</div>
+      <div class="feat-title">3중 명단 대조기</div>
+      <div class="feat-desc">신청자·입금내역·납부자 명단을 드래그앤드롭으로 올리면 4단계로 자동 분류. 모든 결과에 즉시 수정 버튼 제공.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-3">
+      <div class="feat-icon" style="background:rgba(186,117,23,0.15)">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="4" y="2" width="12" height="16" rx="2" stroke="#BA7517" stroke-width="1.3"/><path d="M7 7h6M7 10h6M7 13h4" stroke="#BA7517" stroke-width="1" stroke-linecap="round"/></svg>
+      </div>
+      <div class="feat-num">03</div>
+      <div class="feat-title">AI OCR 영수증 판독</div>
+      <div class="feat-desc">사진 한 장으로 품목·금액 자동 추출. 불확실한 글자는 하이라이트로 표시해 사람이 직접 확인 후 장부 반영.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-1">
+      <div class="feat-icon" style="background:rgba(83,74,183,0.15)">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="7" r="3.5" stroke="#7F77DD" stroke-width="1.3"/><path d="M3 18c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="#7F77DD" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="feat-num">04</div>
+      <div class="feat-title">권한 기반 협업 (RBAC)</div>
+      <div class="feat-desc">국원은 업로드만, 국장은 수정·확정·최종승인. 데이터 무결성을 위한 결재라인으로 실수를 원천 차단.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-2">
+      <div class="feat-icon" style="background:rgba(29,158,117,0.15)">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2v12M5 9l5 5 5-5" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 16h14" stroke="#1D9E75" stroke-width="1.3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="feat-num">05</div>
+      <div class="feat-title">감사 패키지 원클릭 추출</div>
+      <div class="feat-desc">태그 하나로 행사별 파일 필터링. 영수증 사진부터 결산서까지 자동 폴더 구조로 ZIP 생성 후 즉시 다운로드.</div>
+    </div>
+    <div class="feat-card reveal reveal-delay-3">
+      <div class="feat-icon" style="background:rgba(24,95,165,0.15)">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="12" rx="2" stroke="#378ADD" stroke-width="1.3"/><path d="M6 5V4a2 2 0 0 1 4 0v1" stroke="#378ADD" stroke-width="1.1"/><circle cx="10" cy="11" r="2" stroke="#378ADD" stroke-width="1.1"/></svg>
+      </div>
+      <div class="feat-num">06</div>
+      <div class="feat-title">클라우드 아카이브</div>
+      <div class="feat-desc">#태그 시스템으로 모든 증빙 자료를 체계 관리. 다음 기수로의 인계도 링크 하나로 완료. 구글 드라이브처럼 쉽게.</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- S2: STEP FLOW -->
+<div class="step-section" id="flow">
+  <div class="step-inner">
+    <div class="section-label reveal">사용 시나리오</div>
+    <h2 class="section-title reveal reveal-delay-1">로그인부터 <em>감사 A+</em>까지<br>11단계 완전 자동화</h2>
+    <div class="step-flow">
+      <div class="step-item reveal reveal-delay-1">
+        <div class="step-circle">01</div>
+        <div class="step-title">로그인</div>
+        <div class="step-desc">관리자 / 국원 권한 구분 접속</div>
+      </div>
+      <div class="step-item reveal reveal-delay-2">
+        <div class="step-circle">02</div>
+        <div class="step-title">대시보드</div>
+        <div class="step-desc">전년 예산 확인 & 행사 생성</div>
+      </div>
+      <div class="step-item reveal reveal-delay-3">
+        <div class="step-circle">03</div>
+        <div class="step-title">파일 업로드</div>
+        <div class="step-desc">신청서 + 입금 내역 드래그</div>
+      </div>
+      <div class="step-item reveal reveal-delay-4">
+        <div class="step-circle">04</div>
+        <div class="step-title">자동 대조</div>
+        <div class="step-desc">불일치 항목 하이라이팅</div>
+      </div>
+    </div>
+    <div class="step-flow" style="margin-top:2px">
+      <div class="step-item reveal reveal-delay-1">
+        <div class="step-circle" style="border-color:rgba(186,117,23,0.5);color:#EF9F27;background:rgba(186,117,23,0.1)">05</div>
+        <div class="step-title">OCR 판독</div>
+        <div class="step-desc">AI 확률 기반 하이라이트</div>
+      </div>
+      <div class="step-item reveal reveal-delay-2">
+        <div class="step-circle" style="border-color:rgba(186,117,23,0.5);color:#EF9F27;background:rgba(186,117,23,0.1)">06</div>
+        <div class="step-title">장부 반영</div>
+        <div class="step-desc">검토 후 승인 대기함 전송</div>
+      </div>
+      <div class="step-item reveal reveal-delay-3">
+        <div class="step-circle" style="border-color:rgba(186,117,23,0.5);color:#EF9F27;background:rgba(186,117,23,0.1)">07</div>
+        <div class="step-title">권한 관리</div>
+        <div class="step-desc">국원 업로드 / 국장 확정</div>
+      </div>
+      <div class="step-item reveal reveal-delay-4">
+        <div class="step-circle" style="border-color:rgba(186,117,23,0.5);color:#EF9F27;background:rgba(186,117,23,0.1)">08</div>
+        <div class="step-title">최종 승인</div>
+        <div class="step-desc">결재 라인 통과 → 공식 확정</div>
+      </div>
+    </div>
+    <div class="step-flow" style="margin-top:2px;grid-template-columns:repeat(3,1fr)">
+      <div class="step-item reveal reveal-delay-1">
+        <div class="step-circle" style="border-color:rgba(29,158,117,0.5);color:#5DCAA5;background:rgba(29,158,117,0.1)">09</div>
+        <div class="step-title">추이 분석</div>
+        <div class="step-desc">전년 대비 실시간 차트</div>
+      </div>
+      <div class="step-item reveal reveal-delay-2">
+        <div class="step-circle" style="border-color:rgba(29,158,117,0.5);color:#5DCAA5;background:rgba(29,158,117,0.1)">10</div>
+        <div class="step-title">아카이브</div>
+        <div class="step-desc">#태그로 클라우드 보관</div>
+      </div>
+      <div class="step-item reveal reveal-delay-3" style="border-color:rgba(29,158,117,0.4);background:rgba(29,158,117,0.06)">
+        <div class="step-circle" style="border-color:rgba(29,158,117,0.7);color:#5DCAA5;background:rgba(29,158,117,0.15)">11</div>
+        <div class="step-title">감사 A+</div>
+        <div class="step-desc">원클릭 패키지 추출 → 제출</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S3: UI PREVIEW -->
+<section id="preview" style="max-width:1100px">
+  <div class="section-label reveal">화면 미리보기</div>
+  <h2 class="section-title reveal reveal-delay-1">실제 <em>돈워리</em> 화면을<br>직접 확인해보세요</h2>
+  <div class="preview-tabs reveal reveal-delay-2">
+    <div class="ptab on" onclick="switchTab(0,this)">대시보드</div>
+    <div class="ptab" onclick="switchTab(1,this)">3중 대조기</div>
+    <div class="ptab" onclick="switchTab(2,this)">OCR 판독</div>
+    <a href="dashboard.html" style="margin-left:auto;font-size:12px;padding:7px 16px;border-radius:20px;background:#185FA5;color:#fff;text-decoration:none;font-weight:500;display:inline-flex;align-items:center;gap:4px">실제 화면 열기 →</a>
+  </div>
+  <div class="preview-screens">
+    <!-- 대시보드 -->
+    <div class="pscreen on" id="ps0">
+      <div class="mock-window">
+        <div class="mock-bar">
+          <div class="mock-dot" style="background:#F09595"></div>
+          <div class="mock-dot" style="background:#EF9F27"></div>
+          <div class="mock-dot" style="background:#5DCAA5"></div>
+          <div class="mock-title">돈워리 — 대시보드</div>
+          <a href="dashboard.html" style="margin-left:auto;font-size:10px;padding:3px 10px;border-radius:10px;background:rgba(55,138,221,0.2);color:#85B7EB;text-decoration:none">실제 화면 열기 →</a>
+        </div>
+        <div class="mock-body">
+          <div class="mock-sidebar">
+            <div class="mock-logo">돈워리</div>
+            <div class="mock-nav-item on">대시보드</div>
+            <div class="mock-nav-item">행사 관리</div>
+            <div class="mock-nav-item">회계 결산</div>
+            <div class="mock-nav-item">감사 준비</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-header">이번 달 현황 · 2025년 4월</div>
+            <div class="mock-cards">
+              <div class="mock-card"><div class="mock-card-label">미입금자</div><div class="mock-card-val red">7</div></div>
+              <div class="mock-card"><div class="mock-card-label">이번달 지출</div><div class="mock-card-val">324,500</div></div>
+              <div class="mock-card"><div class="mock-card-label">미검토 영수증</div><div class="mock-card-val amber">3</div></div>
+              <div class="mock-card"><div class="mock-card-label">감사까지</div><div class="mock-card-val green">D-18</div></div>
+            </div>
+            <div class="mock-row">
+              <div>
+                <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px">진행 중인 행사</div>
+                <div class="mock-list-item"><div class="mock-dot2" style="background:#378ADD"></div><div class="mock-list-name">봄 MT 참가비 수납</div><span class="mock-badge" style="background:rgba(29,158,117,0.2);color:#5DCAA5">진행중</span></div>
+                <div class="mock-list-item"><div class="mock-dot2" style="background:#7F77DD"></div><div class="mock-list-name">연합 체육대회</div><span class="mock-badge" style="background:rgba(55,138,221,0.2);color:#85B7EB">준비중</span></div>
+                <div class="mock-list-item"><div class="mock-dot2" style="background:#EF9F27"></div><div class="mock-list-name">졸업 기념품 제작</div><span class="mock-badge" style="background:rgba(55,138,221,0.2);color:#85B7EB">준비중</span></div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px">알림</div>
+                <div class="mock-alert" style="margin-bottom:6px">개인 카드 결제 감지 — 오늘 09:14</div>
+                <div class="mock-alert" style="background:rgba(186,117,23,0.12);border-color:rgba(186,117,23,0.3);color:#EF9F27">영수증 상세 품목 누락 — 어제</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 3중 대조기 -->
+    <div class="pscreen" id="ps1">
+      <div class="mock-window">
+        <div class="mock-bar">
+          <div class="mock-dot" style="background:#F09595"></div>
+          <div class="mock-dot" style="background:#EF9F27"></div>
+          <div class="mock-dot" style="background:#5DCAA5"></div>
+          <div class="mock-title">돈워리 — 3중 대조기</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-sidebar">
+            <div class="mock-logo">돈워리</div>
+            <div class="mock-nav-item">대시보드</div>
+            <div class="mock-nav-item on">회계 결산</div>
+            <div class="mock-nav-item">행사 관리</div>
+            <div class="mock-nav-item">감사 준비</div>
+          </div>
+          <div class="mock-content">
+            <div class="mock-header">3중 명단 대조기 — 봄 MT</div>
+            <div class="mock-upload-grid">
+              <div class="mock-upload-box done">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#5DCAA5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="mock-upload-label">신청자 명단</div>
+                <div class="mock-upload-done">47명 · 완료</div>
+              </div>
+              <div class="mock-upload-box done">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3 3 7-7" stroke="#5DCAA5" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div class="mock-upload-label">입금 내역</div>
+                <div class="mock-upload-done">40건 · 완료</div>
+              </div>
+              <div class="mock-upload-box" style="border-color:rgba(255,255,255,0.1)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8h10" stroke="rgba(255,255,255,0.3)" stroke-width="1.4" stroke-linecap="round"/></svg>
+                <div class="mock-upload-label">납부자 명단</div>
+                <div style="font-size:10px;color:rgba(255,255,255,0.2)">드래그 또는 클릭</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px">
+              <div style="background:rgba(29,158,117,0.15);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:#5DCAA5;margin-bottom:2px">정상</div><div style="font-size:16px;font-weight:500;color:#5DCAA5">33</div></div>
+              <div style="background:rgba(186,117,23,0.15);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:#EF9F27;margin-bottom:2px">확인 필요</div><div style="font-size:16px;font-weight:500;color:#EF9F27">7</div></div>
+              <div style="background:rgba(162,45,45,0.15);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:#F09595;margin-bottom:2px">미입금</div><div style="font-size:16px;font-weight:500;color:#F09595">5</div></div>
+              <div style="background:rgba(136,135,128,0.15);border-radius:6px;padding:8px;text-align:center"><div style="font-size:10px;color:#B4B2A9;margin-bottom:2px">미신청</div><div style="font-size:16px;font-weight:500;color:#B4B2A9">2</div></div>
+            </div>
+            <table class="mock-table">
+              <thead><tr><th>이름</th><th>입금액</th><th>입금일</th><th>상태</th><th>수정</th></tr></thead>
+              <tbody>
+                <tr><td>이민준</td><td>30,000원</td><td>4/20</td><td><span class="mock-status st-ok">정상</span></td><td style="color:rgba(55,138,221,0.6);font-size:10px;cursor:pointer">수정</td></tr>
+                <tr><td>김도현</td><td>15,000원</td><td>4/22</td><td><span class="mock-status st-warn">확인 필요</span></td><td style="color:rgba(55,138,221,0.6);font-size:10px;cursor:pointer">수정</td></tr>
+                <tr><td>최지우</td><td>—</td><td>—</td><td><span class="mock-status st-danger">미입금</span></td><td style="color:rgba(55,138,221,0.6);font-size:10px;cursor:pointer">수정</td></tr>
+                <tr><td>홍길동</td><td>30,000원</td><td>4/24</td><td><span class="mock-status st-gray">미신청 입금</span></td><td style="color:rgba(55,138,221,0.6);font-size:10px;cursor:pointer">수정</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- OCR -->
+    <div class="pscreen" id="ps2">
+      <div class="mock-window">
+        <div class="mock-bar">
+          <div class="mock-dot" style="background:#F09595"></div>
+          <div class="mock-dot" style="background:#EF9F27"></div>
+          <div class="mock-dot" style="background:#5DCAA5"></div>
+          <div class="mock-title">돈워리 — OCR 영수증 판독</div>
+        </div>
+        <div class="mock-body">
+          <div class="mock-sidebar">
+            <div class="mock-logo">돈워리</div>
+            <div class="mock-nav-item">대시보드</div>
+            <div class="mock-nav-item on">회계 결산</div>
+            <div class="mock-nav-item">행사 관리</div>
+            <div class="mock-nav-item">감사 준비</div>
+          </div>
+          <div class="mock-content">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+              <div class="mock-header">영수증 OCR 판독 · 미검토 3건</div>
+              <span style="font-size:10px;background:rgba(186,117,23,0.2);color:#EF9F27;padding:2px 8px;border-radius:10px">미검토 3건</span>
+            </div>
+            <div class="mock-split">
+              <div>
+                <div style="font-size:10px;color:var(--text-dim);margin-bottom:6px">원본 이미지</div>
+                <div class="mock-img-box">
+                  <div class="mock-receipt">
+                    <div class="mock-rl" style="width:60%;margin:0 auto"></div>
+                    <div class="mock-rl" style="width:40%;margin:0 auto"></div>
+                    <div style="height:1px;background:rgba(255,255,255,0.1);margin:3px 0"></div>
+                    <div class="mock-rl"></div>
+                    <div style="display:flex;justify-content:space-between"><div class="mock-rl" style="width:55%"></div><div class="mock-rl" style="width:30%"></div></div>
+                    <div class="mock-rl hl"></div>
+                    <div style="display:flex;justify-content:space-between"><div class="mock-rl" style="width:55%"></div><div class="mock-rl" style="width:30%"></div></div>
+                    <div style="height:1px;background:rgba(255,255,255,0.1);margin:3px 0;border-top:1px dashed rgba(255,255,255,0.1)"></div>
+                    <div style="display:flex;justify-content:space-between"><div class="mock-rl" style="width:35%"></div><div class="mock-rl bold" style="width:35%;background:rgba(255,255,255,0.35)"></div></div>
+                  </div>
+                  <div style="font-size:9px;color:rgba(239,159,39,0.7);margin-top:4px">노란색 = 확률 낮은 글자</div>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:10px;color:var(--text-dim);margin-bottom:6px">AI 추출 결과</div>
+                <div class="mock-field"><div class="mock-field-label">업체명</div><div class="mock-field-val">GS25 성균관대점</div></div>
+                <div class="mock-field"><div class="mock-field-label">결제일시</div><div class="mock-field-val">2025.04.22 14:37</div></div>
+                <div class="mock-field"><div class="mock-field-label">합계금액</div><div class="mock-field-val">47,500원</div></div>
+                <div class="mock-field"><div class="mock-field-label">상세 품목</div><div class="mock-field-val warn">상세불명 품목 감지</div></div>
+                <div class="mock-warn-box">품목명이 불분명합니다. 재발급을 요청하거나 직접 수정해 주세요.</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+              <div style="font-size:11px;padding:6px 12px;border-radius:6px;border:0.5px solid rgba(255,255,255,0.15);color:var(--text-mid);cursor:pointer">직접 수정</div>
+              <div style="font-size:11px;padding:6px 12px;border-radius:6px;border:0.5px solid rgba(255,255,255,0.15);color:var(--text-mid);cursor:pointer">재발급 요청</div>
+              <div style="font-size:11px;padding:6px 14px;border-radius:6px;background:#185FA5;color:#fff;cursor:pointer;font-weight:500">장부에 반영</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- S4: STATS -->
+<div class="stats-section">
+  <div class="stats-inner">
+    <div>
+      <div class="section-label reveal">숫자로 보는 돈워리</div>
+      <h2 class="section-title reveal reveal-delay-1">총무국의 <em>시간</em>을<br>돌려드립니다</h2>
+      <p class="section-sub reveal reveal-delay-2" style="font-size:14px">감사 준비에 걸리던 평균 12시간. 돈워리는 원클릭으로 끝냅니다.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card reveal reveal-delay-1">
+        <div class="stat-num">12<span>h</span></div>
+        <div class="stat-label">감사 준비에 걸리던 시간</div>
+        <div class="stat-change">→ 원클릭 30초로 단축</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-2">
+        <div class="stat-num">3<span>중</span></div>
+        <div class="stat-label">자동 명단 교차 검증</div>
+        <div class="stat-change">→ 오기입 오류 0건 목표</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-3">
+        <div class="stat-num">100<span>%</span></div>
+        <div class="stat-label">감사 자료 디지털 전환</div>
+        <div class="stat-change">→ 종이 장부 완전 탈출</div>
+      </div>
+      <div class="stat-card reveal reveal-delay-4">
+        <div class="stat-num">A<span>+</span></div>
+        <div class="stat-label">목표 감사 등급</div>
+        <div class="stat-change">→ 당신도 받을 수 있다</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: COMPARISON -->
+<section id="compare" class="compare-section" style="max-width:900px">
+  <div style="text-align:center">
+    <div class="section-label reveal">기존 방식 vs 돈워리</div>
+    <h2 class="section-title reveal reveal-delay-1">카톡 공유 장부는 <em>이제 그만</em></h2>
+  </div>
+  <table class="compare-table reveal reveal-delay-2">
+    <thead>
+      <tr>
+        <th>기능</th>
+        <th>기존 방식</th>
+        <th class="hl">돈워리</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>명단 대조</td><td>수작업 엑셀 비교</td><td class="hl"><span class="check">✓</span> 3중 자동 대조</td></tr>
+      <tr><td>영수증 관리</td><td>카메라 앨범 → 카톡 전송</td><td class="hl"><span class="check">✓</span> OCR 자동 추출</td></tr>
+      <tr><td>권한 관리</td><td>파일 공유 링크 (전원 동일)</td><td class="hl"><span class="check">✓</span> 역할 기반 차등 권한</td></tr>
+      <tr><td>감사 자료 준비</td><td>야근 + 수동 ZIP 압축</td><td class="hl"><span class="check">✓</span> 원클릭 패키지 추출</td></tr>
+      <tr><td>전년도 비교</td><td>작년 엑셀 찾아서 직접 비교</td><td class="hl"><span class="check">✓</span> 행사 클릭 → 즉시 비교</td></tr>
+      <tr><td>인수인계</td><td>파일 전달 + 구두 설명</td><td class="hl"><span class="check">✓</span> 태그·아카이브 링크 하나</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="divider"></div>
+
+<!-- S6: CTA -->
+<div class="cta-section" id="cta">
+  <div class="cta-bg"></div>
+  <div class="hero-badge" style="margin:0 auto 28px">
+    <div class="hero-badge-dot"></div>
+    MVP 설계 공개 중
+  </div>
+  <h2>총무국의 새 학기,<br><em>돈워리</em>와 함께 시작하세요</h2>
+  <p class="cta-sub">더 이상 감사 전날 밤을 날새지 않아도 됩니다.</p>
+  <div class="hero-btns">
+    <a href="dashboard.html" class="btn-primary">지금 시작하기</a>
+    <a href="#preview" class="btn-secondary">화면 미리보기</a>
+  </div>
+  <div class="cta-tags">
+    <span class="cta-tag">#총무국</span>
+    <span class="cta-tag">#학생회</span>
+    <span class="cta-tag">#회계자동화</span>
+    <span class="cta-tag">#감사준비</span>
+    <span class="cta-tag">#영수증OCR</span>
+    <span class="cta-tag">#3중대조</span>
+    <span class="cta-tag">#원클릭추출</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">돈<span>워리</span></div>
+  <div class="footer-copy">© 2025 돈워리 · 총무국 전용 행정 OS · MVP</div>
+</footer>
+
+<script>
+function switchTab(idx, el) {
+  document.querySelectorAll('.ptab').forEach((t,i) => t.classList.toggle('on', i===idx));
+  document.querySelectorAll('.pscreen').forEach((s,i) => s.classList.toggle('on', i===idx));
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

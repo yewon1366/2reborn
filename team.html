@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 팀원 관리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wlnbiy6gr3");</script>
+<style>
+:root{--navy:#0E1B2E;--navy2:#162438;--blue:#185FA5;--blue-mid:#378ADD;--blue-light:#85B7EB;--teal:#5DCAA5;--amber:#EF9F27;--red:#F09595;--white:#FAFAF8;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text-dim:rgba(255,255,255,0.38);--text-mid:rgba(255,255,255,0.62);--text-main:rgba(255,255,255,0.92)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.top-nav{height:52px;background:rgba(14,27,46,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:100;flex-shrink:0}
+.sb-toggle{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.sb-toggle:hover{background:rgba(255,255,255,0.08)}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);text-decoration:none;padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);transition:all .15s}
+.back-btn:hover{color:var(--white);border-color:var(--border2)}
+.nav-logo{font-size:15px;font-weight:700;color:var(--white)}.nav-logo span{color:#378ADD}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .15s}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--navy);position:absolute;top:4px;right:4px}
+#search-bar{display:none;padding:8px 16px;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.7);backdrop-filter:blur(8px)}
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 52px)}
+.sidebar{width:210px;flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease,opacity .2s;overflow:hidden}
+.sidebar.closed{width:0;opacity:0;pointer-events:none}
+.sb-inner{width:210px;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.sb-logo{padding:16px 14px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sb-logo-mark{width:26px;height:26px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap}.sb-logo-sub{font-size:10px;color:var(--text-dim)}
+.sb-nav{padding:8px;flex:1;overflow-y:auto}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:10px 8px 4px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s;white-space:nowrap}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:10px;border-top:0.5px solid var(--border);flex-shrink:0}
+.sb-avatar{width:26px;height:26px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.page-tabs{display:flex;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.3);flex-shrink:0}
+.ptab{font-size:12px;padding:12px 20px;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.ptab.on{color:#85B7EB;border-bottom-color:#378ADD;font-weight:500}
+.ptab:hover{color:var(--text-main)}
+.tab-content{display:none;flex:1;overflow-y:auto;padding:20px 22px}
+.tab-content.on{display:block}
+.card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px}
+.mc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:18px}
+.mc{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:18px 16px;position:relative;transition:all .15s}
+.mc:hover{border-color:var(--border2);transform:translateY(-1px)}
+.mc.admin{border-color:rgba(55,138,221,0.22);background:rgba(55,138,221,0.04)}
+.mc-av{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:11px;color:var(--text-dim);font-weight:500;padding:8px 12px;border-bottom:0.5px solid var(--border);text-align:left}
+td{font-size:12px;color:var(--text-mid);padding:9px 12px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.role-pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.rp-admin{background:rgba(55,138,221,0.15);color:#85B7EB}.rp-member{background:rgba(239,159,39,0.1);color:#EF9F27}
+.act-row{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid rgba(255,255,255,0.05)}
+.act-row:last-child{border-bottom:none}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.35)}}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+</style>
+</head>
+<body>
+<div class="top-nav">
+  <div class="sb-toggle" onclick="toggleSb()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="rgba(255,255,255,0.55)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+  <a href="dashboard.html" class="back-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>대시보드</a>
+  <div style="width:0.5px;height:16px;background:var(--border)"></div>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2)">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div class="collab-avatars">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+    </div>
+  </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-icon-btn" onclick="toggleSearch()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><path d="M9 9l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+    <div class="nav-icon-btn"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 1.8-.8 3.4-1.5 4h12c-.7-.6-1.5-2.2-1.5-4 0-2.5-2-4.5-4.5-4.5z" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/><path d="M5.5 10c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/></svg><div class="notif-dot"></div></div>
+    <button onclick="openInvite()" style="font-size:11px;padding:6px 14px;border-radius:7px;background:#185FA5;color:#fff;border:none;cursor:pointer;font-weight:500">+ 팀원 초대</button>
+  </div>
+</div>
+<div id="search-bar"><input type="text" placeholder="이름, 이메일로 검색..." oninput="filterMembers(this.value)" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--border2);border-radius:8px;padding:8px 14px;color:var(--white);font-family:inherit;font-size:13px;outline:none"></div>
+
+<div class="app">
+  <div class="sidebar" id="sidebar">
+    <div class="sb-inner">
+      <div class="sb-logo"><div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg></div><div><div class="sb-logo-text">돈워리</div><div class="sb-logo-sub">2025 학생회</div></div></div>
+      <div class="sb-nav">
+        <div class="sb-sec">메뉴</div>
+        <a href="dashboard.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>대시보드</a>
+        <a href="events.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>행사 관리</a>
+        <a href="triple.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>3중 교차 검증<span class="sb-bdg">5</span></a>
+        <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
+        
+        <a href="archive.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
+        <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <div class="sb-sec" style="margin-top:8px">설정</div>
+        <a href="team.html" class="sb-item active"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+        <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+      </div>
+      <div class="sb-footer"><div style="display:flex;align-items:center;gap:8px"><div class="sb-avatar">장</div><div><div style="font-size:12px;color:var(--text-main)">장예원</div><div style="font-size:10px;color:#5DCAA5">관리자</div></div></div></div>
+    </div>
+  </div>
+  <div class="main">
+    <div class="page-tabs">
+      <div class="ptab on" id="tab-btn-cards" onclick="switchTab('cards')">멤버 현황 <span id="member-badge" style="font-size:9px;background:rgba(55,138,221,0.15);color:#85B7EB;padding:1px 5px;border-radius:6px;margin-left:3px">0</span></div>
+      <div class="ptab" id="tab-btn-table" onclick="switchTab('table')">목록 보기</div>
+      <div class="ptab" id="tab-btn-activity" onclick="switchTab('activity')">활동 내역</div>
+    </div>
+    <!-- 카드 뷰 -->
+    <div class="tab-content on" id="tab-cards">
+      <div class="mc-grid" id="member-grid"></div>
+    </div>
+    <!-- 테이블 뷰 -->
+    <div class="tab-content" id="tab-table">
+      <div class="card" style="padding:0;overflow:hidden">
+        <table><thead><tr>
+          <th style="width:13%">이름</th><th style="width:24%">이메일</th><th style="width:12%">권한</th>
+          <th style="width:16%">마지막 접속</th><th style="width:14%">수정요청 대기</th><th style="width:21%">액션</th>
+        </tr></thead><tbody id="member-tbody"></tbody></table>
+      </div>
+    </div>
+    <!-- 활동 내역 -->
+    <div class="tab-content" id="tab-activity">
+      <div class="card">
+        <div style="font-size:10px;font-weight:500;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">최근 활동 내역</div>
+        <div id="activity-rows">
+          <div class="act-row"><div style="width:6px;height:6px;border-radius:50%;background:#5DCAA5;flex-shrink:0;margin-top:4px"></div><div style="flex:1;font-size:12px;color:var(--text-mid)"><b style="color:var(--text-main)">장예원</b>이 김준서의 수정 요청을 승인했습니다<div style="font-size:11px;color:var(--text-dim);margin-top:2px">15,000원 → 30,000원</div></div><span style="font-size:10px;color:var(--text-dim)">10분 전</span></div>
+          <div class="act-row"><div style="width:6px;height:6px;border-radius:50%;background:#85B7EB;flex-shrink:0;margin-top:4px"></div><div style="flex:1;font-size:12px;color:var(--text-mid)"><b style="color:var(--text-main)">이다은</b>이 OCR 영수증 3건을 처리했습니다</div><span style="font-size:10px;color:var(--text-dim)">1시간 전</span></div>
+          <div class="act-row"><div style="width:6px;height:6px;border-radius:50%;background:#EF9F27;flex-shrink:0;margin-top:4px"></div><div style="flex:1;font-size:12px;color:var(--text-mid)"><b style="color:var(--text-main)">정찬우</b>가 봄MT 명단 파일을 업로드했습니다</div><span style="font-size:10px;color:var(--text-dim)">2시간 전</span></div>
+          <div class="act-row"><div style="width:6px;height:6px;border-radius:50%;background:#A9A5EE;flex-shrink:0;margin-top:4px"></div><div style="flex:1;font-size:12px;color:var(--text-mid)"><b style="color:var(--text-main)">박건령</b>이 아카이브에 파일 2건을 추가했습니다</div><span style="font-size:10px;color:var(--text-dim)">3시간 전</span></div>
+          <div class="act-row"><div style="width:6px;height:6px;border-radius:50%;background:#F09595;flex-shrink:0;margin-top:4px"></div><div style="flex:1;font-size:12px;color:var(--text-mid)"><b style="color:var(--text-main)">박경서</b>가 수정 요청을 전송했습니다</div><span style="font-size:10px;color:var(--text-dim)">어제</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 초대 모달 -->
+<div id="invite-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:300;align-items:center;justify-content:center" onclick="if(event.target===this)closeInvite()">
+  <div style="background:#162438;border:0.5px solid rgba(255,255,255,0.14);border-radius:14px;width:400px;overflow:hidden">
+    <div style="padding:16px 18px;border-bottom:0.5px solid var(--border);display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:600;color:var(--text-main)">팀원 초대</span><span onclick="closeInvite()" style="cursor:pointer;color:var(--text-dim);font-size:18px;line-height:1">×</span></div>
+    <div style="padding:18px">
+      <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">이름 *</div><input id="inv-name" style="width:100%;background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:12px;outline:none" placeholder="예) 홍길동"></div>
+      <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">이메일 *</div><input id="inv-email" style="width:100%;background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:12px;outline:none" placeholder="예) hong@univ.ac.kr"></div>
+      <div style="margin-bottom:10px"><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">역할</div><input id="inv-task" style="width:100%;background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:12px;outline:none" placeholder="예) OCR 처리 담당"></div>
+      <div style="margin-bottom:4px"><div style="font-size:11px;color:var(--text-dim);margin-bottom:4px">권한</div><select id="inv-role" style="width:100%;background:rgba(255,255,255,0.05);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:12px;outline:none"><option value="member">국원 (업로드 전용)</option><option value="admin">관리자 (수정·승인)</option></select></div>
+    </div>
+    <div style="padding:12px 18px;border-top:0.5px solid var(--border);display:flex;justify-content:flex-end;gap:8px">
+      <button onclick="closeInvite()" style="font-size:12px;padding:7px 14px;border-radius:7px;border:0.5px solid var(--border);background:transparent;color:var(--text-mid);cursor:pointer">취소</button>
+      <button onclick="submitInvite()" style="font-size:12px;padding:7px 18px;border-radius:7px;border:none;background:#185FA5;color:#fff;cursor:pointer;font-weight:500">팀원 추가</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MEMBERS_KEY='donworry_members';const REQUESTS_KEY='donworry_requests';
+const AVC=['rgba(55,138,221,0.25)','rgba(93,202,165,0.25)','rgba(239,159,39,0.25)','rgba(127,119,221,0.25)','rgba(240,149,149,0.25)','rgba(169,165,238,0.25)'];
+const AVT=['#85B7EB','#5DCAA5','#EF9F27','#A9A5EE','#F09595','#A9A5EE'];
+const DEFAULT_MEMBERS=[
+  {id:1,name:'장예원',email:'jang@univ.ac.kr',role:'admin',task:'재정부장·행사 총괄',lastSeen:'방금 전',me:true},
+  {id:2,name:'박경서',email:'park.k@univ.ac.kr',role:'member',task:'파일 업로드 담당',lastSeen:'30분 전'},
+  {id:3,name:'이다은',email:'lee.d@univ.ac.kr',role:'member',task:'OCR 처리 담당',lastSeen:'1시간 전'},
+  {id:4,name:'정찬우',email:'jung.c@univ.ac.kr',role:'member',task:'명단 대조 담당',lastSeen:'2시간 전'},
+  {id:5,name:'박건령',email:'park.g@univ.ac.kr',role:'member',task:'아카이브 담당',lastSeen:'3시간 전'},
+  {id:6,name:'김준서',email:'kim.j@univ.ac.kr',role:'member',task:'결산 담당',lastSeen:'어제'},
+  {id:7,name:'이예지',email:'lee.y@univ.ac.kr',role:'member',task:'영수증 관리 담당',lastSeen:'어제'},
+];
+function gm(){const s=localStorage.getItem(MEMBERS_KEY);return s?JSON.parse(s):[...DEFAULT_MEMBERS];}
+function sm(d){localStorage.setItem(MEMBERS_KEY,JSON.stringify(d));}
+function gr(){const s=localStorage.getItem(REQUESTS_KEY);const def=[{status:'pending',from:'이다은'},{status:'pending',from:'박건령'},{status:'approved',from:'정찬우'}];return s?JSON.parse(s):def;}
+
+function render(filter=''){
+  const members=gm();const reqs=gr();
+  const pending=reqs.filter(r=>r.status==='pending');
+  const filtered=filter?members.filter(m=>m.name.includes(filter)||m.email.includes(filter)):members;
+  document.getElementById('member-badge').textContent=members.length;
+
+  // 카드
+  document.getElementById('member-grid').innerHTML=filtered.map((m,i)=>{
+    const isAdmin=m.role==='admin';
+    const myP=pending.filter(r=>r.from===m.name).length;
+    return `<div class="mc${isAdmin?' admin':''}">
+      ${isAdmin?`<div style="position:absolute;top:12px;right:12px;font-size:9px;padding:2px 6px;border-radius:7px;background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.25)">관리자</div>`:''}
+      <div class="mc-av" style="background:${AVC[i%6]};color:${AVT[i%6]}">${m.name[0]}</div>
+      <div style="font-size:14px;font-weight:600;color:${isAdmin?'#85B7EB':'var(--text-main)'};margin-bottom:3px">${m.name}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-bottom:8px">${m.task||''}</div>
+      ${myP>0
+        ? `<div onclick="openReqModal('${m.name}')" style="font-size:10px;background:rgba(239,159,39,0.12);color:#EF9F27;padding:3px 10px;border-radius:8px;display:inline-block;margin-bottom:8px;cursor:pointer;border:0.5px solid rgba(239,159,39,0.3);transition:background .15s" onmouseover="this.style.background='rgba(239,159,39,0.22)'" onmouseout="this.style.background='rgba(239,159,39,0.12)'">⏳ 수정요청 ${myP}건 — 클릭해서 처리</div>`
+        : `<div style="font-size:10px;color:#5DCAA5;margin-bottom:8px">✓ 대기 중인 요청 없음</div>`}
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:10px">접속: ${m.lastSeen}</div>
+      <div style="display:flex;gap:5px">
+        ${m.me?`<span style="font-size:10px;color:var(--text-dim)">나</span>`
+        :`<button onclick="changeRole(${m.id})" style="font-size:10px;padding:3px 8px;border-radius:5px;border:0.5px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer">권한 변경</button>
+          <button onclick="removeMember(${m.id})" style="font-size:10px;padding:3px 8px;border-radius:5px;border:0.5px solid rgba(240,149,149,0.3);background:transparent;color:#F09595;cursor:pointer">삭제</button>`}
+      </div>
+    </div>`;
+  }).join('');
+
+  // 테이블
+  document.getElementById('member-tbody').innerHTML=filtered.map(m=>{
+    const isAdmin=m.role==='admin';const myP=pending.filter(r=>r.from===m.name).length;
+    return `<tr>
+      <td style="color:${isAdmin?'#85B7EB':'var(--text-main)'};font-weight:${isAdmin?600:500}">${m.name}</td>
+      <td style="color:var(--text-dim)">${m.email}</td>
+      <td><span class="role-pill ${isAdmin?'rp-admin':'rp-member'}">${isAdmin?'관리자':'국원'}</span></td>
+      <td>${m.lastSeen}</td>
+      <td style="color:${myP>0?'#EF9F27':'var(--text-dim)'}">${myP>0?`${myP}건 대기`:'—'}</td>
+      <td>${m.me?`<span style="font-size:10px;color:var(--text-dim)">나</span>`
+        :`<button onclick="changeRole(${m.id})" style="font-size:10px;padding:3px 7px;border-radius:5px;border:0.5px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;margin-right:4px">권한 변경</button>
+          <button onclick="removeMember(${m.id})" style="font-size:10px;padding:3px 7px;border-radius:5px;border:0.5px solid rgba(240,149,149,0.3);background:transparent;color:#F09595;cursor:pointer">삭제</button>`}
+      </td>
+    </tr>`;
+  }).join('');
+}
+function changeRole(id){const m=gm();const x=m.find(x=>x.id===id);if(!x)return;const n=x.role==='admin'?'member':'admin';if(confirm(`${x.name}을(를) ${n==='admin'?'관리자':'국원'}으로 변경하시겠습니까?`)){x.role=n;sm(m);render();}}
+function removeMember(id){const m=gm();const x=m.find(x=>x.id===id);if(!x)return;if(confirm(`${x.name}을(를) 팀에서 제거하시겠습니까?`)){sm(m.filter(x=>x.id!==id));render();}}
+
+// ── 수정요청 모달 ──
+function openReqModal(name){
+  const reqs=gr();
+  const myPending=reqs.filter(r=>r.status==='pending'&&r.from===name);
+  if(!myPending.length){alert('처리할 요청이 없습니다.');return;}
+  const modal=document.getElementById('req-modal');
+  document.getElementById('req-modal-name').textContent=name+' 의 수정 요청';
+  document.getElementById('req-modal-body').innerHTML=myPending.map(r=>`
+    <div id="rcard-${r.id}" style="background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div style="font-size:13px;font-weight:500;color:var(--text-main)">${r.target||'—'} — ${r.title||r.reason?.slice(0,20)+'...'||'수정 요청'}</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">${r.source||'3중 교차 검증'} · ${r.time||'최근'}</div>
+        </div>
+        <span style="font-size:10px;background:rgba(239,159,39,0.12);color:#EF9F27;padding:2px 7px;border-radius:8px;flex-shrink:0">대기 중</span>
+      </div>
+      <div style="font-size:12px;color:var(--text-mid);background:rgba(255,255,255,0.03);border-radius:6px;padding:8px 10px;line-height:1.6;margin-bottom:10px">${r.reason||'(사유 없음)'}</div>
+      <div style="margin-bottom:8px">
+        <div onclick="toggleReqMemo(${r.id})" style="font-size:11px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:5px">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          메모 남기기 <span style="color:var(--text-dim);font-size:10px">(모든 팀원 공개)</span>
+        </div>
+        <textarea id="rmemo-${r.id}" style="display:none;width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:11px;resize:none;min-height:50px;outline:none" placeholder="예) 당사자 확인 완료. 추가 입금 예정."></textarea>
+      </div>
+      <div style="display:flex;gap:6px;justify-content:flex-end">
+        <button onclick="handleReq(${r.id},'rejected')" style="font-size:11px;padding:6px 14px;border-radius:7px;border:0.5px solid rgba(240,149,149,0.3);background:rgba(240,149,149,0.08);color:#F09595;cursor:pointer">반려</button>
+        <button onclick="handleReq(${r.id},'approved')" style="font-size:11px;padding:6px 14px;border-radius:7px;border:none;background:#1D9E75;color:#fff;cursor:pointer;font-weight:500">✓ 승인 — 장부 반영</button>
+      </div>
+    </div>`).join('');
+  modal.style.display='flex';
+}
+function toggleReqMemo(id){
+  const ta=document.getElementById('rmemo-'+id);
+  const open=ta.style.display==='block';
+  ta.style.display=open?'none':'block';
+  if(!open)ta.focus();
+}
+function handleReq(id,status){
+  const reqs=gr();
+  const r=reqs.find(x=>x.id===id);
+  if(!r)return;
+  const memo=(document.getElementById('rmemo-'+id)||{}).value?.trim()||'';
+  r.status=status;r.time='방금 전';
+  if(memo)r.memo=memo;
+  sr(reqs);
+
+  // 카드 UI 즉시 업데이트
+  const card=document.getElementById('rcard-'+id);
+  if(card){
+    const ok=status==='approved';
+    card.style.opacity='.55';
+    card.innerHTML=`<div style="display:flex;align-items:center;gap:8px;padding:4px 0">
+      <span style="font-size:12px;font-weight:500;color:var(--text-main)">${r.target||''} — ${r.title||'수정 요청'}</span>
+      <span style="font-size:10px;padding:2px 7px;border-radius:8px;background:${ok?'rgba(29,158,117,0.15)':'rgba(240,149,149,0.12)'};color:${ok?'#5DCAA5':'#F09595'}">${ok?'승인됨':'반려됨'}</span>
+    </div>
+    ${memo?`<div style="background:rgba(55,138,221,0.07);border:0.5px solid rgba(55,138,221,0.15);border-radius:6px;padding:6px 10px;font-size:11px;color:#85B7EB;margin-top:8px">💬 ${memo}</div>`:''}`;
+  }
+
+  // 남은 pending 없으면 모달 닫고 카드 새로고침
+  const remaining=gr().filter(x=>x.status==='pending'&&x.from===r.from);
+  if(remaining.length===0){
+    setTimeout(()=>{document.getElementById('req-modal').style.display='none';render();},700);
+  } else {
+    render(); // 뱃지 수 업데이트
+  }
+}
+function sr(d){localStorage.setItem('donworry_requests',JSON.stringify(d));}
+function gr(){const s=localStorage.getItem('donworry_requests');const def=[{id:1,target:'김준서',title:'입금액 수정 요청',from:'이다은',source:'3중 교차 검증',reason:'분할 입금으로 나머지 15,000원 추가 입금 예정. 현재 15,000원 → 30,000원으로 수정 요청합니다.',time:'10분 전',status:'pending'},{id:2,target:'류하은',title:'미입금 사유 기재 요청',from:'박건령',source:'3중 교차 검증',reason:'개인 사정으로 불참 확정. 환불 처리 및 명단 제외가 필요합니다.',time:'25분 전',status:'pending'},{id:99,target:'박경서',title:'교통비 영수증 장부 반영',from:'정찬우',source:'3중 교차 검증',reason:'KTX 교통비 영수증 장부 반영 요청.',time:'어제 14:23',status:'approved',memo:'영수증 원본 확인 완료.'}];return s?JSON.parse(s):def;}
+function openInvite(){document.getElementById('invite-modal').style.display='flex';}
+function closeInvite(){document.getElementById('invite-modal').style.display='none';}
+function submitInvite(){
+  const name=document.getElementById('inv-name').value.trim();
+  const email=document.getElementById('inv-email').value.trim();
+  const task=document.getElementById('inv-task').value.trim();
+  const role=document.getElementById('inv-role').value;
+  if(!name||!email){alert('이름과 이메일을 입력해주세요.');return;}
+  if(!email.includes('@')){alert('이메일 형식이 올바르지 않습니다.');return;}
+  const m=gm();if(m.find(x=>x.email===email)){alert('이미 등록된 이메일입니다.');return;}
+  const newId=Math.max(...m.map(x=>x.id))+1;
+  m.push({id:newId,name,email,role,task,lastSeen:'방금 초대됨'});
+  sm(m);closeInvite();['inv-name','inv-email','inv-task'].forEach(id=>document.getElementById(id).value='');
+  render();switchTab('cards');
+}
+function switchTab(id){document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('on'));document.getElementById('tab-btn-'+id).classList.add('on');document.getElementById('tab-'+id).classList.add('on');}
+function filterMembers(q){render(q);}
+function toggleSb(){document.getElementById('sidebar').classList.toggle('closed');}
+function toggleSearch(){const b=document.getElementById('search-bar');const o=!b.style.display||b.style.display==='none';b.style.display=o?'block':'none';if(o)b.querySelector('input').focus();}
+render();
+</script>
+
+<!-- 수정요청 처리 모달 -->
+<div id="req-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:400;align-items:center;justify-content:center" onclick="if(event.target===this)this.style.display='none'">
+  <div style="background:#162438;border:0.5px solid rgba(255,255,255,0.14);border-radius:14px;width:480px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:16px 18px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+      <div>
+        <div style="font-size:14px;font-weight:600;color:var(--text-main)" id="req-modal-name"></div>
+        <div style="font-size:11px;color:var(--text-dim);margin-top:2px">승인 또는 반려하세요. 선택 즉시 카드 상태가 바뀝니다.</div>
+      </div>
+      <span onclick="document.getElementById('req-modal').style.display='none'" style="cursor:pointer;color:var(--text-dim);font-size:18px;line-height:1;margin-left:12px;flex-shrink:0">×</span>
+    </div>
+    <div id="req-modal-body" style="overflow-y:auto;padding:16px 18px;flex:1"></div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 권한 관리</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wlnbiy6gr3");
+</script>
+<style>
+:root{--navy:#0E1B2E;--navy2:#162438;--blue:#185FA5;--blue-mid:#378ADD;--blue-light:#85B7EB;--teal:#5DCAA5;--amber:#EF9F27;--red:#F09595;--white:#FAFAF8;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);--text-dim:rgba(255,255,255,0.38);--text-mid:rgba(255,255,255,0.62);--text-main:rgba(255,255,255,0.92)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+/* NAV */
+.top-nav{height:52px;background:rgba(14,27,46,0.92);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:10px;position:sticky;top:0;z-index:100;flex-shrink:0}
+.sb-toggle{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
+.sb-toggle:hover{background:rgba(255,255,255,0.08)}
+.back-btn{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--text-dim);text-decoration:none;padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);transition:all .15s}
+.back-btn:hover{color:var(--white);border-color:var(--border2)}
+.nav-logo{font-size:15px;font-weight:700;color:var(--white)}
+.nav-logo span{color:#378ADD}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .15s}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+.notif-dot{width:6px;height:6px;border-radius:50%;background:#E24B4A;border:1.5px solid var(--navy);position:absolute;top:4px;right:4px}
+/* LAYOUT */
+.app{display:flex;flex:1;overflow:hidden;height:calc(100vh - 52px)}
+/* SIDEBAR */
+.sidebar{width:210px;flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;transition:width .22s ease,opacity .2s;overflow:hidden}
+.sidebar.closed{width:0;opacity:0;pointer-events:none}
+.sb-inner{width:210px;display:flex;flex-direction:column;flex:1;overflow:hidden}
+.sb-logo{padding:16px 14px 12px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sb-logo-mark{width:26px;height:26px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main);white-space:nowrap}
+.sb-logo-sub{font-size:10px;color:var(--text-dim)}
+.sb-nav{padding:8px;flex:1;overflow-y:auto}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:10px 8px 4px;letter-spacing:.07em;text-transform:uppercase;white-space:nowrap}
+.sb-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s;white-space:nowrap}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:10px;border-top:0.5px solid var(--border);flex-shrink:0}
+.sb-avatar{width:26px;height:26px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+/* SEARCH BAR */
+#search-bar{display:none;padding:8px 16px;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.7);backdrop-filter:blur(8px)}
+/* PAGE TABS */
+.page-tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);background:rgba(22,36,56,0.3);flex-shrink:0}
+.ptab{font-size:12px;padding:12px 20px;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
+.ptab.on{color:#85B7EB;border-bottom-color:#378ADD;font-weight:500}
+.ptab:hover{color:var(--text-main)}
+.tab-content{display:none;flex:1;overflow-y:auto;padding:20px 22px}
+.tab-content.on{display:block}
+/* COMMON CARDS */
+.card{background:rgba(255,255,255,0.03);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;margin-bottom:12px;transition:border-color .15s}
+.card:hover{border-color:var(--border2)}
+.sl{font-size:10px;font-weight:500;color:var(--text-dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+/* ROLE CARDS */
+.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.role-card{border-radius:12px;padding:20px;border:0.5px solid var(--border);background:rgba(255,255,255,0.02)}
+.role-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:4px 12px;border-radius:20px;margin-bottom:10px}
+.role-admin{background:rgba(55,138,221,0.12);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.25)}
+.role-member{background:rgba(239,159,39,0.1);color:#EF9F27;border:0.5px solid rgba(239,159,39,0.2)}
+.role-title{font-size:14px;font-weight:600;color:var(--text-main);margin-bottom:5px}
+.role-desc{font-size:12px;color:var(--text-mid);line-height:1.6;margin-bottom:12px}
+.perm-list{display:flex;flex-direction:column;gap:5px}
+.perm-item{display:flex;align-items:center;gap:7px;font-size:12px}
+.perm-ok{color:#5DCAA5}
+.perm-no{color:rgba(255,255,255,0.2);text-decoration:line-through}
+.perm-icon{width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pi-ok{background:rgba(29,158,117,0.15)}
+.pi-no{background:rgba(255,255,255,0.05)}
+/* TABLE */
+table{width:100%;border-collapse:collapse;table-layout:fixed}
+th{font-size:11px;color:var(--text-dim);font-weight:500;padding:8px 12px;border-bottom:0.5px solid var(--border);text-align:left}
+td{font-size:12px;color:var(--text-mid);padding:9px 12px;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+.role-pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
+.rp-admin{background:rgba(55,138,221,0.15);color:#85B7EB}
+.rp-member{background:rgba(239,159,39,0.1);color:#EF9F27}
+.change-btn{font-size:10px;padding:3px 8px;border-radius:6px;border:0.5px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .15s}
+.change-btn:hover{border-color:var(--border2);color:var(--text-main)}
+/* APPROVAL */
+.ap-item{background:rgba(255,255,255,0.02);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:8px;transition:all .15s}
+.ap-item:hover{border-color:var(--border2)}
+.ap-item.done{opacity:.4}
+.ap-name{font-size:13px;font-weight:500;color:var(--text-main)}
+.ap-from{font-size:11px;color:var(--text-mid);margin:3px 0 8px}
+.ap-reason{font-size:12px;color:var(--text-mid);background:rgba(255,255,255,0.03);border-radius:6px;padding:8px 10px;line-height:1.6;margin-bottom:10px}
+.memo-area{margin-bottom:8px}
+.memo-toggle{font-size:11px;color:var(--text-dim);cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-bottom:6px}
+.memo-toggle:hover{color:#85B7EB}
+.memo-input{display:none;width:100%;background:rgba(255,255,255,0.04);border:0.5px solid var(--border);border-radius:7px;padding:8px 10px;color:var(--text-main);font-family:inherit;font-size:11px;resize:none;min-height:54px}
+.memo-input:focus{outline:none;border-color:rgba(55,138,221,0.4)}
+.memo-input.show{display:block}
+.public-note{background:rgba(55,138,221,0.07);border:0.5px solid rgba(55,138,221,0.18);border-radius:6px;padding:6px 10px;font-size:11px;color:#85B7EB;margin-top:6px;display:none}
+.public-note.show{display:block}
+.ap-btns{display:flex;gap:6px;justify-content:flex-end;align-items:center}
+.btn-approve{font-size:11px;padding:6px 14px;border-radius:7px;border:none;background:#1D9E75;color:#fff;cursor:pointer;font-weight:500}
+.btn-approve:hover{background:#15795a}
+.btn-reject{font-size:11px;padding:6px 14px;border-radius:7px;border:0.5px solid rgba(240,149,149,0.3);background:rgba(240,149,149,0.08);color:#F09595;cursor:pointer}
+.btn-reject:hover{background:rgba(240,149,149,0.15)}
+/* SETTINGS */
+.setting-section{margin-bottom:20px}
+.setting-title{font-size:13px;font-weight:600;color:var(--text-main);margin-bottom:12px;padding-bottom:8px;border-bottom:0.5px solid var(--border)}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid rgba(255,255,255,0.04)}
+.setting-row:last-child{border-bottom:none}
+.setting-label{font-size:12px;color:var(--text-main)}
+.setting-desc{font-size:11px;color:var(--text-dim);margin-top:2px}
+.toggle{width:36px;height:20px;border-radius:10px;background:rgba(55,138,221,0.3);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.off{background:rgba(255,255,255,0.1)}
+.toggle::after{content:'';width:14px;height:14px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:left .2s}
+.toggle:not(.off)::after{left:19px}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.35)}}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="sb-toggle" onclick="toggleSb()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3.5h10M2 7h10M2 10.5h10" stroke="rgba(255,255,255,0.55)" stroke-width="1.3" stroke-linecap="round"/></svg></div>
+  <a href="dashboard.html" class="back-btn"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>대시보드</a>
+  <div style="width:0.5px;height:16px;background:var(--border)"></div>
+  <div class="nav-logo">돈<span>워리</span></div>
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2)">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div class="collab-avatars">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+    </div>
+  </div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-icon-btn" onclick="toggleSearch()" title="검색">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><path d="M9 9l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="nav-icon-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.5C4.5 1.5 2.5 3.5 2.5 6c0 1.8-.8 3.4-1.5 4h12c-.7-.6-1.5-2.2-1.5-4 0-2.5-2-4.5-4.5-4.5z" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/><path d="M5.5 10c0 .8.7 1.5 1.5 1.5s1.5-.7 1.5-1.5" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/></svg>
+      <div class="notif-dot"></div>
+    </div>
+    <button style="font-size:11px;padding:6px 14px;border-radius:7px;background:#185FA5;color:#fff;border:none;cursor:pointer;font-weight:500" onclick="alert('팀원 초대')">+ 팀원 초대</button>
+  </div>
+</div>
+
+<div id="search-bar">
+  <input type="text" placeholder="팀원 이름, 이메일로 검색..." oninput="searchMembers(this.value)" style="width:100%;background:rgba(255,255,255,0.06);border:0.5px solid var(--border2);border-radius:8px;padding:8px 14px;color:var(--text-main);font-family:inherit;font-size:13px;outline:none">
+</div>
+
+<div class="app">
+  <!-- 사이드바 -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-inner">
+      <div class="sb-logo">
+        <div class="sb-logo-mark"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg></div>
+        <div><div class="sb-logo-text">돈워리</div><div class="sb-logo-sub">2025 학생회</div></div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-sec">메뉴</div>
+        <a href="dashboard.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>대시보드</a>
+        <a href="events.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>행사 관리</a>
+        <a href="triple.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>3중 교차 검증<span class="sb-bdg">5</span></a>
+        <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
+        <a href="archive.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
+        <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <div class="sb-sec" style="margin-top:8px">설정</div>
+        <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+        <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+      </div>
+      <div class="sb-footer"><div style="display:flex;align-items:center;gap:8px"><div class="sb-avatar">장</div><div><div style="font-size:12px;color:var(--text-main)">장예원</div><div style="font-size:10px;color:#5DCAA5">관리자</div></div></div></div>
+    </div>
+  </div>
+
+  <!-- 메인 -->
+  <div class="main">
+    <!-- 페이지 탭 -->
+    <div class="page-tabs">
+      <div class="ptab on" id="tab-btn-approval" onclick="switchTab('approval')">승인 대기 <span style="background:rgba(239,159,39,0.2);color:#EF9F27;font-size:9px;padding:1px 5px;border-radius:6px;margin-left:4px">2</span></div>
+      <div class="ptab" id="tab-btn-members" onclick="switchTab('members')">팀원 관리</div>
+      <div class="ptab" id="tab-btn-settings" onclick="switchTab('settings')">설정 · 권한 체계</div>
+    </div>
+
+    <!-- TAB: 승인 대기 -->
+    <div class="tab-content on" id="tab-approval">
+      <div class="sl" style="margin-bottom:14px">수정 요청 승인 대기 <span style="font-size:10px;background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:6px;margin-left:4px">2건</span></div>
+
+      <!-- AP 1 -->
+      <div class="ap-item" id="ap1">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+          <div>
+            <div class="ap-name">김준서 — 입금액 수정 요청</div>
+            <div class="ap-from">요청자: 이다은 (국원) · 3중 교차 검증 · <span style="color:var(--text-dim)">10분 전</span></div>
+          </div>
+          <span style="font-size:10px;background:rgba(239,159,39,0.12);color:#EF9F27;padding:2px 7px;border-radius:8px">대기 중</span>
+        </div>
+        <div class="ap-reason">분할 입금으로 나머지 15,000원 추가 입금 예정입니다. 현재 15,000원 → 30,000원으로 수정 요청합니다.</div>
+        <div class="memo-area">
+          <div class="memo-toggle" onclick="toggleMemo('m1')">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            메모 남기기 <span style="font-size:10px;color:var(--text-dim)">(모든 팀원에게 공개)</span>
+          </div>
+          <textarea class="memo-input" id="m1" placeholder="예) 당사자에게 확인했습니다. 4/30까지 추가 입금 예정."></textarea>
+          <div class="public-note" id="pn1">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5.5v3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><circle cx="6" cy="4" r=".5" fill="currentColor"/></svg>
+            이 메모는 승인/반려 후 모든 팀원의 활동 내역에 표시됩니다.
+          </div>
+        </div>
+        <div class="ap-btns">
+          <button class="btn-reject" onclick="doReject('ap1','m1')">반려</button>
+          <button class="btn-approve" onclick="doApprove('ap1','m1')">최종 승인 — 장부 반영 ✓</button>
+        </div>
+      </div>
+
+      <!-- AP 2 -->
+      <div class="ap-item" id="ap2">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+          <div>
+            <div class="ap-name">류하은 — 미입금 사유 기재 요청</div>
+            <div class="ap-from">요청자: 박건령 (국원) · 3중 교차 검증 · <span style="color:var(--text-dim)">25분 전</span></div>
+          </div>
+          <span style="font-size:10px;background:rgba(239,159,39,0.12);color:#EF9F27;padding:2px 7px;border-radius:8px">대기 중</span>
+        </div>
+        <div class="ap-reason">개인 사정으로 불참 확정되었습니다. 환불 처리 및 명단 제외가 필요합니다.</div>
+        <div class="memo-area">
+          <div class="memo-toggle" onclick="toggleMemo('m2')">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M6 2v8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+            메모 남기기 <span style="font-size:10px;color:var(--text-dim)">(모든 팀원에게 공개)</span>
+          </div>
+          <textarea class="memo-input" id="m2" placeholder="예) 환불 처리 완료. 통장 이체 예정."></textarea>
+          <div class="public-note" id="pn2">
+            <svg width="11" height="11" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.1"/><path d="M6 5.5v3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><circle cx="6" cy="4" r=".5" fill="currentColor"/></svg>
+            이 메모는 승인/반려 후 모든 팀원의 활동 내역에 표시됩니다.
+          </div>
+        </div>
+        <div class="ap-btns">
+          <button class="btn-reject" onclick="doReject('ap2','m2')">반려</button>
+          <button class="btn-approve" onclick="doApprove('ap2','m2')">최종 승인 — 장부 반영 ✓</button>
+        </div>
+      </div>
+
+      <!-- 처리 완료 내역 -->
+      <div class="sl" style="margin-top:24px;margin-bottom:10px">처리 완료 내역</div>
+      <div class="ap-item done" style="cursor:default">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:12px;font-weight:500;color:var(--text-main)">박경서 — 교통비 영수증 장부 반영</span>
+          <span style="font-size:10px;background:rgba(29,158,117,0.15);color:#5DCAA5;padding:2px 7px;border-radius:8px">승인됨</span>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim)">요청자: 정찬우 · 어제 14:23 · 승인자: 장예원</div>
+        <div style="background:rgba(55,138,221,0.07);border:0.5px solid rgba(55,138,221,0.15);border-radius:6px;padding:6px 10px;font-size:11px;color:#85B7EB;margin-top:8px">
+          💬 공개 메모: 영수증 원본 확인 완료. OCR 재판독 후 반영했습니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: 팀원 관리 -->
+    <div class="tab-content" id="tab-members">
+      <div class="sl">팀원 목록 <span style="font-size:10px;font-weight:400;color:var(--text-dim);margin-left:4px">· 7명</span></div>
+      <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+        <table id="member-table">
+          <thead><tr>
+            <th style="width:16%">이름</th>
+            <th style="width:24%">이메일</th>
+            <th style="width:12%">권한</th>
+            <th style="width:14%">마지막 접속</th>
+            <th style="width:14%">수정 요청</th>
+            <th style="width:20%">변경</th>
+          </tr></thead>
+          <tbody>
+            <tr><td style="color:var(--text-main);font-weight:600;color:#85B7EB">장예원</td><td style="color:var(--text-dim)">jang@univ.ac.kr</td><td><span class="role-pill rp-admin">관리자</span></td><td>방금 전</td><td style="color:#5DCAA5">—</td><td><button class="change-btn" disabled style="opacity:.4">나</button></td></tr>
+            <tr><td style="color:var(--text-main);font-weight:500">박경서</td><td style="color:var(--text-dim)">park.k@univ.ac.kr</td><td><span class="role-pill rp-member">국원</span></td><td>30분 전</td><td style="color:#EF9F27">1건 대기</td><td><button class="change-btn" onclick="changeRole(this,'박경서')">권한 변경</button></td></tr>
+            <tr><td style="color:var(--text-main);font-weight:500">이다은</td><td style="color:var(--text-dim)">lee.d@univ.ac.kr</td><td><span class="role-pill rp-member">국원</span></td><td>1시간 전</td><td style="color:#EF9F27">1건 대기</td><td><button class="change-btn" onclick="changeRole(this,'이다은')">권한 변경</button></td></tr>
+            <tr><td style="color:var(--text-main);font-weight:500">정찬우</td><td style="color:var(--text-dim)">jung.c@univ.ac.kr</td><td><span class="role-pill rp-member">국원</span></td><td>2시간 전</td><td>—</td><td><button class="change-btn" onclick="changeRole(this,'정찬우')">권한 변경</button></td></tr>
+            <tr><td style="color:var(--text-main);font-weight:500">박건령</td><td style="color:var(--text-dim)">park.g@univ.ac.kr</td><td><span class="role-pill rp-member">국원</span></td><td>3시간 전</td><td>—</td><td><button class="change-btn" onclick="changeRole(this,'박건령')">권한 변경</button></td></tr>
+            <tr><td style="color:var(--text-main);font-weight:500">김준서</td><td style="color:var(--text-dim)">kim.j@univ.ac.kr</td><td><span class="role-pill rp-member">국원</span></td><td>어제</td><td>—</td><td><button class="change-btn" onclick="changeRole(this,'김준서')">권한 변경</button></td></tr>
+            <tr><td style="color:var(--text-main);font-weight:500">이예지</td><td style="color:var(--text-dim)">lee.y@univ.ac.kr</td><td><span class="role-pill rp-member">국원</span></td><td>어제</td><td>—</td><td><button class="change-btn" onclick="changeRole(this,'이예지')">권한 변경</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="sl">활동 내역 (최근)</div>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid rgba(255,255,255,0.05)"><div style="width:6px;height:6px;border-radius:50%;background:#5DCAA5;flex-shrink:0"></div><span style="font-size:12px;color:var(--text-mid);flex:1">장예원이 박경서의 수정 요청을 승인했습니다</span><span style="font-size:10px;color:var(--text-dim)">10분 전</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid rgba(255,255,255,0.05)"><div style="width:6px;height:6px;border-radius:50%;background:#85B7EB;flex-shrink:0"></div><span style="font-size:12px;color:var(--text-mid);flex:1">이다은이 OCR 영수증 3건을 업로드했습니다</span><span style="font-size:10px;color:var(--text-dim)">1시간 전</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid rgba(255,255,255,0.05)"><div style="width:6px;height:6px;border-radius:50%;background:#EF9F27;flex-shrink:0"></div><span style="font-size:12px;color:var(--text-mid);flex:1">정찬우가 3중 교차 검증 파일을 업로드했습니다</span><span style="font-size:10px;color:var(--text-dim)">2시간 전</span></div>
+        <div style="display:flex;align-items:center;gap:8px;padding:7px 0"><div style="width:6px;height:6px;border-radius:50%;background:#A9A5EE;flex-shrink:0"></div><span style="font-size:12px;color:var(--text-mid);flex:1">박건령이 아카이브에 파일 2건을 추가했습니다</span><span style="font-size:10px;color:var(--text-dim)">어제</span></div>
+      </div>
+    </div>
+
+    <!-- TAB: 설정 · 권한 체계 -->
+    <div class="tab-content" id="tab-settings">
+      <div class="sl">권한 체계 <span style="font-size:10px;color:var(--text-dim);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">— 아직 구체화 중입니다</span></div>
+      <div class="role-grid">
+        <div class="role-card" style="border-color:rgba(55,138,221,0.2);background:rgba(55,138,221,0.04)">
+          <div class="role-badge role-admin"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1L1.5 3.5v3C1.5 9 3.5 10.5 6 11c2.5-.5 4.5-2 4.5-4.5v-3L6 1z" stroke="#85B7EB" stroke-width="1.1"/></svg>관리자 (사무국장)</div>
+          <div class="role-title">수정 · 확정 · 승인 권한</div>
+          <div class="role-desc">행사 관리, 회계 장부의 모든 데이터를 직접 수정하고 확정할 수 있습니다. 국원의 수정 요청에 대한 최종 승인권을 가집니다.</div>
+          <div class="perm-list">
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">파일 업로드 · 삭제</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">데이터 직접 수정</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">장부 최종 확정</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">수정 요청 승인 / 반려</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">감사 패키지 추출</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">권한 체계 설정 변경</span></div>
+          </div>
+        </div>
+        <div class="role-card" style="border-color:rgba(239,159,39,0.2);background:rgba(239,159,39,0.03)">
+          <div class="role-badge role-member"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="4" r="2.5" stroke="#EF9F27" stroke-width="1.1"/><path d="M1.5 11c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" stroke="#EF9F27" stroke-width="1.1" stroke-linecap="round"/></svg>일반 국원</div>
+          <div class="role-title">업로드 전용 권한</div>
+          <div class="role-desc">파일 업로드와 OCR 결과 제출은 가능하지만, 데이터 수정은 관리자의 승인을 받아야 합니다.</div>
+          <div class="perm-list">
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">파일 업로드</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">OCR 결과 제출</span></div>
+            <div class="perm-item"><div class="perm-icon pi-ok"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M1 4l2 2 4-4" stroke="#5DCAA5" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="perm-ok">수정 요청 전송</span></div>
+            <div class="perm-item"><div class="perm-icon pi-no"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 2l4 4M6 2L2 6" stroke="rgba(255,255,255,0.2)" stroke-width="1.3" stroke-linecap="round"/></svg></div><span class="perm-no">데이터 직접 수정</span></div>
+            <div class="perm-item"><div class="perm-icon pi-no"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 2l4 4M6 2L2 6" stroke="rgba(255,255,255,0.2)" stroke-width="1.3" stroke-linecap="round"/></svg></div><span class="perm-no">장부 확정 · 감사 추출</span></div>
+            <div class="perm-item"><div class="perm-icon pi-no"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><path d="M2 2l4 4M6 2L2 6" stroke="rgba(255,255,255,0.2)" stroke-width="1.3" stroke-linecap="round"/></svg></div><span class="perm-no">권한 체계 설정 변경</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sl" style="margin-top:8px">서비스 설정</div>
+      <div class="card">
+        <div class="setting-section">
+          <div class="setting-title">알림</div>
+          <div class="setting-row">
+            <div><div class="setting-label">수정 요청 알림</div><div class="setting-desc">국원이 수정 요청을 보내면 관리자에게 알림</div></div>
+            <div class="toggle" onclick="this.classList.toggle('off')"></div>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-label">승인/반려 결과 알림</div><div class="setting-desc">요청자에게 처리 결과 알림 발송</div></div>
+            <div class="toggle" onclick="this.classList.toggle('off')"></div>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-label">공개 메모 알림</div><div class="setting-desc">새 공개 메모 작성 시 팀원 전체에게 알림</div></div>
+            <div class="toggle" onclick="this.classList.toggle('off')"></div>
+          </div>
+        </div>
+        <div class="setting-section">
+          <div class="setting-title">데이터 · 보안</div>
+          <div class="setting-row">
+            <div><div class="setting-label">자동 로그아웃</div><div class="setting-desc">30분 비활동 시 자동 로그아웃</div></div>
+            <div class="toggle" onclick="this.classList.toggle('off')"></div>
+          </div>
+          <div class="setting-row">
+            <div><div class="setting-label">활동 내역 기록</div><div class="setting-desc">모든 업로드·수정·승인 내역을 로그로 보관</div></div>
+            <div class="toggle" onclick="this.classList.toggle('off')"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleSb(){document.getElementById('sidebar').classList.toggle('closed');}
+function toggleSearch(){
+  const bar=document.getElementById('search-bar');
+  const open=bar.style.display==='none'||bar.style.display==='';
+  bar.style.display=open?'block':'none';
+  if(open)bar.querySelector('input').focus();
+}
+function searchMembers(q){
+  const lq=q.toLowerCase();
+  document.querySelectorAll('#member-table tbody tr').forEach(tr=>{
+    tr.style.display=(!q||tr.textContent.toLowerCase().includes(lq))?'':'none';
+  });
+}
+function switchTab(id){
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('on'));
+  document.getElementById('tab-btn-'+id).classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+}
+function toggleMemo(id){
+  const inp=document.getElementById(id);
+  const pn=document.getElementById('pn'+id.slice(1));
+  const isOpen=inp.classList.contains('show');
+  inp.classList.toggle('show',!isOpen);
+  pn.classList.toggle('show',!isOpen);
+  if(!isOpen)inp.focus();
+}
+function doApprove(apId,memoId){
+  const el=document.getElementById(apId);
+  const memo=document.getElementById(memoId).value.trim();
+  let html='<span style="font-size:11px;color:#5DCAA5;font-weight:500">✓ 승인 완료 — 장부에 반영되었습니다</span>';
+  if(memo) html+=`<div style="background:rgba(55,138,221,0.07);border:0.5px solid rgba(55,138,221,0.15);border-radius:6px;padding:6px 10px;font-size:11px;color:#85B7EB;margin-top:8px">💬 공개 메모: ${memo}</div>`;
+  el.classList.add('done');
+  el.querySelector('.ap-btns').innerHTML=html;
+  el.querySelector('.memo-area').style.display='none';
+}
+function doReject(apId,memoId){
+  const el=document.getElementById(apId);
+  const memo=document.getElementById(memoId).value.trim();
+  let html='<span style="font-size:11px;color:#F09595;font-weight:500">× 반려됨</span>';
+  if(memo) html+=`<div style="background:rgba(240,149,149,0.07);border:0.5px solid rgba(240,149,149,0.15);border-radius:6px;padding:6px 10px;font-size:11px;color:#F09595;margin-top:8px">💬 반려 메모: ${memo}</div>`;
+  el.classList.add('done');
+  el.querySelector('.ap-btns').innerHTML=html;
+  el.querySelector('.memo-area').style.display='none';
+}
+function changeRole(btn,name){
+  const td=btn.closest('tr').querySelector('.role-pill');
+  if(td.classList.contains('rp-member')){
+    if(confirm(name+'을(를) 관리자로 승격하시겠습니까?')){td.textContent='관리자';td.className='role-pill rp-admin';}
+  } else {
+    if(confirm(name+'을(를) 국원으로 변경하시겠습니까?')){td.textContent='국원';td.className='role-pill rp-member';}
+  }
+}
+</script>
+</body>
+</html>
