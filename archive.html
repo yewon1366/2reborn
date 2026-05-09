@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.documentElement.classList.add('light-mode');
+    }
+  })();
+</script>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB9R9B737F"></script>
 <script>
@@ -140,6 +148,157 @@ body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--
 .sb-user{display:flex;align-items:center;gap:8px}
 .sb-uname{font-size:12px;color:var(--text-main)}
 .sb-urole{font-size:10px;color:#5DCAA5}
+
+/* ─── LIGHT MODE OVERRIDES ─── */
+html.light-mode {
+  --navy: #F5F7FA;
+  --navy2: #FFFFFF;
+  --navy3: #E4E7EB;
+  --white: #1A202C;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.12);
+  --text-dim: rgba(0,0,0,0.45);
+  --text-mid: rgba(0,0,0,0.65);
+  --text-main: rgba(0,0,0,0.85);
+}
+
+html.light-mode .top-nav,
+html.light-mode .sidebar,
+html.light-mode .drive-sb,
+html.light-mode .content-header,
+html.light-mode .mc,
+html.light-mode .card,
+html.light-mode .nav-icon-btn,
+html.light-mode .sb-toggle,
+html.light-mode .tb-btn,
+html.light-mode .search-bar input,
+html.light-mode #search-bar,
+html.light-mode #search-bar input {
+  background: #FFFFFF !important;
+  color: var(--white) !important;
+}
+
+html.light-mode #search-bar {
+  border-bottom: 0.5px solid var(--border) !important;
+}
+
+html.light-mode .drive-sb {
+  background: #F9FAFB !important;
+  border-right-color: var(--border) !important;
+}
+
+html.light-mode .ds-item {
+  color: var(--text-mid) !important;
+  background: transparent !important;
+}
+
+html.light-mode .ds-item:hover {
+  background: rgba(0,0,0,0.04) !important;
+  color: var(--text-main) !important;
+}
+
+html.light-mode .ds-item.on {
+  background: rgba(55,138,221,0.08) !important;
+  color: #185FA5 !important;
+  border-right-color: #185FA5 !important;
+}
+
+html.light-mode .ds-divider {
+  background: var(--border) !important;
+}
+
+html.light-mode .drive-handle::after,
+html.light-mode .drive-tab::after {
+  background: rgba(0,0,0,0.08) !important;
+}
+
+html.light-mode .drive-handle:hover::after,
+html.light-mode .drive-tab:hover::after {
+  background: #378ADD !important;
+}
+
+html.light-mode .upload-zone {
+  border-color: rgba(0,0,0,0.1) !important;
+  background: rgba(0,0,0,0.02);
+}
+
+html.light-mode .upload-zone:hover {
+  background: rgba(55,138,221,0.04);
+  border-color: rgba(55,138,221,0.3) !important;
+}
+
+html.light-mode .fc, html.light-mode .fl-row {
+  background: #FFFFFF !important;
+  border-color: var(--border) !important;
+}
+
+html.light-mode .fc:hover, html.light-mode .fl-row:hover {
+  background: #F9FAFB !important;
+  border-color: var(--border2) !important;
+}
+
+html.light-mode .fc.sel, html.light-mode .fl-row.sel {
+  background: rgba(55,138,221,0.05) !important;
+  border-color: rgba(55,138,221,0.3) !important;
+}
+
+html.light-mode .sb-item:hover,
+html.light-mode .nav-icon-btn:hover {
+  background: rgba(0,0,0,0.05) !important;
+}
+
+html.light-mode .sb-item.active {
+  background: rgba(55,138,221,0.1) !important;
+  color: #185FA5 !important;
+}
+
+html.light-mode .sb-item.active svg {
+  color: #185FA5 !important;
+}
+
+html.light-mode .sb-logo-mark,
+html.light-mode .sb-avatar {
+  background: rgba(55,138,221,0.1) !important;
+}
+
+html.light-mode .top-nav > div[style*="background:rgba(29,158,117,0.1)"] {
+  background: rgba(29,158,117,0.08) !important;
+  border-color: rgba(29,158,117,0.2) !important;
+}
+
+html.light-mode .sb-item.active {
+  background: rgba(55,138,221,0.1) !important;
+  color: #185FA5 !important;
+}
+
+html.light-mode .sb-item.active svg {
+  color: #185FA5 !important;
+}
+
+html.light-mode .sb-logo-mark,
+html.light-mode .sb-avatar {
+  background: rgba(55,138,221,0.1) !important;
+}
+
+html.light-mode .sb-item svg,
+html.light-mode .nav-icon-btn svg {
+  opacity: 0.8;
+}
+
+html.light-mode .notif-dot {
+  border-color: #FFFFFF !important;
+}
+
+.theme-toggle svg .sun { display: none; }
+.theme-toggle svg .moon { display: block; }
+html.light-mode .theme-toggle svg .sun { display: block; }
+html.light-mode .theme-toggle svg .moon { display: none; }
+
+/* 업로더 아바타 */
+.uploader-tag{display:flex;align-items:center;gap:4px;margin-top:5px}
+.uploader-av{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
+.uploader-name{font-size:10px;color:var(--text-dim)}
+
 </style>
 </head>
 <body>
@@ -160,6 +319,12 @@ body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--
   </div>
 </div>
   <div class="nav-right">
+    <button class="nav-icon-btn theme-toggle" onclick="toggleTheme()" title="테마 변경">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path class="sun" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+        <path class="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
 
     <!-- 돋보기 -->
     <div class="nav-icon-btn" onclick="toggleSearch()" id="search-btn">
@@ -193,6 +358,10 @@ body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--
         <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
         <a href="archive.html" class="sb-item active"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
         <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+        <a href="guidelines.html" class="sb-item">
+          <svg viewBox="0 0 14 14" fill="none"><path d="M3 1h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.2"/><path d="M5 4h4M5 7h4M5 10h2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+          회계지침서
+        </a>
         <div class="sb-sec" style="margin-top:8px">설정</div>
         <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
         <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
@@ -263,7 +432,7 @@ body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--
       </div>
       <div class="file-grid" id="fg"></div>
       <div class="file-list" id="fl">
-        <div class="fl-hdr"><div style="flex:1">파일명</div><div style="width:160px">태그</div><div style="width:55px;text-align:right">크기</div><div style="width:50px;text-align:right">날짜</div></div>
+        <div class="fl-hdr"><div style="flex:1">파일명</div><div style="width:80px">업로더</div><div style="width:160px">태그</div><div style="width:55px;text-align:right">크기</div><div style="width:50px;text-align:right">날짜</div></div>
         <div id="fl-body"></div>
       </div>
     </div>
@@ -272,21 +441,21 @@ body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--
 
 <script>
 const FILES=[
-  {id:1,type:'folder',name:'봄 MT',      folder:'mt',      color:'#85B7EB',tags:['#봄MT'],                  size:'—',    date:'4/7'},
-  {id:2,type:'folder',name:'환영회',     folder:'welcome', color:'#5DCAA5',tags:['#환영회'],                 size:'—',    date:'4/10'},
-  {id:3,type:'folder',name:'체육대회',   folder:'sports',  color:'#A9A5EE',tags:['#체육대회'],               size:'—',    date:'5/1'},
-  {id:4,type:'folder',name:'공통 서류',  folder:'common',  color:'#EF9F27',tags:['#공통'],                   size:'—',    date:'4/24'},
-  {id:5,type:'jpg',   name:'영수증_GS25_봄MT.jpg',        folder:'mt',      tags:['#봄MT','#영수증','#식비'],    size:'2.4MB',date:'4/22'},
-  {id:6,type:'jpg',   name:'영수증_KTX_봄MT.jpg',         folder:'mt',      tags:['#봄MT','#영수증','#교통비'],  size:'1.8MB',date:'4/18'},
-  {id:7,type:'pdf',   name:'참가자명단_봄MT.pdf',          folder:'mt',      tags:['#봄MT','#명단'],              size:'120KB',date:'4/15'},
-  {id:8,type:'xlsx',  name:'봄MT_결산내역.xlsx',           folder:'mt',      tags:['#봄MT','#결산'],              size:'95KB', date:'4/28'},
-  {id:9,type:'jpg',   name:'영수증_올리브영_환영회.jpg',   folder:'welcome', tags:['#환영회','#영수증','#물품'],  size:'3.1MB',date:'4/25'},
-  {id:10,type:'pdf',  name:'참가자명단_환영회.pdf',        folder:'welcome', tags:['#환영회','#명단'],            size:'88KB', date:'4/8'},
-  {id:11,type:'pdf',  name:'지출결의서_환영회.pdf',        folder:'welcome', tags:['#환영회','#결의서'],          size:'210KB',date:'4/11'},
-  {id:12,type:'pdf',  name:'참가자명단_체육대회.pdf',      folder:'sports',  tags:['#체육대회','#명단'],          size:'145KB',date:'5/2'},
-  {id:13,type:'jpg',  name:'영수증_체육대회_물품.jpg',     folder:'sports',  tags:['#체육대회','#영수증'],        size:'2.2MB',date:'5/3'},
-  {id:14,type:'xlsx', name:'통장사본_입출금내역.xlsx',     folder:'common',  tags:['#통장','#공통'],              size:'88KB', date:'4/24'},
-  {id:15,type:'pdf',  name:'지출결의서_전체.pdf',          folder:'common',  tags:['#결의서','#공통'],            size:'340KB',date:'4/25'},
+  {id:1,type:'folder',name:'봄 MT',      folder:'mt',      color:'#85B7EB',tags:['#봄MT'],                  size:'—',    date:'4/7',  uploader:'장예원'},
+  {id:2,type:'folder',name:'환영회',     folder:'welcome', color:'#5DCAA5',tags:['#환영회'],                 size:'—',    date:'4/10', uploader:'김지수'},
+  {id:3,type:'folder',name:'체육대회',   folder:'sports',  color:'#A9A5EE',tags:['#체육대회'],               size:'—',    date:'5/1',  uploader:'이민호'},
+  {id:4,type:'folder',name:'공통 서류',  folder:'common',  color:'#EF9F27',tags:['#공통'],                   size:'—',    date:'4/24', uploader:'박하늘'},
+  {id:5,type:'jpg',   name:'영수증_GS25_봄MT.jpg',        folder:'mt',      tags:['#봄MT','#영수증','#식비'],    size:'2.4MB',date:'4/22', uploader:'장예원'},
+  {id:6,type:'jpg',   name:'영수증_KTX_봄MT.jpg',         folder:'mt',      tags:['#봄MT','#영수증','#교통비'],  size:'1.8MB',date:'4/18', uploader:'김지수'},
+  {id:7,type:'pdf',   name:'참가자명단_봄MT.pdf',          folder:'mt',      tags:['#봄MT','#명단'],              size:'120KB',date:'4/15', uploader:'정다은'},
+  {id:8,type:'xlsx',  name:'봄MT_결산내역.xlsx',           folder:'mt',      tags:['#봄MT','#결산'],              size:'95KB', date:'4/28', uploader:'장예원'},
+  {id:9,type:'jpg',   name:'영수증_올리브영_환영회.jpg',   folder:'welcome', tags:['#환영회','#영수증','#물품'],  size:'3.1MB',date:'4/25', uploader:'이민호'},
+  {id:10,type:'pdf',  name:'참가자명단_환영회.pdf',        folder:'welcome', tags:['#환영회','#명단'],            size:'88KB', date:'4/8',  uploader:'박하늘'},
+  {id:11,type:'pdf',  name:'지출결의서_환영회.pdf',        folder:'welcome', tags:['#환영회','#결의서'],          size:'210KB',date:'4/11', uploader:'정다은'},
+  {id:12,type:'pdf',  name:'참가자명단_체육대회.pdf',      folder:'sports',  tags:['#체육대회','#명단'],          size:'145KB',date:'5/2',  uploader:'장예원'},
+  {id:13,type:'jpg',  name:'영수증_체육대회_물품.jpg',     folder:'sports',  tags:['#체육대회','#영수증'],        size:'2.2MB',date:'5/3',  uploader:'김지수'},
+  {id:14,type:'xlsx', name:'통장사본_입출금내역.xlsx',     folder:'common',  tags:['#통장','#공통'],              size:'88KB', date:'4/24', uploader:'이민호'},
+  {id:15,type:'pdf',  name:'지출결의서_전체.pdf',          folder:'common',  tags:['#결의서','#공통'],            size:'340KB',date:'4/25', uploader:'장예원'},
 ];
 const TAG_MAP={'t-receipt':'#영수증','t-doc':'#결의서','t-list':'#명단','t-bank':'#통장','t-calc':'#결산'};
 const FC={'jpg':'#F09595','png':'#F09595','pdf':'#85B7EB','xlsx':'#5DCAA5','csv':'#EF9F27'};
@@ -352,6 +521,7 @@ function cardHTML(f){
     <div class="fc-icon" style="background:${color}18">${ficon(f.type,color)}</div>
     <div class="fc-name">${f.name}</div>
     <div class="fc-meta">${f.size} · ${f.date}</div>
+    ${f.uploader?`<div class="uploader-tag"><div class="uploader-av" style="background:rgba(55,138,221,0.2);color:#85B7EB">${f.uploader[0]}</div><span class="uploader-name">${f.uploader}</span></div>`:''}
     <div class="fc-tags">${f.tags.map(t=>`<span class="ft">${t}</span>`).join('')}</div>
   </div>`;
 }
@@ -364,6 +534,7 @@ function rowHTML(f){
   return`<div class="fl-row${isSel?' sel':''}" data-id="${f.id}" onclick="${click}">
     <div style="width:16px;flex-shrink:0">${ficon(f.type,color)}</div>
     <div class="fl-name">${f.name}</div>
+    <div style="width:80px;font-size:11px;color:var(--text-mid)">${f.uploader}</div>
     <div class="fl-tags">${f.tags.map(t=>`<span class="ft">${t}</span>`).join('')}</div>
     <div class="fl-size">${f.size}</div>
     <div class="fl-date">${f.date}</div>
@@ -402,6 +573,12 @@ function openUpload(){alert('파일 업로드\n업로드 후 태그를 추가하
 function mkFolder(){const n=prompt('새 폴더 이름');if(n)alert(`"${n}" 폴더가 생성되었습니다.`);}
 
 render();
+</script>
+<script>
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
 </script>
 </body>
 </html>

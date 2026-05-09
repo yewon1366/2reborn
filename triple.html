@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DB9R9B737F"></script>
 <script>
@@ -241,6 +242,71 @@ textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
 .collab-avatars{display:flex;align-items:center}
 .collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
 .collab-av:first-child{margin-left:0}
+/* ─── LIGHT MODE OVERRIDES ─── */
+html.light-mode {
+  --navy: #F5F7FA;
+  --navy2: #FFFFFF;
+  --navy3: #E4E7EB;
+  --white: #1A202C;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.12);
+  --text-dim: rgba(0,0,0,0.45);
+  --text-mid: rgba(0,0,0,0.65);
+  --text-main: rgba(0,0,0,0.85);
+}
+
+html.light-mode .top-nav,
+html.light-mode .sidebar,
+html.light-mode .content-header,
+html.light-mode .mc,
+html.light-mode .card,
+html.light-mode .ds-item,
+html.light-mode .nav-icon-btn,
+html.light-mode .sb-toggle,
+html.light-mode .tb-btn,
+html.light-mode .search-bar input,
+html.light-mode #search-bar input {
+  background: #FFFFFF !important;
+  color: var(--white) !important;
+}
+
+html.light-mode .sb-item:hover,
+html.light-mode .ds-item:hover,
+html.light-mode .nav-icon-btn:hover {
+  background: rgba(0,0,0,0.05) !important;
+}
+
+html.light-mode .sb-item.active {
+  background: rgba(55,138,221,0.1) !important;
+  color: #185FA5 !important;
+}
+
+html.light-mode .sb-item.active svg {
+  color: #185FA5 !important;
+}
+
+html.light-mode .sb-logo-mark,
+html.light-mode .sb-avatar {
+  background: rgba(55,138,221,0.1) !important;
+}
+
+html.light-mode .sb-item svg,
+html.light-mode .nav-icon-btn svg {
+  opacity: 0.8;
+}
+
+html.light-mode .notif-dot {
+  border-color: #FFFFFF !important;
+}
+
+.theme-toggle svg .sun { display: none; }
+.theme-toggle svg .moon { display: block; }
+html.light-mode .theme-toggle svg .sun { display: block; }
+html.light-mode .theme-toggle svg .moon { display: none; }
+
+.uploader-tag{display:inline-flex;align-items:center;gap:4px;margin-top:6px}
+.uploader-av{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
+.uploader-name{font-size:10px;color:var(--text-dim)}
 </style>
 </head>
 <body>
@@ -258,9 +324,17 @@ textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
       <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
     </div>
     </div>
+    </div>
+    </div>
   </div>
   </div>
   <div class="nav-right">
+    <button class="nav-icon-btn theme-toggle" onclick="toggleTheme()" title="테마 변경">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path class="sun" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+        <path class="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
     <div onclick="openApproval()" style="font-size:11px;padding:5px 12px;border-radius:7px;background:rgba(239,159,39,0.1);border:0.5px solid rgba(239,159,39,0.3);color:#EF9F27;cursor:pointer;font-weight:500">승인 대기 <span style="background:rgba(239,159,39,0.2);padding:1px 5px;border-radius:6px;margin-left:3px">2</span></div>
     <div class="nav-icon-btn" onclick="toggleSearch()" title="검색">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="6" cy="6" r="4" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><path d="M9 9l3 3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round"/></svg>
@@ -287,6 +361,10 @@ textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
       <a href="ocr.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>OCR 영수증<span class="sb-bdg">3</span></a>
       <a href="archive.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>아카이브</a>
       <a href="audit.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>감사 준비</a>
+      <a href="guidelines.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 1h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.2"/><path d="M5 4h4M5 7h4M5 10h2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        회계지침서
+      </a>
         <div class="sb-sec" style="margin-top:8px">설정</div>
         <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
         <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
@@ -317,6 +395,7 @@ textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
           <div class="upload-label">① 신청자 명단</div>
           <div class="upload-done">applicants_0425.csv</div>
           <div class="upload-sub">47명 · 업로드 완료</div>
+          <div class="uploader-tag"><div class="uploader-av" style="background:rgba(127,119,221,0.3);color:#A9A5EE">정</div><span class="uploader-name">정찬우 업로드</span></div>
           <button onclick="openPreview('applicants')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>
         </div>
         <div class="upload-box done" id="ub1">
@@ -324,6 +403,7 @@ textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
           <div class="upload-label">② 입금 내역</div>
           <div class="upload-done">bank_0425.xlsx</div>
           <div class="upload-sub">40건 · 업로드 완료</div>
+          <div class="uploader-tag"><div class="uploader-av" style="background:rgba(169,165,238,0.3);color:#A9A5EE">이</div><span class="uploader-name">이예지 업로드</span></div>
           <button onclick="openPreview('bank')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>
         </div>
         <div class="upload-box" id="ub2" ondragover="ev.preventDefault();this.classList.add('dragging')" ondragleave="this.classList.remove('dragging')" ondrop="dropFile(event,this)" onclick="simulateDrop(this)">
@@ -559,6 +639,10 @@ textarea:focus{outline:none;border-color:rgba(55,138,221,0.4)}
 </div>
 
 <script>
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
 function toggleSb(){document.getElementById('sidebar').classList.toggle('closed');}
 function toggleSearch(){
   const bar=document.getElementById('search-bar');
@@ -647,7 +731,7 @@ function simulateDrop(box){
   setTimeout(()=>{
     box.classList.remove('dragging');
     box.classList.add('done');
-    box.innerHTML=`<div class="upload-icon" style="background:rgba(29,158,117,0.15)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#5DCAA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="upload-label">③ 납부자 명단</div><div class="upload-done">payers_0425.csv</div><div class="upload-sub">45명 · 업로드 완료</div><button onclick="openPreview('applicants')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>`;
+    box.innerHTML=`<div class="upload-icon" style="background:rgba(29,158,117,0.15)"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9l4 4 8-8" stroke="#5DCAA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="upload-label">③ 납부자 명단</div><div class="upload-done">payers_0425.csv</div><div class="upload-sub">45명 · 업로드 완료</div>` + getUploaderTag() + `<button onclick="openPreview('applicants')" style="margin-top:4px;font-size:10px;padding:3px 9px;border-radius:6px;border:0.5px solid rgba(55,138,221,0.35);background:rgba(55,138,221,0.1);color:#85B7EB;cursor:pointer">파일 미리보기</button>`;
   },600);
 }
 function dropFile(e,box){e.preventDefault();box.classList.remove('dragging');simulateDrop(box);}
@@ -747,6 +831,24 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+function getUploaderTag() {
+  try {
+    var members = JSON.parse(localStorage.getItem('donworry_members') || '[]');
+    var me = members.find(function(m){ return m.me; }) || {name:'장예원'};
+    var cm = {'장':'rgba(55,138,221,0.3)','정':'rgba(127,119,221,0.3)','이':'rgba(239,159,39,0.3)','박':'rgba(93,202,165,0.3)','김':'rgba(55,138,221,0.2)'};
+    var tm = {'장':'#85B7EB','정':'#A9A5EE','이':'#EF9F27','박':'#5DCAA5','김':'#85B7EB'};
+    var i = me.name[0];
+    return '<div class="uploader-tag"><div class="uploader-av" style="background:' + (cm[i]||'rgba(55,138,221,0.3)') + ';color:' + (tm[i]||'#85B7EB') + '">' + i + '</div><span class="uploader-name">' + me.name + ' 업로드</span></div>';
+  } catch(e) { return ''; }
+}
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.documentElement.classList.add('light-mode');
+    }
+  })();
+
 </script>
 </body>
 </html>

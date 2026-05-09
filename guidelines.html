@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      document.documentElement.classList.add('light-mode');
+    }
+  })();
+</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>돈워리 — 회계지침서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "wlnbiy6gr3");
+</script>
+<style>
+:root{
+  --navy:#0E1B2E;
+  --navy2:#162438;
+  --navy3:#1C2E45;
+  --blue:#185FA5;
+  --blue-mid:#378ADD;
+  --blue-light:#85B7EB;
+  --blue-dim:rgba(55,138,221,0.15);
+  --teal:#1D9E75;
+  --teal-light:#5DCAA5;
+  --amber:#BA7517;
+  --amber-light:#EF9F27;
+  --red:#A32D2D;
+  --red-light:#F09595;
+  --white:#FAFAF8;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.12);
+  --text-dim:rgba(255,255,255,0.4);
+  --text-mid:rgba(255,255,255,0.65);
+  --text-main:rgba(255,255,255,0.92);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans','Noto Sans KR',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;display:flex;flex-direction:column}
+
+/* ─── TOP NAV ─── */
+.top-nav{height:52px;background:rgba(14,27,46,0.9);backdrop-filter:blur(12px);border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;position:sticky;top:0;z-index:50}
+.top-nav-logo{font-size:15px;font-weight:700;color:var(--white);letter-spacing:-.3px}
+.top-nav-logo span{color:#378ADD}
+.top-nav-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.nav-icon-btn{width:32px;height:32px;border-radius:8px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:background .15s}
+.nav-icon-btn:hover{background:rgba(255,255,255,0.08)}
+
+/* ─── LAYOUT ─── */
+.app{display:flex;flex:1}
+
+/* ─── SIDEBAR ─── */
+.sidebar{width:200px;flex-shrink:0;background:var(--navy2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;padding:0}
+.sb-logo{padding:18px 16px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;gap:8px}
+.sb-logo-mark{width:28px;height:28px;border-radius:7px;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center}
+.sb-logo-text{font-size:13px;font-weight:600;color:var(--text-main)}
+.sb-logo-sub{font-size:10px;color:var(--text-dim);margin-top:1px}
+.sb-nav{padding:10px 8px;flex:1}
+.sb-sec{font-size:10px;color:var(--text-dim);padding:12px 8px 5px;letter-spacing:.07em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;font-size:12px;color:var(--text-mid);cursor:pointer;margin-bottom:2px;text-decoration:none;transition:all .15s}
+.sb-item:hover{background:rgba(255,255,255,0.05);color:var(--white)}
+.sb-item.active{background:rgba(55,138,221,0.15);color:#85B7EB;border:0.5px solid rgba(55,138,221,0.2)}
+.sb-item svg{width:14px;height:14px;flex-shrink:0;opacity:.7}
+.sb-item.active svg{opacity:1}
+.sb-bdg{font-size:9px;padding:1px 6px;border-radius:10px;background:rgba(224,75,74,0.2);color:#F09595;margin-left:auto;border:0.5px solid rgba(224,75,74,0.2)}
+.sb-footer{padding:12px 10px;border-top:0.5px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:8px}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0}
+.sb-uname{font-size:12px;color:var(--text-main)}
+.sb-urole{font-size:10px;color:var(--text-dim)}
+
+/* ─── MAIN CONTENT ─── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.content-header{height:52px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:10px;background:rgba(22,36,56,0.4)}
+.ch-title{font-size:15px;font-weight:600;color:var(--text-main)}
+.content{padding:20px 22px;flex:1;overflow:auto;background:transparent;display:flex;flex-direction:column;gap:20px}
+
+/* ─── UPLOAD BOX ─── */
+.upload-container{
+  background:rgba(255,255,255,0.03);
+  border:1.5px dashed var(--border);
+  border-radius:12px;
+  padding:40px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+}
+.upload-container:hover{
+  border-color:var(--blue-mid);
+  background:rgba(55,138,221,0.05);
+}
+.upload-icon{font-size:32px;margin-bottom:12px;display:block}
+.upload-text{font-size:14px;color:var(--text-main);font-weight:500;margin-bottom:4px}
+.upload-sub{font-size:12px;color:var(--text-dim)}
+
+/* ─── VIEWER ─── */
+.pdf-viewer{
+  flex:1;
+  background:rgba(255,255,255,0.02);
+  border:0.5px solid var(--border);
+  border-radius:12px;
+  display:none; /* Hidden initially */
+  flex-direction:column;
+  overflow:hidden;
+}
+.viewer-header{
+  padding:10px 16px;
+  background:rgba(255,255,255,0.04);
+  border-bottom:0.5px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.viewer-title{font-size:12px;font-weight:500;color:var(--text-mid)}
+.viewer-body{
+  flex:1;
+  padding:40px 20px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  background:#525659; /* PDF viewer grey background */
+  gap:20px;
+}
+.pdf-page{
+  width:100%;
+  max-width:800px;
+  background:white;
+  color:#333;
+  padding:80px 70px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.3);
+  min-height:1100px;
+  flex-shrink:0;
+  position:relative;
+}
+.page-num{
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:12px;
+  color:#999;
+}
+.pdf-h1{font-size:32px;font-weight:700;margin-bottom:40px;text-align:center;border-bottom:2px solid #333;padding-bottom:20px}
+.pdf-h2{font-size:20px;font-weight:700;margin-top:35px;margin-bottom:15px;color:#185FA5;border-left:4px solid #185FA5;padding-left:12px}
+.pdf-p{font-size:14px;line-height:1.9;margin-bottom:20px;color:#333;text-align:justify}
+.pdf-list{margin-left:20px;margin-bottom:20px}
+.pdf-list li{font-size:14px;line-height:1.9;margin-bottom:10px}
+.pdf-table{width:100%;border-collapse:collapse;margin:20px 0}
+.pdf-table th, .pdf-table td{border:1px solid #ddd;padding:10px;font-size:13px;text-align:center}
+.pdf-table th{background:#f8f9fa;font-weight:600}
+
+/* ─── LIGHT MODE OVERRIDES ─── */
+html.light-mode {
+  --navy: #F5F7FA;
+  --navy2: #FFFFFF;
+  --navy3: #E4E7EB;
+  --white: #1A202C;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.12);
+  --text-dim: rgba(0,0,0,0.45);
+  --text-mid: rgba(0,0,0,0.65);
+  --text-main: rgba(0,0,0,0.85);
+}
+html.light-mode .top-nav, html.light-mode .sidebar, html.light-mode .content-header, html.light-mode .upload-container, html.light-mode .pdf-viewer, html.light-mode .viewer-header {
+  background: #FFFFFF !important;
+  color: var(--white) !important;
+}
+html.light-mode .viewer-body { background: #E4E7EB !important; }
+html.light-mode .sb-item.active { background: rgba(55,138,221,0.1) !important; color: #185FA5 !important; }
+
+.uploader-tag{display:inline-flex;align-items:center;gap:4px;margin-top:5px}
+.uploader-av{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0}
+.uploader-name{font-size:10px;color:var(--text-dim)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#5DCAA5;animation:livepulse 2s infinite;flex-shrink:0}
+@keyframes livepulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.35)}}
+.collab-avatars{display:flex;align-items:center}
+.collab-av{width:24px;height:24px;border-radius:50%;border:2px solid var(--navy2,#162438);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;margin-left:-6px}
+.collab-av:first-child{margin-left:0}
+</style>
+</head>
+<body>
+
+<div class="top-nav">
+  <div class="top-nav-logo">돈<span>워리</span></div>
+  <div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:8px;background:rgba(29,158,117,0.1);border:0.5px solid rgba(29,158,117,0.2)">
+    <div class="live-dot"></div>
+    <span style="font-size:11px;color:#5DCAA5;font-weight:500">실시간 협업 중</span>
+    <div class="collab-avatars">
+      <div class="collab-av" style="background:rgba(55,138,221,0.3);color:#85B7EB">장</div>
+      <div class="collab-av" style="background:rgba(93,202,165,0.3);color:#5DCAA5">정</div>
+      <div class="collab-av" style="background:rgba(239,159,39,0.3);color:#EF9F27">이</div>
+    </div>
+    </div>
+    </div>
+  </div>
+  <div class="top-nav-right">
+    <button class="nav-icon-btn theme-toggle" onclick="toggleTheme()" title="테마 변경">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path class="sun" d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/>
+        <path class="moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1.5" fill="#378ADD"/><rect x="8" y="1" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="1" y="8" width="5" height="5" rx="1.5" fill="rgba(55,138,221,0.4)"/><rect x="8" y="8" width="5" height="5" rx="1.5" fill="#378ADD"/></svg>
+      </div>
+      <div>
+        <div class="sb-logo-text">돈워리</div>
+        <div class="sb-logo-sub">2025 학생회</div>
+      </div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-sec">메뉴</div>
+      <a href="dashboard.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="currentColor"/></svg>
+        대시보드
+      </a>
+      <a href="events.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M1 6h12" stroke="currentColor" stroke-width="1"/></svg>
+        행사 관리
+      </a>
+      <a href="triple.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.2"/><path d="M5 5h4M5 7.5h3" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        3중 교차 검증
+      </a>
+      <a href="ocr.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="10" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4 4h6M4 6.5h6M4 9h4" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        OCR 영수증
+      </a>
+      <a href="archive.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M2 4h10v8H2z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l5-3 5 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        아카이브
+      </a>
+      <a href="audit.html" class="sb-item">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M7 1L1.5 4v4c0 2.5 2.5 4.5 5.5 5 3-.5 5.5-2.5 5.5-5V4L7 1z" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7l2 2 3-3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        감사 준비
+      </a>
+      <a href="guidelines.html" class="sb-item active">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 1h8a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.2"/><path d="M5 4h4M5 7h4M5 10h2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        회계지침서
+      </a>
+      <div class="sb-sec" style="margin-top:8px">설정</div>
+      <a href="team.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="10" cy="4.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 12c0-1.9 1.8-3.5 4-3.5s4 1.6 4 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M10 8.5c1.7.3 3 1.6 3 3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>팀원 및 권한 관리</a>
+      <a href="settings.html" class="sb-item"><svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7 1v2M7 11v2M1 7h2M11 7h2M2.9 2.9l1.4 1.4M9.7 9.7l1.4 1.4M2.9 11.1l1.4-1.4M9.7 4.3l1.4-1.4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>설정</a>
+    </div>
+<div class="sb-footer" style="padding:10px;border-top:0.5px solid rgba(255,255,255,0.08);flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:26px;height:26px;border-radius:50%;background:rgba(55,138,221,0.2);border:0.5px solid rgba(55,138,221,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#85B7EB;flex-shrink:0">장</div>
+        <div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.92)">장예원</div>
+          <div style="font-size:10px;color:#5DCAA5">관리자</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="content-header">
+      <div class="ch-title">회계지침서</div>
+    </div>
+    <div class="content">
+      <div class="upload-container" id="upload-box" onclick="simulateUpload()">
+        <span class="upload-icon">📄</span>
+        <div class="upload-text">회계지침서 파일을 업로드하세요</div>
+        <div class="upload-sub">PDF, Word 또는 이미지 파일 (최대 20MB)</div>
+      </div>
+
+      <div class="pdf-viewer" id="viewer">
+        <div class="viewer-header">
+          <span class="viewer-title">2025_학생회_회계운영_지침서.pdf</span>
+          <button class="nav-icon-btn" onclick="resetView()" title="닫기">×</button>
+        </div>
+        <div class="viewer-body">
+          <!-- Page 1 -->
+          <div class="pdf-page">
+            <h1 class="pdf-h1">2025 학생회 회계운영 지침서</h1>
+            <p class="pdf-p">본 지침서는 2025학년도 학생회 및 하위 기구의 투명하고 효율적인 예산 집행과 회계 처리를 목적으로 작성되었습니다. 모든 집행 부서는 본 지침을 준수하여 감사를 준비해야 합니다.</p>
+
+            <h2 class="pdf-h2">제1장 총칙</h2>
+            <p class="pdf-p"><b>제1조 (목적)</b> 본 지침은 학생회비의 투명한 운용과 공정한 예산 집행을 통해 회원들의 권익을 보호하고 학생회 신뢰도를 제고하는 데 목적이 있다.</p>
+            <p class="pdf-p"><b>제2조 (적용범위)</b> 본 지침은 총학생회를 포함한 각 단과대학 학생회, 학과(부) 학생회 및 중앙집행위원회 산하 모든 기구에 적용된다.</p>
+            <p class="pdf-p"><b>제3조 (회계연도)</b> 학생회의 회계연도는 매년 1월 1일부터 12월 31일까지로 한다.</p>
+
+            <h2 class="pdf-h2">제2장 지출 증빙 일반 규정</h2>
+            <p class="pdf-p">모든 지출은 객관적인 증빙자료에 의하여 그 집행 근거가 명확히 확인되어야 하며, 다음 각 호의 규정을 준수한다.</p>
+            <ul class="pdf-list">
+              <li><b>적격 증빙의 원칙:</b> 신용카드 매출전표, 현금영수증(지출증빙용), 세금계산서만을 적격 증빙으로 인정한다.</li>
+              <li><b>간이 영수증 제한:</b> 3만원 이하의 소액 지출이라 하더라도 부득이한 경우를 제외하고는 간이 영수증 사용을 금지한다.</li>
+              <li><b>온라인 결제:</b> 온라인 쇼핑몰 이용 시 주문 내역서와 카드 매출전표를 함께 첨부해야 한다.</li>
+            </ul>
+            <div class="page-num">1 / 3</div>
+          </div>
+
+          <!-- Page 2 -->
+          <div class="pdf-page">
+            <h2 class="pdf-h2">제3장 예산 항목별 집행 기준</h2>
+            <p class="pdf-p">예산은 승인된 예산안의 관·항·목에 따라 목적에 맞게 집행하여야 하며, 항목 간 전용이 필요한 경우 사전에 중앙운영위원회의 승인을 득해야 한다.</p>
+            
+            <h3 style="font-size:16px; margin:15px 0 10px; font-weight:600;">[항목별 집행 한도 및 주의사항]</h3>
+            <table class="pdf-table">
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>집행 한도 및 기준</th>
+                  <th>비고</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>식비 및 다과비</td>
+                  <td>1인 1식 10,000원 이하</td>
+                  <td>회의록 필수 첨부</td>
+                </tr>
+                <tr>
+                  <td>물품 구입비</td>
+                  <td>단가 50,000원 이상 시 비교 견적</td>
+                  <td>자산성 물품 관리 대장 기입</td>
+                </tr>
+                <tr>
+                  <td>인쇄 및 홍보비</td>
+                  <td>업체 견적서 및 결과물 사진</td>
+                  <td>교내 복사실 우선 이용 권장</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <h2 class="pdf-h2">제4장 학생회 카드 사용 규정</h2>
+            <p class="pdf-p"><b>제10조 (카드 관리)</b> 학생회 법인카드는 각 기구의 장 또는 지명된 재무 담당자(총무)가 관리하며, 개인적인 용도로의 사용을 엄격히 금지한다.</p>
+            <p class="pdf-p"><b>제11조 (사용 시간)</b> 심야 시간(23시 이후) 및 주말 사용은 원칙적으로 금지하되, 행사 진행 등 업무상 필수적인 경우 사유서를 작성하여 제출한다.</p>
+            <p class="pdf-p"><b>제12조 (업종 제한)</b> 유흥 주점, 노래방, 단란주점 등 학생회 목적에 부합하지 않는 업종에서의 사용은 전면 금지하며, 적발 시 전액 환수 조치 및 징계위원회에 회부한다.</p>
+            <div class="page-num">2 / 3</div>
+          </div>
+
+          <!-- Page 3 -->
+          <div class="pdf-page">
+            <h2 class="pdf-h2">제5장 회계 보고 및 감사</h2>
+            <p class="pdf-p"><b>제15조 (월별 보고)</b> 각 기구는 매월 말일까지 해당 월의 수입 및 지출 내역을 정리하여 '돈워리' 시스템에 등록해야 한다.</p>
+            <p class="pdf-p"><b>제16조 (정기 감사)</b> 매 학기 종결 후 15일 이내에 중앙감사위원회의 정기 감사를 수감해야 하며, 감사 결과는 학생 커뮤니티에 공개한다.</p>
+            
+            <h2 class="pdf-h2">제6장 특수 상황 처리</h2>
+            <p class="pdf-p"><b>제20조 (기부금 및 협찬)</b> 외부 업체로부터 받은 협찬금 및 물품은 반드시 학생회 공식 계좌로 입금 받아야 하며, 별도의 협찬 내역서를 작성하여 보고한다.</p>
+            <p class="pdf-p"><b>제21조 (예비비 사용)</b> 예측하지 못한 지출에 대해서는 예비비 사용 신청서를 작성하여 총학생회장의 승인을 얻은 후 집행한다.</p>
+
+            <div style="margin-top:100px; padding:40px; border:1px solid #eee; background:#fafafa; border-radius:8px;">
+              <p class="pdf-p" style="text-align:center; font-weight:600; font-size:18px;">위 지침을 위반하여 발생한 회계상의 사고에 대해서는<br>해당 기구의 장 및 실무자에게 책임이 있음을 확인합니다.</p>
+              <div style="margin-top:40px; display:flex; justify-content:space-around;">
+                <div style="text-align:center;">(인)</div>
+                <div style="text-align:center;">(인)</div>
+              </div>
+            </div>
+
+            <div style="margin-top:60px; text-align:center; font-size:16px; font-weight:700;">2025. 03. 01.</div>
+            <div style="margin-top:10px; text-align:center; font-size:18px; font-weight:800;">2025학년도 학생회 중앙집행위원회</div>
+
+            <div class="page-num">3 / 3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function getGuideUploader() {
+  try {
+    const members = JSON.parse(localStorage.getItem('donworry_members') || '[]');
+    const me = members.find(m => m.me) || {name:'장예원'};
+    const cm = {'장':'rgba(55,138,221,0.3)','정':'rgba(127,119,221,0.3)','이':'rgba(239,159,39,0.3)','박':'rgba(93,202,165,0.3)','김':'rgba(55,138,221,0.2)'};
+    const tm = {'장':'#85B7EB','정':'#A9A5EE','이':'#EF9F27','박':'#5DCAA5','김':'#85B7EB'};
+    const i = me.name[0];
+    return `<div class="uploader-tag" style="margin-left:8px"><div class="uploader-av" style="background:${cm[i]||'rgba(55,138,221,0.3)'};color:${tm[i]||'#85B7EB'}">${i}</div><span class="uploader-name">${me.name} 업로드</span></div>`;
+  } catch(e) { return ''; }
+}
+function simulateUpload() {
+  const box = document.getElementById('upload-box');
+  const viewer = document.getElementById('viewer');
+  box.style.display = 'none';
+  viewer.style.display = 'flex';
+
+  // 업로더 표시: viewer-header에 추가
+  const existTag = document.getElementById('guide-uploader-tag');
+  if(existTag) existTag.remove();
+  const vHeader = document.querySelector('.viewer-header');
+  if(vHeader) {
+    const tag = document.createElement('div');
+    tag.id = 'guide-uploader-tag';
+    tag.style.display = 'inline-flex';
+    tag.innerHTML = getGuideUploader();
+    vHeader.appendChild(tag);
+  }
+}
+
+function resetView() {
+  const box = document.getElementById('upload-box');
+  const viewer = document.getElementById('viewer');
+  
+  box.style.display = 'block';
+  viewer.style.display = 'none';
+}
+
+function toggleTheme() {
+  const isLight = document.documentElement.classList.toggle('light-mode');
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+</script>
+</body>
+</html>
