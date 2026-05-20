@@ -401,6 +401,11 @@ html.light-mode .theme-toggle svg .moon { display: none; }
     <div class="ds-item" id="di-t-list" onclick="go('t-list',this)"><span class="ds-tag-dot" style="background:#5DCAA5"></span>#명단<span class="ds-count">3</span></div>
     <div class="ds-item" id="di-t-bank" onclick="go('t-bank',this)"><span class="ds-tag-dot" style="background:#EF9F27"></span>#통장<span class="ds-count">1</span></div>
     <div class="ds-item" id="di-t-calc" onclick="go('t-calc',this)"><span class="ds-tag-dot" style="background:#A9A5EE"></span>#결산<span class="ds-count">1</span></div>
+  <div class="ds-divider"></div>
+  <div class="ds-head">연도</div>
+  <div class="ds-item" id="di-t-2025" onclick="go('t-2025',this)"><span class="ds-tag-dot" style="background:#378ADD"></span>#2025<span class="ds-count">7</span></div>
+  <div class="ds-item" id="di-t-2024" onclick="go('t-2024',this)"><span class="ds-tag-dot" style="background:#5DCAA5"></span>#2024<span class="ds-count">0</span></div>
+  <div class="ds-item" id="di-t-2023" onclick="go('t-2023',this)"><span class="ds-tag-dot" style="background:#EF9F27"></span>#2023<span class="ds-count">0</span></div>
   </div><!-- ds-inner -->
   </div><!-- drive-sb -->
 
@@ -445,10 +450,10 @@ const FILES=[
   {id:2,type:'folder',name:'환영회',     folder:'welcome', color:'#5DCAA5',tags:['#환영회'],                 size:'—',    date:'4/10', uploader:'김지수'},
   {id:3,type:'folder',name:'체육대회',   folder:'sports',  color:'#A9A5EE',tags:['#체육대회'],               size:'—',    date:'5/1',  uploader:'이민호'},
   {id:4,type:'folder',name:'공통 서류',  folder:'common',  color:'#EF9F27',tags:['#공통'],                   size:'—',    date:'4/24', uploader:'박하늘'},
-  {id:5,type:'jpg',   name:'영수증_GS25_봄MT.jpg',        folder:'mt',      tags:['#봄MT','#영수증','#식비'],    size:'2.4MB',date:'4/22', uploader:'장예원'},
+  {id:5,type:'jpg',   name:'영수증_GS25_봄MT.jpg',        folder:'mt',      tags:['#봄MT','#영수증','#식비','#2025'],    size:'2.4MB',date:'4/22', uploader:'장예원'},
   {id:6,type:'jpg',   name:'영수증_KTX_봄MT.jpg',         folder:'mt',      tags:['#봄MT','#영수증','#교통비'],  size:'1.8MB',date:'4/18', uploader:'김지수'},
-  {id:7,type:'pdf',   name:'참가자명단_봄MT.pdf',          folder:'mt',      tags:['#봄MT','#명단'],              size:'120KB',date:'4/15', uploader:'정다은'},
-  {id:8,type:'xlsx',  name:'봄MT_결산내역.xlsx',           folder:'mt',      tags:['#봄MT','#결산'],              size:'95KB', date:'4/28', uploader:'장예원'},
+  {id:7,type:'pdf',   name:'참가자명단_봄MT.pdf',          folder:'mt',      tags:['#봄MT','#명단','#2025'],              size:'120KB',date:'4/15', uploader:'정다은'},
+  {id:8,type:'xlsx',  name:'봄MT_결산내역.xlsx',           folder:'mt',      tags:['#봄MT','#결산','#2025'],              size:'95KB', date:'4/28', uploader:'장예원'},
   {id:9,type:'jpg',   name:'영수증_올리브영_환영회.jpg',   folder:'welcome', tags:['#환영회','#영수증','#물품'],  size:'3.1MB',date:'4/25', uploader:'이민호'},
   {id:10,type:'pdf',  name:'참가자명단_환영회.pdf',        folder:'welcome', tags:['#환영회','#명단'],            size:'88KB', date:'4/8',  uploader:'박하늘'},
   {id:11,type:'pdf',  name:'지출결의서_환영회.pdf',        folder:'welcome', tags:['#환영회','#결의서'],          size:'210KB',date:'4/11', uploader:'정다은'},
@@ -457,7 +462,7 @@ const FILES=[
   {id:14,type:'xlsx', name:'통장사본_입출금내역.xlsx',     folder:'common',  tags:['#통장','#공통'],              size:'88KB', date:'4/24', uploader:'이민호'},
   {id:15,type:'pdf',  name:'지출결의서_전체.pdf',          folder:'common',  tags:['#결의서','#공통'],            size:'340KB',date:'4/25', uploader:'장예원'},
 ];
-const TAG_MAP={'t-receipt':'#영수증','t-doc':'#결의서','t-list':'#명단','t-bank':'#통장','t-calc':'#결산'};
+const TAG_MAP={'t-receipt':'#영수증','t-doc':'#결의서','t-list':'#명단','t-bank':'#통장','t-calc':'#결산','t-2025':'#2025','t-2024':'#2024','t-2023':'#2023'};
 const FC={'jpg':'#F09595','png':'#F09595','pdf':'#85B7EB','xlsx':'#5DCAA5','csv':'#EF9F27'};
 const BC_MAP={all:'내 드라이브',mt:'내 드라이브 › 봄 MT',welcome:'내 드라이브 › 환영회',sports:'내 드라이브 › 체육대회',common:'내 드라이브 › 공통 서류','t-receipt':'태그 › #영수증','t-doc':'태그 › #결의서','t-list':'태그 › #명단','t-bank':'태그 › #통장','t-calc':'태그 › #결산'};
 let cur='all', viewMode='grid', sel=new Set();

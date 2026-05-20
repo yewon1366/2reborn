@@ -315,8 +315,11 @@ html.light-mode .theme-toggle svg .moon { display: none; }
       <div class="ch-title">행사 관리</div>
       <div class="ch-sub">2025년 · 진행 중 2건</div>
       <div class="ch-right">
-        <select style="font-size:11px;padding:5px 8px;border-radius:7px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-mid)">
-          <option>2025년</option><option>2024년</option><option>2023년</option>
+        <select id="year-select" onchange="filterByYear(this.value)" style="font-size:11px;padding:5px 8px;border-radius:7px;border:0.5px solid var(--border);background:rgba(255,255,255,0.04);color:var(--text-mid)">
+          <option value="all">전체</option>
+          <option value="2025" selected>2025년</option>
+          <option value="2024">2024년</option>
+          <option value="2023">2023년</option>
         </select>
       </div>
     </div>
@@ -502,7 +505,10 @@ const DEFAULT_EVENTS = [
   { id: 2, name: '동아리 연합 체육대회', cat: '체육·문화', start: '2025-05-10', end: '2025-05-10', budget: 450000, people: 120, status: 'prep', desc: '인근 대학 연합 체육대회.', spend: 0, color: '#85B7EB' },
   { id: 3, name: '졸업 기념품 제작', cat: '물품 구매', start: '2025-05-01', end: '2025-05-20', budget: 80000, people: 0, status: 'prep', desc: '졸업생 기념품 제작 발주.', spend: 0, color: '#EF9F27' },
   { id: 4, name: '1학기 환영회', cat: '환영·친목', start: '2025-03-25', end: '2025-03-25', budget: 300000, people: 85, status: 'done', desc: '신입생 및 재학생 환영회.', spend: 287000, color: 'rgba(255,255,255,0.3)' },
-  { id: 5, name: '신입생 OT', cat: '환영·친목', start: '2025-03-05', end: '2025-03-05', budget: 250000, people: 92, status: 'done', desc: '신입생 오리엔테이션.', spend: 241000, color: 'rgba(255,255,255,0.3)' }
+  { id: 5, name: '신입생 OT', cat: '환영·친목', start: '2025-03-05', end: '2025-03-05', budget: 250000, people: 92, status: 'done', desc: '신입생 오리엔테이션.', spend: 241000, color: 'rgba(255,255,255,0.3)' },
+  { id: 10, name: '2024 종강 파티', cat: '행사·참가비', start: '2024-12-15', end: '2024-12-15', budget: 300000, people: 38, status: 'done', desc: '2024년 2학기 종강 파티 수납.', spend: 287000, color: '#A9A5EE' },
+  { id: 11, name: '2024 신입생 환영회', cat: '행사·참가비', start: '2024-03-08', end: '2024-03-08', budget: 400000, people: 52, status: 'done', desc: '2024년 신입생 환영회 참가비 수납.', spend: 392000, color: '#5DCAA5' },
+  { id: 12, name: '2024 봄 MT', cat: '행사·참가비', start: '2024-04-20', end: '2024-04-21', budget: 520000, people: 44, status: 'done', desc: '2024년 봄 MT 참가비 수납.', spend: 498000, color: '#85B7EB' }
 ];
 
 let events = [];
@@ -556,10 +562,23 @@ function updateDefaultColor(prefix) {
 }
 
 // ─── 렌더링 로직 ───
-function renderEventList() {
+function filterByYear(year) {
+  const sub = document.querySelector('.ch-sub');
+  const yr = year || '2025';
+  const filtered = yr === 'all' ? events : events.filter(e => e.start.startsWith(yr));
+  const cnt = filtered.filter(e => e.status === 'active').length;
+  if (sub) sub.textContent = (yr === 'all' ? '전체' : yr + '년') + ' · 진행 중 ' + cnt + '건';
+  renderEventList(yr);
+}
+
+function renderEventList(yearFilter) {
   const wrap = document.getElementById('ev-list-wrap');
   if (!wrap) return;
-  wrap.innerHTML = events.sort((a,b)=>new Date(b.start)-new Date(a.start)).map(ev => `
+  const yr = yearFilter || document.getElementById('year-select')?.value || '2025';
+  const src = yr === 'all' ? events : events.filter(e => e.start.startsWith(yr));
+
+  if (yr !== 'all') {
+    wrap.innerHTML = src.sort((a,b)=>new Date(b.start)-new Date(a.start)).map(ev => `
     <div class="ev-card">
       <div class="ev-card-top" onclick="openEventDetailById(${ev.id})">
         <div class="ev-name" style="border-left: 3px solid ${ev.color || '#378ADD'}; padding-left: 8px;">${ev.name}</div>
@@ -576,6 +595,33 @@ function renderEventList() {
       </div>
     </div>
   `).join('');
+  } else {
+    const grouped = {};
+    src.forEach(ev => {
+      const y = ev.start.slice(0,4);
+      if (!grouped[y]) grouped[y] = [];
+      grouped[y].push(ev);
+    });
+    const years = Object.keys(grouped).sort((a,b) => b - a);
+    wrap.innerHTML = years.map(year => `
+      <div style="margin-bottom:16px">
+        <div style="font-size:11px;font-weight:600;color:#85B7EB;padding:5px 0 7px;border-bottom:0.5px solid var(--border);margin-bottom:7px">
+          ${year}년 <span style="color:var(--text-dim);font-weight:400">(${grouped[year].length}건)</span>
+        </div>
+        ${grouped[year].sort((a,b)=>new Date(b.start)-new Date(a.start)).map(ev => `
+          <div class="ev-card">
+            <div class="ev-card-top" onclick="openEventDetailById(${ev.id})">
+              <div class="ev-name" style="border-left:3px solid ${ev.color||'#378ADD'};padding-left:8px">${ev.name}</div>
+              <span class="ev-badge ${getStatusClass(ev.status)}">${getStatusText(ev.status)}</span>
+            </div>
+            <div class="ev-meta">
+              <span class="ev-meta-item">${ev.cat}</span>
+              <span class="ev-meta-item">${ev.start}</span>
+              <span class="ev-meta-item">${ev.people}명</span>
+            </div>
+          </div>`).join('')}
+      </div>`).join('');
+  }
 }
 
 function renderCal() {
