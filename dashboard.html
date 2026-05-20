@@ -243,6 +243,18 @@ html.light-mode .notif-dot {
 .theme-toggle svg .moon { display: block; }
 html.light-mode .theme-toggle svg .sun { display: block; }
 html.light-mode .theme-toggle svg .moon { display: none; }
+
+/* 라이트모드 드롭다운 */
+:root.light-mode #unpaid-list,
+.light-mode #unpaid-list {
+  background: #ffffff !important;
+  border-color: rgba(220,80,80,0.4) !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important;
+}
+:root.light-mode #unpaid-list [style*="color:var(--text-main"],
+.light-mode #unpaid-list [style*="color:var(--text-main"] {
+  color: #1A1A2E !important;
+}
 </style>
 </head>
 <body>
@@ -362,21 +374,21 @@ html.light-mode .theme-toggle svg .moon { display: none; }
           <div class="mc-label">미입금자</div>
           <div class="mc-val">9</div>
           <div class="mc-sub">확인 필요 ▾</div>
-          <div id="unpaid-list" style="display:none;position:fixed;width:220px;background:var(--navy2,#162438);border:0.5px solid rgba(240,149,149,0.3);border-radius:8px;padding:8px 10px;z-index:9999;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,0.5)">
-            <div style="font-size:9px;color:rgba(240,149,149,0.7);margin-bottom:6px;font-weight:500;letter-spacing:0.04em">3중 교차 검증 기반</div>
+          <div id="unpaid-list" style="display:none;position:fixed;width:220px;background:var(--navy2);border:1px solid rgba(240,149,149,0.5);border-radius:8px;padding:8px 10px;z-index:9999;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,0.25)">
+            <div style="font-size:9px;color:#E05555;margin-bottom:6px;font-weight:500;letter-spacing:0.04em">3중 교차 검증 기반</div>
             <div style="display:flex;flex-direction:column;gap:3px">
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">류하은</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">최보람</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">마준영</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">양도훈</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
-              <div style="height:0.5px;background:rgba(255,255,255,0.08);margin:3px 0"></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">김준서</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">강동현</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">남기준</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">전수연</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
-              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:rgba(255,255,255,0.85)">태윤서</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">류하은</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">최보람</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">마준영</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">양도훈</span><span style="background:rgba(240,149,149,0.15);color:#F09595;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">미입금</span></div>
+              <div style="height:0.5px;background:var(--border,rgba(255,255,255,0.08));margin:3px 0"></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">김준서</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">강동현</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">남기준</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">전수연</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
+              <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;gap:12px"><span style="color:var(--text-main,rgba(255,255,255,0.85))">태윤서</span><span style="background:rgba(239,159,39,0.15);color:#EF9F27;padding:1px 6px;border-radius:4px;font-size:9px;flex-shrink:0">확인필요</span></div>
             </div>
-            <a href="triple.html" href="triple.html" style="display:block;text-align:center;margin-top:8px;font-size:9px;color:#85B7EB;text-decoration:none;padding-top:6px;border-top:0.5px solid var(--border)">3중 교차 검증에서 자세히 보기 →</a>
+            <a href="triple.html" href="triple.html" style="display:block;text-align:center;margin-top:8px;font-size:9px;color:#85B7EB;text-decoration:none;padding-top:6px;border-top:0.5px solid var(--border);color:var(--blue-mid,#378ADD)">3중 교차 검증에서 자세히 보기 →</a>
           </div>
         </div>
 
